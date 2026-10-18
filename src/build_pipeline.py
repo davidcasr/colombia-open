@@ -19,9 +19,10 @@ from typing import Any
 from src.builders.catalog import build_catalog_entry, write_dataset_catalog
 from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
+from src.extractors.demografia_extractor import DemografiaExtractor
 from src.extractors.divipola_extractor import DivipolaExtractor
 from src.registry import load_registry
-from src.validation import validate_departamentos, validate_municipios
+from src.validation import validate_demografia, validate_departamentos, validate_municipios
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 NORMALIZED_DIR = ROOT_DIR / "data" / "normalized"
@@ -59,6 +60,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["municipios"],
             extraction_metadata=staging_metadata,
             validation_result=mpio_validation,
+        )
+    )
+
+    # --- demografia: dataset normalizado 1:1 desde staging (sin derive_*) ---
+    demografia_extraction = DemografiaExtractor().run()
+    demografia_staging_metadata = demografia_extraction.to_staging_metadata()
+    demografia_df = demografia_extraction.dataframe
+    valid_mpio_codes = set(municipios_df["cod_mpio"].to_list())
+    demografia_validation = validate_demografia(
+        demografia_df, demografia_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(demografia_df, NORMALIZED_DIR / "demografia.parquet")
+    write_json_atomic(demografia_df, NORMALIZED_DIR / "demografia.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["demografia"],
+            extraction_metadata=demografia_staging_metadata,
+            validation_result=demografia_validation,
         )
     )
 

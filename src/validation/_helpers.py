@@ -29,6 +29,15 @@ def invalid_fixed_length_count(df: pl.DataFrame, column: str, length: int) -> in
     return int((series.str.len_chars() != length).sum())
 
 
+def duplicate_count_multi(df: pl.DataFrame, key_columns: list[str]) -> int:
+    """Como `duplicate_count`, pero para una clave primaria compuesta (ej.
+    cod_mpio + anio + area_geografica en series de tiempo por municipio)."""
+    missing = [col for col in key_columns if col not in df.columns]
+    if missing:
+        return 0
+    return df.height - df.select(key_columns).unique().height
+
+
 def unknown_codes_count(df: pl.DataFrame, column: str, valid_codes: set[str]) -> int:
     """Integridad referencial: cuenta valores de `column` que no están en
     `valid_codes` (p. ej. cod_dpto de municipios contra departamentos)."""

@@ -31,5 +31,22 @@
       "cli": "colombia-open path municipios --output parquet"
     },
     "documentation": "docs/datasets/municipios.md"
+  },
+  "demografia": {
+    "description": "Proyecciones de población municipal de Colombia por área geográfica (cabecera / centros poblados y rural disperso / total), años 2018-2042 (DANE).",
+    "extractor": "src/extractors/demografia_extractor.py",
+    "source_name": "DANE — Proyecciones de población municipal por área geográfica 2018-2042",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 84225,
+    "outputs": {
+      "parquet": "data/normalized/demografia.parquet",
+      "json": "data/normalized/demografia.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('demografia')",
+      "cli": "colombia-open path demografia --output parquet"
+    },
+    "documentation": "docs/datasets/demografia.md"
   }
 }

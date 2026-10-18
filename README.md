@@ -12,9 +12,10 @@ municipios = hub.load_polars("municipios")
 departamentos = hub.load_polars("departamentos")
 ```
 
-> **Proyecto en MVP activo.** Solo una fuente está implementada (DIVIPOLA:
-> departamentos + municipios, DANE). No publicado en PyPI todavía, y la
-> landing page (`site/`) aún no tiene su primer deploy — ver
+> **Proyecto en MVP activo.** Dos fuentes están implementadas (DIVIPOLA:
+> departamentos + municipios; y demografía: proyecciones de población
+> municipal, ambas DANE). No publicado en PyPI todavía, y la landing page
+> (`site/`) aún no tiene su primer deploy — ver
 > [Estado del proyecto](#estado-del-proyecto).
 
 ## Por qué existe
@@ -54,7 +55,7 @@ from colombia_open import ColombiaOpen
 hub = ColombiaOpen()
 
 hub.list_datasets()
-# ["departamentos", "municipios"]
+# ["departamentos", "municipios", "demografia"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -86,6 +87,7 @@ colombia-open validate municipios
 | --------------- | -------------------------------------------------------------------------------- | ---------------------- | ----- | ------------ |
 | `departamentos` | Departamentos: código DIVIPOLA (2 dígitos) + nombre                              | DANE, vía datos.gov.co | 33    | CC BY-SA 4.0 |
 | `municipios`    | Municipios: código DIVIPOLA (5 dígitos), nombre, departamento, centroide lon/lat | DANE, vía datos.gov.co | ~1122 | CC BY-SA 4.0 |
+| `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 
 Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
@@ -143,10 +145,11 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con la primera
-  fuente (DIVIPOLA).
+- ✅ Patrón extractor/builder/validación/registro probado con dos fuentes
+  (DIVIPOLA y demografía) de dominios distintos (API Socrata y descarga
+  directa de Excel).
 - ⬜ Todavía no se publica en PyPI ni se corta un Release — eso viene
-  después de validar el patrón con 2-3 fuentes más.
+  después de validar el patrón con 1-2 fuentes más.
 - ⬜ Landing page lista en `site/` (ver `docs/brand/design-system.md`),
   pendiente del primer deploy a GitHub Pages — una vez publicada, vivirá en
   `https://davidcasr.github.io/colombia-open/`.

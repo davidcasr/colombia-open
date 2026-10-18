@@ -59,6 +59,21 @@ más permisiva).
 |---|---|---|---|---|
 | `departamentos` | DANE, vía datos.gov.co (`gdxc-w37w`) | CC BY-SA 4.0 | Sí — "DANE" | Sí, bajo CC BY-SA 4.0 |
 | `municipios` | DANE, vía datos.gov.co (`gdxc-w37w`) | CC BY-SA 4.0 | Sí — "DANE" | Sí, bajo CC BY-SA 4.0 |
+| `demografia` | DANE, descarga directa (dane.gov.co, PPED) | Sin CC explícito — términos de uso del DANE (`public-api-review-terms`) | Sí — "Fuente: Departamento Administrativo Nacional de Estadística: www.dane.gov.co" | Sí, bajo la presunción de apertura de la Ley 1712/2014 — ver nota abajo |
+
+## Nota sobre `demografia` (public-api-review-terms)
+
+A diferencia de `departamentos`/`municipios` (publicados en datos.gov.co
+bajo CC BY-SA 4.0 explícito), `demografia` se descarga directamente de
+dane.gov.co. Los términos de uso del DANE (revisados 2026-10-18)
+autorizan expresamente "uso, aprovechamiento, transformación y análisis"
+de la información con atribución obligatoria, pero no declaran ninguna
+licencia Creative Commons ni mencionan explícitamente "redistribución".
+Se publica bajo 🟡 `public-api-review-terms`: es información estadística
+pública de una entidad estatal colombiana, sin restricción de reuso
+declarada, bajo la presunción de apertura de la Ley 1712/2014 de
+Transparencia. Si el DANE publicara en el futuro una licencia explícita
+más restrictiva para este archivo, re-evaluar esta clasificación.
 
 ## Fuente permanentemente caída
 

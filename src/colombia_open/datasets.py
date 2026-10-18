@@ -10,6 +10,7 @@ from difflib import get_close_matches
 class Dataset(enum.StrEnum):
     DEPARTAMENTOS = "departamentos"
     MUNICIPIOS = "municipios"
+    DEMOGRAFIA = "demografia"
 
     @classmethod
     def from_string(cls, name: str) -> Dataset:
