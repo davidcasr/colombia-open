@@ -14,8 +14,10 @@ departamentos = hub.load_polars("departamentos")
 
 > **Proyecto en MVP activo.** Dos fuentes están implementadas (DIVIPOLA:
 > departamentos + municipios; y demografía: proyecciones de población
-> municipal, ambas DANE). No publicado en PyPI todavía, y la landing page
-> (`site/`) aún no tiene su primer deploy — ver
+> municipal, ambas DANE). Primer [GitHub Release](https://github.com/davidcasr/colombia-open/releases)
+> publicado y landing page en vivo en
+> [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/). No
+> publicado en PyPI todavía — ver
 > [Estado del proyecto](#estado-del-proyecto).
 
 ## Por qué existe
@@ -148,11 +150,14 @@ directamente `data/normalized/` si ya corriste `make build`.
 - ✅ Patrón extractor/builder/validación/registro probado con dos fuentes
   (DIVIPOLA y demografía) de dominios distintos (API Socrata y descarga
   directa de Excel).
-- ⬜ Todavía no se publica en PyPI ni se corta un Release — eso viene
-  después de validar el patrón con 1-2 fuentes más.
-- ⬜ Landing page lista en `site/` (ver `docs/brand/design-system.md`),
-  pendiente del primer deploy a GitHub Pages — una vez publicada, vivirá en
-  `https://davidcasr.github.io/colombia-open/`.
+- ✅ Primer [GitHub Release](https://github.com/davidcasr/colombia-open/releases)
+  publicado (`v0.1.0`, bundle de datos con SHA256) — `ColombiaOpen()` ya
+  puede descargarlo y cachearlo automáticamente sin tener que correr el
+  pipeline localmente (ver `data_manager.py`).
+- ⬜ Todavía no se publica en PyPI — por ahora la instalación es vía
+  `git clone` + `make bootstrap`, o consumiendo el bundle del Release.
+- ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en
+  [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
 - Ver `docs/roadmap/roadmap.md` para qué sigue.
 
 ## Legal
