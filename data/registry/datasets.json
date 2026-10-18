@@ -48,5 +48,22 @@
       "cli": "colombia-open path demografia --output parquet"
     },
     "documentation": "docs/datasets/demografia.md"
+  },
+  "educacion_establecimientos": {
+    "description": "Directorio único de establecimientos educativos de Colombia (preescolar, básica y media), 2015-2025 (MEN).",
+    "extractor": "src/extractors/educacion_establecimientos_extractor.py",
+    "source_name": "MEN — Directorio único de establecimientos educativos (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "codigo_dane_establecimiento"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 606206,
+    "outputs": {
+      "parquet": "data/normalized/educacion_establecimientos.parquet",
+      "json": "data/normalized/educacion_establecimientos.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('educacion_establecimientos')",
+      "cli": "colombia-open path educacion_establecimientos --output parquet"
+    },
+    "documentation": "docs/datasets/educacion_establecimientos.md"
   }
 }

@@ -20,3 +20,11 @@ DEMOGRAFIA_AREA_GEOGRAFICA_VALUES = {
     "Centros Poblados y Rural Disperso",
     "Total",
 }
+
+# Directorio de establecimientos educativos (MEN).
+EXPECTED_EDUCACION_ESTABLECIMIENTOS_MIN_COUNT = 500_000
+# Bajo este umbral de (valores distintos de codigo_dane / filas) para un
+# año dado, se trata como un defecto conocido de la fuente para ese año
+# (warning), no como clave primaria duplicada (error) — ver nota en
+# src/extractors/educacion_establecimientos_extractor.py sobre el año 2023.
+EDUCACION_CODIGO_DANE_LOW_CARDINALITY_RATIO = 0.5

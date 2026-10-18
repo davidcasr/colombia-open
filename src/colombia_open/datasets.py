@@ -11,6 +11,7 @@ class Dataset(enum.StrEnum):
     DEPARTAMENTOS = "departamentos"
     MUNICIPIOS = "municipios"
     DEMOGRAFIA = "demografia"
+    EDUCACION_ESTABLECIMIENTOS = "educacion_establecimientos"
 
     @classmethod
     def from_string(cls, name: str) -> Dataset:

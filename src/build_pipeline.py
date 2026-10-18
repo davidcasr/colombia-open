@@ -21,8 +21,16 @@ from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
 from src.extractors.demografia_extractor import DemografiaExtractor
 from src.extractors.divipola_extractor import DivipolaExtractor
+from src.extractors.educacion_establecimientos_extractor import (
+    EducacionEstablecimientosExtractor,
+)
 from src.registry import load_registry
-from src.validation import validate_demografia, validate_departamentos, validate_municipios
+from src.validation import (
+    validate_demografia,
+    validate_departamentos,
+    validate_educacion_establecimientos,
+    validate_municipios,
+)
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 NORMALIZED_DIR = ROOT_DIR / "data" / "normalized"
@@ -78,6 +86,23 @@ def build() -> list[dict[str, Any]]:
             spec=registry["demografia"],
             extraction_metadata=demografia_staging_metadata,
             validation_result=demografia_validation,
+        )
+    )
+
+    # --- educacion_establecimientos: dataset normalizado 1:1, sin derive_* ---
+    educacion_extraction = EducacionEstablecimientosExtractor().run()
+    educacion_staging_metadata = educacion_extraction.to_staging_metadata()
+    educacion_df = educacion_extraction.dataframe
+    educacion_validation = validate_educacion_establecimientos(
+        educacion_df, educacion_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(educacion_df, NORMALIZED_DIR / "educacion_establecimientos.parquet")
+    write_json_atomic(educacion_df, NORMALIZED_DIR / "educacion_establecimientos.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["educacion_establecimientos"],
+            extraction_metadata=educacion_staging_metadata,
+            validation_result=educacion_validation,
         )
     )
 

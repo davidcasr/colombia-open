@@ -13,19 +13,19 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 2 — `divipola` (geografía: departamentos +
-  municipios, DANE) y `demografia` (proyecciones de población municipal
-  2018-2042, DANE).
-- **Próxima candidata sugerida**: educación o delincuencia (ambas tienen
-  endpoints Socrata confirmados en vivo, ver tabla). Para educación, el
-  endpoint de Saber 11 (`kgxf-xxbe`) tiene ~7.1 millones de filas de
-  microdato — requiere decidir una estrategia de agregación antes de
-  implementar, no se puede publicar tal cual. Para delincuencia, solo el
-  endpoint de hurto a personas (`4rxi-8m8d`) tiene códigos DANE limpios
-  (`cod_depto`/`cod_muni`); los otros 2 endpoints de ese dominio
-  (lesiones, hurto a residencias/comercios) solo traen `codigo_dane` de
-  8-9 dígitos y nombres de municipio inconsistentes — más trabajo de
-  normalización de lo que sugiere la tabla.
+- **Fuentes implementadas**: 3 — `divipola` (geografía: departamentos +
+  municipios, DANE), `demografia` (proyecciones de población municipal
+  2018-2042, DANE) y `educacion_establecimientos` (directorio de
+  establecimientos educativos 2015-2025, MEN).
+- **Próxima candidata sugerida**: delincuencia (endpoints Socrata
+  confirmados en vivo, ver tabla) o Saber 11/ICFES (segunda iteración del
+  dominio educación, ver fila propia abajo — requiere diseño de
+  agregación antes de implementar por su volumen de microdato). Para
+  delincuencia, solo el endpoint de hurto a personas (`4rxi-8m8d`) tiene
+  códigos DANE limpios (`cod_depto`/`cod_muni`); los otros 2 endpoints de
+  ese dominio (lesiones, hurto a residencias/comercios) solo traen
+  `codigo_dane` de 8-9 dígitos y nombres de municipio inconsistentes —
+  más trabajo de normalización de lo que sugiere la tabla.
 
 ## Tabla de fuentes
 
@@ -34,7 +34,8 @@
 | Geografía (códigos DIVIPOLA + centroides) | DANE, vía API Socrata de datos.gov.co (dataset `gdxc-w37w`) | API JSON directa, confirmada y estable | 🟢 Implementada | ✅ `divipola` — ver `src/extractors/divipola_extractor.py` |
 | Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | Geoportal DANE: shapefile por vigencia, mecanismo sin JS no confirmado. **Mirror HDX confirmado en vivo 2026-10-17** (`data.humdata.org`, dataset `50ea7fee-...`, capa ADM2 = municipio, licencia CC BY-IGO, responde 302 a S3 firmado — ver nota abajo) | 🟢 Fácil vía HDX / 🟡 Media vía Geoportal directo | ⬜ No implementada — ver nota abajo |
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
-| Educación | ICFES (Saber 11) / MinEducación (directorio de establecimientos) | **2 endpoints Socrata confirmados en vivo 2026-10-17**: Saber 11 → `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0); directorio MEN → `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0) | 🟡 Fácil | ⬜ No implementada |
+| Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
+| Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-17**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). ~7.1 millones de filas de microdato por estudiante — requiere decidir una estrategia de agregación (ej. por municipio-año) antes de implementar, no se puede publicar tal cual | 🟡 Fácil (acceso) / requiere diseño de agregación | ⬜ No implementada |
 | Calidad del aire | IDEAM — SISAIRE | Portal con descargas | 🟡 Media | ⬜ No implementada |
 | Vivienda / edificación | DANE / Camacol | Boletines + censo (Excel) | 🟡 Media | ⬜ No implementada |
 | Pobreza | DANE (monetaria / multidimensional) | Excel anual | 🟡 Media | ⬜ No implementada |
