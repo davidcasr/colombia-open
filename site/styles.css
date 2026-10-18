@@ -160,7 +160,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 /* ---------- Section shell ---------- */
 .band { padding-block: 3.8rem; border-top: 1px solid var(--line); }
 .band h2 { font-size: 1.7rem; margin-bottom: 0.7rem; }
-.band .intro { color: var(--fg-muted); max-width: 58ch; margin-bottom: 2rem; }
+.band .intro { color: var(--fg-muted); margin-bottom: 2rem; }
 
 /* ---------- Code example ---------- */
 .terminal {
