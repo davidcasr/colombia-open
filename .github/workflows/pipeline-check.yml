@@ -28,6 +28,8 @@ jobs:
       - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
         run: uv pip install -e ".[pipeline,dev]" --system
+      - name: Actualizar setuptools (la imagen base del runner trae una versión vieja y vulnerable)
+        run: uv pip install --upgrade setuptools --system
       - name: ruff check
         run: python -m ruff check src/ tests/
       - name: ruff format --check
