@@ -15,33 +15,41 @@
 
 - **Fuentes implementadas**: 1 — `divipola` (geografía: departamentos +
   municipios, DANE).
-- **Próxima candidata sugerida**: ver tabla — la de menor dificultad entre las
-  no implementadas (hoy: demografía o educación, 🟡 Fácil).
+- **Próxima candidata sugerida**: antes había que elegir entre demografía o
+  educación. Desde 2026-10-17, **delincuencia y educación tienen endpoints
+  Socrata confirmados en vivo** (ver tabla) — son ahora las candidatas más
+  fuertes junto con demografía, no solo las "de menor dificultad en papel".
 
 ## Tabla de fuentes
 
 | Dominio | Fuente oficial | Acceso | Dificultad | Estado |
 |---|---|---|---|---|
 | Geografía (códigos DIVIPOLA + centroides) | DANE, vía API Socrata de datos.gov.co (dataset `gdxc-w37w`) | API JSON directa, confirmada y estable | 🟢 Implementada | ✅ `divipola` — ver `src/extractors/divipola_extractor.py` |
-| Geografía (geometría de polígonos, MGN) | DANE Geoportal (Marco Geoestadístico Nacional) | Shapefile por vigencia; **mecanismo de descarga directa sin JS no confirmado todavía** — requiere investigación adicional antes de implementar | 🟡 Media (pendiente de verificar) | ⬜ No implementada — ver nota abajo |
-| Demografía (censo) | DANE CNPV 2018, `microdatos.dane.gov.co` | Descarga directa; hay mapeo de referencia en el paquete R `ColOpenData` | 🟡 Fácil | ⬜ No implementada |
-| Educación | ICFES (pruebas Saber) / MinEducación SIMAT | Microdatos abiertos del ICFES, descarga directa | 🟡 Fácil | ⬜ No implementada |
+| Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | Geoportal DANE: shapefile por vigencia, mecanismo sin JS no confirmado. **Mirror HDX confirmado en vivo 2026-10-17** (`data.humdata.org`, dataset `50ea7fee-...`, capa ADM2 = municipio, licencia CC BY-IGO, responde 302 a S3 firmado — ver nota abajo) | 🟢 Fácil vía HDX / 🟡 Media vía Geoportal directo | ⬜ No implementada — ver nota abajo |
+| Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-17**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200). También hay mapeo de referencia en el paquete R `ColOpenData` | 🟡 Fácil | ⬜ No implementada |
+| Educación | ICFES (Saber 11) / MinEducación (directorio de establecimientos) | **2 endpoints Socrata confirmados en vivo 2026-10-17**: Saber 11 → `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0); directorio MEN → `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0) | 🟡 Fácil | ⬜ No implementada |
 | Calidad del aire | IDEAM — SISAIRE | Portal con descargas | 🟡 Media | ⬜ No implementada |
 | Vivienda / edificación | DANE / Camacol | Boletines + censo (Excel) | 🟡 Media | ⬜ No implementada |
 | Pobreza | DANE (monetaria / multidimensional) | Excel anual | 🟡 Media | ⬜ No implementada |
 | Consumo eléctrico | XM (operador del mercado eléctrico) / UPME | XM tiene API pública (SINERGOX) — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
 | Macroeconomía | Banco de la República | Tiene API de series — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
+| Infraestructura urbana / puntos de interés | OpenStreetMap, vía extracto Geofabrik | **Confirmado en vivo 2026-10-17**: `download.geofabrik.de/south-america/colombia-latest.osm.pbf` (ODbL 1.0, © OpenStreetMap contributors). Requiere recorte con osmium/GDAL y filtrado por etiqueta (ej. `shop=supermarket`, `amenity=pharmacy`) — más trabajo de geoprocesamiento que un fetch de API | 🟡 Media | ⬜ No implementada — dominio nuevo, no mapeado antes de 2026-10-17 |
 | Economía municipal / finanzas territoriales | DNP Terridata (basado en el FUT) | Sin API confirmada; solo descarga web por año (2000-2024) | 🟠 Difícil (requiere scraping) | ⬜ No implementada |
-| Salud | MinSalud — SISPRO | Portal "bodega de datos", sin API pública clara | 🟠 Difícil | ⬜ No implementada |
+| Salud | MinSalud — SISPRO (nacional); REPS departamental sí existe en Socrata | Nacional: portal "bodega de datos", sin API pública clara. **Pista parcial 2026-10-17**: Gobernación de Antioquia publica su propio REPS (prestadores de salud) en Socrata — confirma que el dato existe en ese formato, pero es departamental, no nacional. Buscar si MinSalud publica un REPS nacional equivalente antes de implementar | 🟠 Difícil (nacional) | ⬜ No implementada |
 | Clima | IDEAM | Catálogo fragmentado — podría terminar siendo un proyecto de investigación propio | 🟠 Difícil | ⬜ No implementada |
 | Electoral | Registraduría — Observatorio Electoral | Sin API; datos no legibles por máquina según IDEA. Alternativa: `datoselectorales.org` (MOE, sociedad civil) | 🔴 Bloqueada sin scraping serio | ⬜ No implementada |
-| Delincuencia | Policía Nacional — SIEDCO | No se confirmó portal de datos abiertos estructurado | 🔴 Sin fuente confirmada | ⬜ No implementada |
+| Delincuencia | Policía Nacional / DIJIN, vía Observatorio del Ministerio de Defensa | **3 endpoints Socrata confirmados en vivo 2026-10-17** (CC BY-SA 4.0): hurto a personas → `datos.gov.co/resource/4rxi-8m8d.json`; lesiones personales → `datos.gov.co/resource/72sg-cybi.json`; hurto a residencias/comercios → `datos.gov.co/resource/6sqw-8cg5.json` | 🟡 Fácil (bajó de 🔴) | ⬜ No implementada |
 
 > Esta tabla se investigó por búsqueda web además de verificación directa de
-> endpoints (curl/fetch) para la fila de geografía — las demás filas **no
-> están verificadas contra código real** y pueden estar desactualizadas.
-> Antes de implementar cualquiera, confirma el endpoint/URL actual con
-> `/next-source` (que te obliga a este paso) o manualmente.
+> endpoints (curl/fetch). Las filas de geografía (ambas), demografía,
+> educación, delincuencia e infraestructura/POIs se verificaron **en vivo**
+> (HTTP 200 o redirect válido) el 2026-10-17, cruzando hallazgos con el
+> proyecto hermano `vivireneloriente` (ver su `config/fuentes.yaml` y
+> `docs/decisions/` para el detalle de cómo verificó cada una originalmente).
+> Las demás filas **no están verificadas contra código real** y pueden estar
+> desactualizadas. Verificar en vivo no es lo mismo que implementar: antes de
+> escribir el extractor, sigue confirmando el esquema completo y los límites
+> de paginación con `/next-source` o manualmente.
 
 ## Por qué geografía fue primero
 
@@ -60,6 +68,13 @@ geometría de polígonos es candidata a **segunda iteración de la misma fuente*
 (no una fuente nueva), una vez se confirme un mecanismo de descarga
 reproducible (shapefile versionado, servicio ArcGIS/WFS, o espejo estable).
 Si investigas esto, documenta el hallazgo aquí antes de implementar.
+
+**Actualización (2026-10-17)**: se encontró y verificó en vivo un espejo
+estable — HDX (Humanitarian Data Exchange) redistribuye el shapefile ADM2
+del DANE con descarga directa (sin JS) y licencia CC BY-IGO. Ver la fila de
+geometría en la tabla arriba. Sigue siendo segunda iteración de `divipola`,
+no fuente nueva — pero el bloqueo original (sin mecanismo de descarga
+confirmado) ya no aplica.
 
 ## Cómo agregar la siguiente fuente
 

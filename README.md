@@ -87,7 +87,7 @@ colombia-open validate municipios
 | `departamentos` | Departamentos: código DIVIPOLA (2 dígitos) + nombre                              | DANE, vía datos.gov.co | 33    | CC BY-SA 4.0 |
 | `municipios`    | Municipios: código DIVIPOLA (5 dígitos), nombre, departamento, centroide lon/lat | DANE, vía datos.gov.co | ~1122 | CC BY-SA 4.0 |
 
-Ver `docs/roadmap/roadmap.md` para las ~13 fuentes mapeadas (implementadas y
+Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
 
 ## Instalación con extras
