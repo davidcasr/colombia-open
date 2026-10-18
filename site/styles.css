@@ -175,6 +175,9 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 .terminal .muted { color: var(--terminal-muted); }
 .terminal .gold { color: var(--terminal-gold); }
 .terminal pre { margin: 0; white-space: pre; }
+.terminal-note { font-size: 0.82rem; color: var(--fg-muted); margin-top: 0.75rem; }
+.terminal-note a { color: var(--accent); text-decoration: none; }
+.terminal-note a:hover { text-decoration: underline; }
 
 /* ---------- Catalog ---------- */
 .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
