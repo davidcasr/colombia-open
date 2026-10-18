@@ -10,7 +10,7 @@ from collections.abc import Callable
 
 from . import __version__
 from .core import ColombiaOpen
-from .exceptions import ColombiaOpenError
+from .exceptions import ColombiaOpenDataError, ColombiaOpenError
 
 
 def _cmd_version(_args: argparse.Namespace) -> int:
@@ -68,6 +68,18 @@ def _cmd_summary(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mcp(_args: argparse.Namespace) -> int:
+    try:
+        from . import mcp_server
+    except ModuleNotFoundError as exc:
+        raise ColombiaOpenDataError(
+            "El comando 'mcp' necesita el extra 'mcp': `pip install colombia-open[mcp]`"
+        ) from exc
+
+    mcp_server.main()
+    return 0
+
+
 def _cmd_cache(args: argparse.Namespace) -> int:
     from . import data_manager
 
@@ -92,6 +104,7 @@ HANDLERS: dict[str, Callable[[argparse.Namespace], int]] = {
     "validate": _cmd_validate,
     "summary": _cmd_summary,
     "cache": _cmd_cache,
+    "mcp": _cmd_mcp,
 }
 
 
@@ -119,6 +132,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     cache_parser = subparsers.add_parser("cache", help="Gestionar el caché local del bundle")
     cache_parser.add_argument("action", choices=["status", "clear", "update"])
+
+    subparsers.add_parser("mcp", help="Levantar el servidor MCP (stdio) — requiere el extra 'mcp'")
 
     return parser
 

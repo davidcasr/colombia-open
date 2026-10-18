@@ -40,6 +40,7 @@ src/
 │   ├── cli.py            # CLI, dataset-agnóstica
 │   ├── datasets.py       # Dataset(StrEnum) — actualizar a mano al agregar fuente
 │   ├── data_manager.py   # descarga/cachea el bundle de GitHub Releases (SHA256)
+│   ├── mcp_server.py      # servidor MCP opcional (extra `mcp`) — ver docs/mcp.md
 │   └── text.py            # clean_name() — normalización para joins/búsqueda
 ├── extractors/         # uno por fuente institucional — fetch + fallback + raw snapshot
 ├── builders/            # staging -> normalizado (parquet/json) + catálogo runtime
@@ -152,3 +153,4 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 | Revisar calidad de datos antes de mergear | agente `.claude/agents/data-quality-reviewer.md` |
 | Tocar la landing page o la marca | `docs/brand/design-system.md` (tokens) + `site/index.html`/`site/styles.css` (implementación) |
 | Cortar o versionar un release | `.claude/rules/releases.md` |
+| Entender/tocar el servidor MCP | `docs/mcp.md` + `src/colombia_open/mcp_server.py` |
