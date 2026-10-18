@@ -1,0 +1,35 @@
+{
+  "departamentos": {
+    "description": "Departamentos de Colombia: código DIVIPOLA de 2 dígitos y nombre oficial (DANE).",
+    "extractor": "src/extractors/divipola_extractor.py",
+    "source_name": "DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)",
+    "join_keys": ["cod_dpto"],
+    "expected_record_count": 33,
+    "outputs": {
+      "parquet": "data/normalized/departamentos.parquet",
+      "json": "data/normalized/departamentos.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('departamentos')",
+      "cli": "colombia-open path departamentos --output parquet"
+    },
+    "documentation": "docs/datasets/departamentos.md"
+  },
+  "municipios": {
+    "description": "Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). No incluye geometría de polígonos (MGN) todavía — ver docs/roadmap/roadmap.md.",
+    "extractor": "src/extractors/divipola_extractor.py",
+    "source_name": "DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto"],
+    "references": { "cod_dpto": "departamentos" },
+    "expected_record_count": 1122,
+    "outputs": {
+      "parquet": "data/normalized/municipios.parquet",
+      "json": "data/normalized/municipios.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('municipios')",
+      "cli": "colombia-open path municipios --output parquet"
+    },
+    "documentation": "docs/datasets/municipios.md"
+  }
+}

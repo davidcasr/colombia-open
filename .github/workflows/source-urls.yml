@@ -1,0 +1,19 @@
+name: Source URLs Check
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # semanal, lunes
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias mínimas
+        run: uv pip install requests --system
+      - name: Check
+        run: python scripts/check_source_urls.py

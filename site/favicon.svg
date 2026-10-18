@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="colombia-open">
+  <rect width="200" height="200" rx="40" fill="#17233D"/>
+  <line x1="40" y1="52" x2="100" y2="100" stroke="#AEB6C4" stroke-width="3" opacity="0.4"/>
+  <line x1="160" y1="44" x2="100" y2="100" stroke="#AEB6C4" stroke-width="3" opacity="0.4"/>
+  <line x1="168" y1="148" x2="100" y2="100" stroke="#AEB6C4" stroke-width="3" opacity="0.4"/>
+  <line x1="44" y1="156" x2="100" y2="100" stroke="#AEB6C4" stroke-width="3" opacity="0.4"/>
+  <line x1="98" y1="26" x2="100" y2="100" stroke="#AEB6C4" stroke-width="3" opacity="0.4"/>
+  <circle cx="40" cy="52" r="13" fill="#AEB6C4" opacity="0.85"/>
+  <circle cx="160" cy="44" r="12.5" fill="#AEB6C4" opacity="0.85"/>
+  <circle cx="168" cy="148" r="13" fill="#AEB6C4" opacity="0.85"/>
+  <circle cx="44" cy="156" r="12.5" fill="#AEB6C4" opacity="0.85"/>
+  <circle cx="98" cy="26" r="11" fill="#AEB6C4" opacity="0.8"/>
+  <circle cx="100" cy="100" r="24" fill="#D9B544"/>
+</svg>

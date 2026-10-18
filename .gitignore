@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Test / lint / type-check caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# colombia_open data pipeline artifacts
+data/raw/
+data/staging/
+data/normalized/
+data/cache/
+*.parquet
+!tests/**/*.parquet
+colombia-open-bundle.zip
+colombia-open-bundle.zip.sha256
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Env
+.env

@@ -1,0 +1,42 @@
+name: Release (bundle de datos)
+
+# Manual-only a propósito: este proyecto todavía no ha hecho su primer
+# release. NO publica a PyPI (ver README.md "Estado del proyecto") — solo
+# construye el pipeline, lo verifica en modo --require-live, empaqueta
+# data/normalized/ y lo adjunta como asset de un GitHub Release con su
+# SHA256. Activar esto a un trigger automático es una decisión del
+# mantenedor, no algo que un agente deba habilitar solo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag del release (ej. v0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: uv pip install -e ".[pipeline,dev]" --system
+      - name: Build
+        run: python -m src.build_pipeline
+      - name: Verificar (requiere source_mode=live en todos los datasets)
+        run: python scripts/verify_pipeline.py --require-live
+      - name: Empaquetar bundle
+        run: python scripts/make_bundle.py
+      - name: Crear Release y adjuntar assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: |
+            colombia-open-bundle.zip
+            colombia-open-bundle.zip.sha256

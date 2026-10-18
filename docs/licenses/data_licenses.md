@@ -1,0 +1,70 @@
+---
+title: "colombia-open — data_licenses.md"
+description: >
+  Licenciamiento y atribución por dataset. El código es MIT; los datos NO
+  lo son — cada dataset conserva la licencia de su fuente original.
+source_of_truth_for: [licensing, attribution, exclusion-policy, share-alike-handling]
+related_docs: [CLAUDE.md, .claude/rules/extractors.md, docs/roadmap/roadmap.md]
+last_updated: 2026-10-17
+---
+
+# Licenciamiento de datos
+
+**Código**: MIT (`LICENSE`). **Datos**: cada fuente conserva su propia
+licencia — no hay una licencia única para "los datos de colombia-open".
+
+La fuente de verdad **machine-readable** del estado legal de cada dataset es
+el campo `reuse_policy` dentro de `data/normalized/dataset_catalog.json`
+(generado en build time) — este archivo es la referencia humana, no la
+autoridad. Antes de redistribuir cualquier dataset fuera de este paquete,
+corre:
+
+```bash
+colombia-open show <dataset>   # incluye reuse_policy completo
+```
+
+## Semáforo de licencias (criterio para aceptar una fuente nueva)
+
+🟢 **`open-attribution`** — licencia abierta explícita (CC BY, CC BY-SA,
+dominio público, Ley 1712 de 2014 sin restricción declarada). Se publica,
+con atribución a la fuente siempre visible (nunca se remueve el link al
+dato oficial — ver `.claude/rules/extractors.md`).
+
+🟡 **`public-api-review-terms`** — API/descarga pública de una entidad
+estatal colombiana, sin licencia explícita pero sin restricción de reuso
+declarada (la Ley 1712/2014 de Transparencia establece que la información
+pública es abierta por defecto salvo excepción expresa). Se publica solo
+tras revisar que no haya una excepción aplicable.
+
+🔴 **`restricted`** — términos restrictivos, ambiguos, o requiere
+autenticación/convenio. **Se excluye del bundle público.** Regla por
+defecto ante la duda: *no redistribuir el dato — publicar solo la
+metadata y el link a la fuente original.*
+
+## Share-alike (CC BY-SA): qué implica
+
+Un dataset CC BY-SA (share-alike) puede redistribuirse, pero cualquier
+redistribución de **ese dataset específico** debe mantenerse bajo la misma
+licencia y atribución. Esto NO afecta la licencia del código (MIT) ni de
+datasets con licencia distinta — si en el futuro se mezclan fuentes con
+licencias incompatibles (ej. una share-alike y una CC BY simple) en una
+tabla derivada, esa tabla derivada se mantiene separada y documentada bajo
+la licencia más restrictiva de sus insumos, en vez de heredar silenciosamente
+la más permisiva (segregar por familia de licencia, no mezclar y heredar la
+más permisiva).
+
+## Datasets actuales
+
+| Dataset | Fuente | Licencia | Atribución requerida | Redistribuible |
+|---|---|---|---|---|
+| `departamentos` | DANE, vía datos.gov.co (`gdxc-w37w`) | CC BY-SA 4.0 | Sí — "DANE" | Sí, bajo CC BY-SA 4.0 |
+| `municipios` | DANE, vía datos.gov.co (`gdxc-w37w`) | CC BY-SA 4.0 | Sí — "DANE" | Sí, bajo CC BY-SA 4.0 |
+
+## Fuente permanentemente caída
+
+Si una fuente deja de responder, el protocolo (antes de marcarla
+deprecated) es: confirmar que la caída es permanente (esperar ~3 ciclos de
+`source-urls.yml`), congelar el dataset en su última versión publicada, y
+decidir si se mantiene como dataset histórico congelado (documentado como
+tal) o se deprecia por completo. Nunca fabricar datos nuevos para
+reemplazar una fuente caída.

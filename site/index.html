@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>colombia-open — Datos públicos de Colombia para Python</title>
+  <meta name="description" content="Datasets públicos de Colombia, curados y normalizados para Python. Empezando por la división político-administrativa (DIVIPOLA/DANE), con una fuente nueva agregándose cada semana.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,500;1,560&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="wrap">
+    <nav class="nav">
+      <div class="brand-group">
+        <a class="nav-brand" href="#">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="34" fill="var(--accent)" opacity="0.16"/>
+            <line x1="40" y1="52" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+            <line x1="160" y1="44" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+            <line x1="168" y1="148" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+            <line x1="44" y1="156" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+            <line x1="98" y1="26" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+            <circle cx="40" cy="52" r="9.5" fill="var(--fg-muted)" opacity="0.75"/>
+            <circle cx="160" cy="44" r="9" fill="var(--fg-muted)" opacity="0.75"/>
+            <circle cx="168" cy="148" r="9.5" fill="var(--fg-muted)" opacity="0.75"/>
+            <circle cx="44" cy="156" r="9" fill="var(--fg-muted)" opacity="0.75"/>
+            <circle cx="98" cy="26" r="8" fill="var(--fg-muted)" opacity="0.7"/>
+            <circle cx="100" cy="100" r="17" fill="var(--accent)"/>
+          </svg>
+          colombia-open
+        </a>
+        <span class="version-badge">v0.1.0</span>
+      </div>
+      <div class="nav-links">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#roadmap">Roadmap</a>
+        <a class="nav-github" href="https://github.com/davidcasr/colombia-open">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <svg class="hero-mark" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="34" fill="var(--accent)" opacity="0.16"/>
+        <line x1="40" y1="52" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+        <line x1="160" y1="44" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+        <line x1="168" y1="148" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+        <line x1="44" y1="156" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+        <line x1="98" y1="26" x2="100" y2="100" stroke="var(--fg-muted)" stroke-width="1.4" opacity="0.4"/>
+        <circle cx="40" cy="52" r="9.5" fill="var(--fg-muted)" opacity="0.75"/>
+        <circle cx="160" cy="44" r="9" fill="var(--fg-muted)" opacity="0.75"/>
+        <circle cx="168" cy="148" r="9.5" fill="var(--fg-muted)" opacity="0.75"/>
+        <circle cx="44" cy="156" r="9" fill="var(--fg-muted)" opacity="0.75"/>
+        <circle cx="98" cy="26" r="8" fill="var(--fg-muted)" opacity="0.7"/>
+        <circle cx="100" cy="100" r="17" fill="var(--accent)"/>
+      </svg>
+      <p class="eyebrow">colombia-open</p>
+      <h1>Datos públicos de Colombia, listos para usar en Python.</h1>
+      <p class="lede">Cada fuente oficial empieza dispersa, en su propio formato. La curamos, la normalizamos, la validamos — y la distribuimos como un dataset limpio, con su fuente y licencia siempre visibles.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#catalogo">Ver catálogo</a>
+        <a class="btn btn-secondary" href="https://github.com/davidcasr/colombia-open">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          Ver en GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band examples">
+    <div class="wrap">
+      <h2>Así se usa</h2>
+      <p class="intro">Sin cuentas, sin tokens, sin lidiar con el portal del DANE.</p>
+      <div class="terminal">
+        <pre><span class="muted">$</span> pip install colombia-open
+
+<span class="gold">from</span> colombia_open <span class="gold">import</span> ColombiaOpen
+
+hub = ColombiaOpen()
+municipios = hub.load_polars(<span class="gold">"municipios"</span>)
+municipios.filter(municipios[<span class="gold">"cod_dpto"</span>] == <span class="gold">"05"</span>)  <span class="muted"># municipios de Antioquia</span>
+
+hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold">"cali"</span>, <span class="gold">"BOGOTA"</span>])
+<span class="muted"># resuelve nombres a código DIVIPOLA</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="band catalog" id="catalogo">
+    <div class="wrap">
+      <h2>Catálogo</h2>
+      <p class="intro">Lo que hay disponible hoy. Crece una fuente a la vez — ver el roadmap completo abajo.</p>
+      <div class="catalog-grid">
+        <div class="dataset-card">
+          <h3>departamentos</h3>
+          <p>Departamentos de Colombia: código DIVIPOLA de 2 dígitos y nombre oficial.</p>
+          <div class="dataset-meta">
+            <span class="pill">33 filas</span>
+            <span class="pill">parquet · json</span>
+            <span class="pill">CC BY-SA 4.0</span>
+          </div>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a></p>
+        </div>
+        <div class="dataset-card">
+          <h3>municipios</h3>
+          <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Sin geometría de polígonos todavía.</p>
+          <div class="dataset-meta">
+            <span class="pill">1,122 filas</span>
+            <span class="pill">parquet · json</span>
+            <span class="pill">CC BY-SA 4.0</span>
+          </div>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band roadmap" id="roadmap">
+    <div class="wrap">
+      <h2>Roadmap</h2>
+      <p class="intro">Una fuente por fin de semana, de punta a punta. Esta tabla es el mapa completo — implementadas y por venir.</p>
+      <div class="roadmap-table-wrap">
+        <table class="roadmap-table">
+          <thead>
+            <tr><th>Dominio</th><th>Fuente oficial</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Geografía (códigos + centroides)</td><td>DANE, vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Geografía (geometría de polígonos, MGN)</td><td>DANE Geoportal</td><td><span class="status-dot pending"></span>Por verificar</td></tr>
+            <tr><td>Demografía (censo)</td><td>DANE CNPV 2018</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Educación</td><td>ICFES / MinEducación</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Calidad del aire</td><td>IDEAM — SISAIRE</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Vivienda / edificación</td><td>DANE / Camacol</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Pobreza</td><td>DANE</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Consumo eléctrico</td><td>XM / UPME</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Macroeconomía</td><td>Banco de la República</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Economía municipal / finanzas territoriales</td><td>DNP Terridata</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Salud</td><td>MinSalud — SISPRO</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Clima</td><td>IDEAM</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Electoral</td><td>Registraduría</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+            <tr><td>Delincuencia</td><td>Policía Nacional — SIEDCO</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="band">
+    <div class="wrap">
+      <div class="foot-row">
+        <span>Código bajo MIT · cada dataset conserva la licencia de su fuente original — ver <a href="https://github.com/davidcasr/colombia-open/blob/master/docs/licenses/data_licenses.md">licencias por dataset</a>.</span>
+        <span>Hecho por <a href="https://github.com/davidcasr">David Castro</a> · <a href="https://davidcasr.com/">@davidcasr</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var btn = document.getElementById('themeToggle');
+    var root = document.documentElement;
+    function current() {
+      var attr = root.getAttribute('data-theme');
+      if (attr) return attr;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function render() {
+      btn.setAttribute('aria-label', current() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+    }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('co-open-theme', next); } catch (e) {}
+      render();
+    });
+    try {
+      var saved = localStorage.getItem('co-open-theme');
+      if (saved) root.setAttribute('data-theme', saved);
+    } catch (e) {}
+    render();
+  })();
+  </script>
+</body>
+</html>

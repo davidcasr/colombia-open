@@ -1,0 +1,88 @@
+name: Pipeline Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 10 * * *" # diario — re-extrae en vivo y exige source_mode=live
+  workflow_dispatch:
+    inputs:
+      require_live:
+        description: "Exigir source_mode=live (gate de publicación)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: pipeline-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: uv pip install -e ".[pipeline,dev]" --system
+      - name: ruff check
+        run: python -m ruff check src/ tests/
+      - name: ruff format --check
+        run: python -m ruff format --check src/ tests/
+      - name: mypy
+        run: python -m mypy
+      - name: bandit
+        run: python -m bandit -c pyproject.toml -r src/
+      - name: pip-audit
+        run: python -m pip_audit
+
+  build-and-test:
+    needs: quality
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: uv pip install -e ".[pipeline,dev]" --system
+      - name: Chequeo anti-drift del registro de validación
+        run: python scripts/check_validation_registration.py
+      - name: Build (extract -> normalize -> validate -> catalog)
+        run: python -m src.build_pipeline
+      - name: Verificar catálogo
+        run: >
+          python scripts/verify_pipeline.py
+          ${{ (github.event_name == 'schedule' || inputs.require_live) && '--require-live' || '' }}
+      - name: Tests
+        run: python -m pytest --cov=colombia_open --cov-report=term-missing
+      - name: Subir data/normalized como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: normalized-data
+          path: data/normalized/
+          retention-days: 14
+
+  package-quality:
+    needs: quality
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build wheel + sdist
+        run: |
+          uv pip install build twine --system
+          python -m build
+          python -m twine check dist/*
+      - name: Smoke install
+        run: |
+          uv pip install --force-reinstall dist/*.whl --system
+          python -c "from colombia_open import ColombiaOpen; print(ColombiaOpen)"
+          python -m colombia_open --help
