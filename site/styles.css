@@ -49,6 +49,7 @@
 
 * { box-sizing: border-box; }
 
+html { scroll-padding-top: 88px; scroll-behavior: smooth; }
 html, body { margin: 0; }
 
 body {
@@ -81,6 +82,15 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 }
 
 /* ---------- Nav ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
 .nav {
   display: flex;
   align-items: center;
@@ -211,4 +221,8 @@ footer.band a:hover { color: var(--fg); }
 @media (max-width: 480px) {
   .band { padding-block: 2.6rem; }
   .hero { padding-block: 2.6rem 3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
