@@ -1,4 +1,10 @@
-# 🇨🇴 Colombia Open
+# <img src="https://flagcdn.com/co.svg" alt="Colombia" width="28" valign="middle"> Colombia Open
+
+[![Pipeline Check](https://github.com/davidcasr/colombia-open/actions/workflows/pipeline-check.yml/badge.svg)](https://github.com/davidcasr/colombia-open/actions/workflows/pipeline-check.yml)
+[![PyPI](https://img.shields.io/pypi/v/colombia-open)](https://pypi.org/project/colombia-open/)
+[![Python](https://img.shields.io/pypi/pyversions/colombia-open)](https://pypi.org/project/colombia-open/)
+[![License](https://img.shields.io/github/license/davidcasr/colombia-open)](LICENSE)
+[![Datasets](https://img.shields.io/badge/datasets-4-success)](#datasets-disponibles)
 
 Datasets públicos de Colombia, **curados, normalizados y validados**, para
 que cualquiera los use desde Python sin lidiar con los portales, APIs y
