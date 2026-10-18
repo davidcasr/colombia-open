@@ -27,7 +27,12 @@ permissions:
 
 jobs:
   publish:
-    runs-on: windows-latest
+    # ubuntu, no windows: pypa/gh-action-pypi-publish es una Docker action,
+    # solo corre en Linux. El build en sí (sdist+wheel de código puro
+    # Python) no tiene ninguna de las dependencias nativas que sí
+    # justifican windows-latest en release.yml (ese es por el pipeline de
+    # datos — pyarrow/openpyxl en Windows — no aplica acá).
+    runs-on: ubuntu-latest
     environment: pypi
     permissions:
       id-token: write
@@ -37,7 +42,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Validar que pyproject.toml tiene la versión esperada
-        shell: bash
         run: |
           actual=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
           expected="${{ inputs.expected_version }}"
