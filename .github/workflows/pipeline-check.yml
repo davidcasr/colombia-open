@@ -22,9 +22,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
         run: uv pip install -e ".[pipeline,dev]" --system
       - name: ruff check
@@ -43,9 +44,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
         run: uv pip install -e ".[pipeline,dev]" --system
       - name: Chequeo anti-drift del registro de validación
@@ -73,9 +75,10 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - uses: astral-sh/setup-uv@v3
       - name: Build wheel + sdist
         run: |
           uv pip install build twine --system
