@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="site/assets/brand/mark-indigo.svg" alt="colombia-open" width="96">
-</p>
+<img src="site/assets/brand/mark-indigo.svg" alt="colombia-open" width="96">
 
 # <img src="https://flagcdn.com/co.svg" alt="Colombia" width="28" valign="middle"> Colombia Open
 
@@ -121,6 +119,30 @@ pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una
 ```bash
 pip install "colombia-open[pipeline]"
 ```
+
+## Servidor MCP
+
+```bash
+pip install "colombia-open[mcp]"
+colombia-open mcp   # stdio — agregalo como comando en tu cliente MCP
+```
+
+Config típica de cliente MCP (Claude Desktop, Claude Code, etc.):
+
+```json
+{
+  "mcpServers": {
+    "colombia-open": { "command": "colombia-open", "args": ["mcp"] }
+  }
+}
+```
+
+Expone 3 tools: `list_datasets()`, `describe_dataset(dataset)` (metadata +
+esquema de columnas) y `query(sql, limit=None)` — SQL de solo lectura
+contra todos los datasets como tablas nombradas, con JOIN entre datasets en
+una sola query. Las filas siempre se limitan automáticamente (hasta 1000)
+para no volcarle a un agente un dataset de 600k filas crudo. Detalle
+completo, incluida la validación de seguridad del SQL, en `docs/mcp.md`.
 
 ## Filosofía: una fuente por fin de semana
 
