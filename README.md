@@ -157,8 +157,13 @@ directamente `data/normalized/` si ya corriste `make build`.
   tres fuentes) — `ColombiaOpen()` ya puede descargar y cachear el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
-- ⬜ Todavía no se publica en PyPI — por ahora la instalación es vía
-  `git clone` + `make bootstrap`, o consumiendo el bundle del Release.
+- ⬜ Todavía no se publica en PyPI. El mecanismo ya está listo y verificado
+  end-to-end (`.github/workflows/publish.yml`, trusted publishing sin
+  token): build en limpio, venv aislado, descarga real del bundle desde
+  GitHub Releases y carga de los 4 datasets confirmados el 2026-10-18.
+  Falta configurar el trusted publisher en pypi.org y correr el primer
+  publish. Mientras tanto, la instalación es vía `git clone` + `make
+  bootstrap`, o consumiendo el bundle del Release directamente.
 - ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en
   [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
 - Ver `docs/roadmap/roadmap.md` para qué sigue.

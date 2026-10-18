@@ -1,0 +1,54 @@
+name: Publish (PyPI)
+
+# Manual-only a propósito, igual que release.yml. Publica el PAQUETE
+# (código de colombia_open/, sin datos — ver data_manager.py) a PyPI vía
+# trusted publishing (OIDC, sin token almacenado). Activar esto a un
+# trigger automático es una decisión del mantenedor, no algo que un
+# agente deba habilitar solo. Convención de versionado: ver
+# .claude/rules/releases.md — el campo `version` de pyproject.toml es la
+# fuente de verdad; este workflow NO lo modifica, solo lo valida contra
+# el input que le pases.
+#
+# Requiere configurar un "trusted publisher" en pypi.org ANTES de correr
+# esto por primera vez (Account settings -> Publishing -> Add a new
+# publisher): owner davidcasr, repo colombia-open, workflow publish.yml,
+# environment pypi. Sin eso, el paso de publicación falla con un error de
+# autenticación — no hay ningún secret que configurar en este repo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_version:
+        description: "Versión esperada en pyproject.toml (ej. 0.3.0) — valida antes de publicar, no cambia nada"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validar que pyproject.toml tiene la versión esperada
+        shell: bash
+        run: |
+          actual=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          expected="${{ inputs.expected_version }}"
+          if [ "$actual" != "$expected" ]; then
+            echo "pyproject.toml tiene version=$actual, pero se esperaba $expected. Corrige el input o bumpea pyproject.toml antes de publicar." >&2
+            exit 1
+          fi
+          echo "version confirmada: $actual"
+      - name: Instalar herramientas de build
+        run: python -m pip install build
+      - name: Build (sdist + wheel)
+        run: python -m build
+      - name: Publicar a PyPI (trusted publishing, sin token)
+        uses: pypa/gh-action-pypi-publish@release/v1
