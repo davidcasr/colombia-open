@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="site/assets/brand/mark-indigo.svg" alt="colombia-open" width="96">
+</p>
+
 # <img src="https://flagcdn.com/co.svg" alt="Colombia" width="28" valign="middle"> Colombia Open
 
 [![Pipeline Check](https://github.com/davidcasr/colombia-open/actions/workflows/pipeline-check.yml/badge.svg)](https://github.com/davidcasr/colombia-open/actions/workflows/pipeline-check.yml)
