@@ -32,7 +32,7 @@
           </svg>
           colombia-open
         </a>
-        <span class="version-badge">v0.1.0</span>
+        <a class="version-badge" id="versionBadge" href="https://github.com/davidcasr/colombia-open/releases" target="_blank" rel="noopener">v0.1.0</a>
       </div>
       <div class="nav-links">
         <a href="#catalogo">Catálogo</a>
@@ -201,6 +201,19 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
       if (saved) root.setAttribute('data-theme', saved);
     } catch (e) {}
     render();
+  })();
+
+  (function () {
+    var badge = document.getElementById('versionBadge');
+    fetch('https://api.github.com/repos/davidcasr/colombia-open/releases/latest')
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (release) {
+        if (release && release.tag_name) {
+          badge.textContent = release.tag_name;
+          badge.href = release.html_url;
+        }
+      })
+      .catch(function () {});
   })();
   </script>
 </body>
