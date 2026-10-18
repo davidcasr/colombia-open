@@ -87,6 +87,10 @@ jobs:
           python -m build
           python -m twine check dist/*
       - name: Smoke install
+        # PowerShell (shell por defecto en windows-latest) no expande
+        # `dist/*.whl` como bash — uv pip install recibe el literal
+        # "*.whl" y falla con "Must have a version". bash sí lo expande.
+        shell: bash
         run: |
           uv pip install --force-reinstall dist/*.whl --system
           python -c "from colombia_open import ColombiaOpen; print(ColombiaOpen)"
