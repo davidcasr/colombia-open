@@ -1,15 +1,15 @@
 # Notebooks de ejemplo — colombia-open
 
 Un notebook por dataset publicado, listo para abrir en Google Colab sin
-instalar nada localmente. Cada notebook clona el repo, instala el extra
-`pipeline` y corre el pipeline localmente para generar los datos — el
-proyecto todavía no tiene un Release publicado en GitHub ni está en PyPI
-(ver [Estado del proyecto](../../README.md#estado-del-proyecto)). Cuando
-eso cambie, la celda de setup se reduce a `pip install colombia-open`.
+instalar nada localmente. `colombia-open` ya está publicado en
+[PyPI](https://pypi.org/project/colombia-open/) — la celda de setup de
+cada notebook es simplemente `pip install colombia-open`, que descarga y
+cachea el bundle de datos publicado en GitHub Releases automáticamente
+(ver [Estado del proyecto](../../README.md#estado-del-proyecto)).
 
 | Notebook | Qué muestra | Abrir |
 |---|---|---|
 | [01_departamentos.ipynb](01_departamentos.ipynb) | Cargar `departamentos`, su esquema (código DIVIPOLA de 2 dígitos, nombre oficial) y búsqueda por nombre normalizado. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidcasr/colombia-open/blob/main/examples/notebooks/01_departamentos.ipynb) |
 | [02_municipios.ipynb](02_municipios.ipynb) | Cargar `municipios`, filtrar por departamento, resolver nombres de ciudades (`resolve_municipios`) y el join con `departamentos` (`cross_view`). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidcasr/colombia-open/blob/main/examples/notebooks/02_municipios.ipynb) |
 | [03_demografia.ipynb](03_demografia.ipynb) | Cargar `demografia`, serie de tiempo de población por municipio, el join con `municipios` (`cross_view`) y la validación de integridad referencial (`validate_dataset`). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidcasr/colombia-open/blob/main/examples/notebooks/03_demografia.ipynb) |
-| [04_educacion_establecimientos.ipynb](04_educacion_establecimientos.ipynb) | Cargar `educacion_establecimientos` (606k filas, ~7min de setup), filtrar establecimientos oficiales por municipio/año, el join con `municipios`, y el defecto conocido de la fuente en 2023 (`validate_dataset`). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidcasr/colombia-open/blob/main/examples/notebooks/04_educacion_establecimientos.ipynb) |
+| [04_educacion_establecimientos.ipynb](04_educacion_establecimientos.ipynb) | Cargar `educacion_establecimientos` (606k filas), filtrar establecimientos oficiales por municipio/año, el join con `municipios`, y el defecto conocido de la fuente en 2023 (`validate_dataset`). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidcasr/colombia-open/blob/main/examples/notebooks/04_educacion_establecimientos.ipynb) |

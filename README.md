@@ -15,11 +15,12 @@ departamentos = hub.load_polars("departamentos")
 > **Proyecto en MVP activo.** Tres fuentes están implementadas (DIVIPOLA:
 > departamentos + municipios, DANE; demografía: proyecciones de población
 > municipal, DANE; y educación: directorio de establecimientos, MEN).
+> Publicado en [PyPI](https://pypi.org/project/colombia-open/)
+> (`pip install colombia-open`), con
 > [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-> publicados y landing page en vivo en
-> [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/). No
-> publicado en PyPI todavía — ver
-> [Estado del proyecto](#estado-del-proyecto).
+> para el bundle de datos y landing page en vivo en
+> [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/) —
+> ver [Estado del proyecto](#estado-del-proyecto).
 
 ## Por qué existe
 
@@ -37,7 +38,7 @@ oficial, licencia y fecha de actualización siempre visibles.
 ## Instalación
 
 ```bash
-pip install colombia-open  # próximamente — ver "Estado del proyecto"
+pip install colombia-open
 ```
 
 Para correr el pipeline localmente (extraer datos en vivo, no solo leerlos):
@@ -154,16 +155,14 @@ directamente `data/normalized/` si ya corriste `make build`.
   pequeña, descarga directa de Excel, API Socrata grande y paginada).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
   publicados (último: `v0.3.0`, bundle de datos con SHA256, incluye las
-  tres fuentes) — `ColombiaOpen()` ya puede descargar y cachear el bundle
+  tres fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
-- ⬜ Todavía no se publica en PyPI. El mecanismo ya está listo y verificado
-  end-to-end (`.github/workflows/publish.yml`, trusted publishing sin
-  token): build en limpio, venv aislado, descarga real del bundle desde
-  GitHub Releases y carga de los 4 datasets confirmados el 2026-10-18.
-  Falta configurar el trusted publisher en pypi.org y correr el primer
-  publish. Mientras tanto, la instalación es vía `git clone` + `make
-  bootstrap`, o consumiendo el bundle del Release directamente.
+- ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**
+  (`pip install colombia-open`, trusted publishing vía
+  `.github/workflows/publish.yml`, sin token almacenado) — verificado
+  end-to-end el 2026-10-18 instalando desde PyPI real en un venv limpio: los
+  4 datasets cargan correctamente.
 - ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en
   [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
 - Ver `docs/roadmap/roadmap.md` para qué sigue.

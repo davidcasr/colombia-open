@@ -6,12 +6,14 @@ workflow manual:
 - **Datos**: GitHub Releases con el bundle de `data/normalized/` + SHA256
   (`.github/workflows/release.yml`). Es lo que `ColombiaOpen()` descarga y
   cachea automáticamente en el primer uso (ver `data_manager.py`).
-- **Paquete**: el código de `colombia_open/` a PyPI, vía trusted
-  publishing — sin token almacenado (`.github/workflows/publish.yml`).
-  Verificado end-to-end el 2026-10-18 (build local + venv aislado +
-  descarga real del bundle), pero **todavía no se ha corrido el primer
-  publish real** — requiere que el mantenedor configure un trusted
-  publisher en pypi.org primero (ver el comentario del workflow).
+- **Paquete**: el código de `colombia_open/` a [PyPI](https://pypi.org/project/colombia-open/)
+  (`pip install colombia-open`), vía trusted publishing — sin token
+  almacenado (`.github/workflows/publish.yml`). Primer publish real
+  (`0.3.0`) corrido el 2026-10-18, verificado instalando desde PyPI en un
+  venv limpio. El job corre en `ubuntu-latest`, no `windows-latest` como
+  `release.yml` — `pypa/gh-action-pypi-publish` es una Docker action, solo
+  corre en Linux (falló en el primer intento con `windows-latest`, no
+  copies ese valor de `release.yml` sin pensarlo).
 
 Usa SemVer (`MAJOR.MINOR.PATCH`) sobre `version` en `pyproject.toml` para
 ambos — el mismo número de versión identifica el release de datos
