@@ -150,10 +150,11 @@ directamente `data/normalized/` si ya corriste `make build`.
 - ✅ Patrón extractor/builder/validación/registro probado con dos fuentes
   (DIVIPOLA y demografía) de dominios distintos (API Socrata y descarga
   directa de Excel).
-- ✅ Primer [GitHub Release](https://github.com/davidcasr/colombia-open/releases)
-  publicado (`v0.1.0`, bundle de datos con SHA256) — `ColombiaOpen()` ya
-  puede descargarlo y cachearlo automáticamente sin tener que correr el
-  pipeline localmente (ver `data_manager.py`).
+- ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
+  publicados (último: `v0.2.0`, bundle de datos con SHA256, incluye las
+  tres fuentes) — `ColombiaOpen()` ya puede descargarlo y cachearlo
+  automáticamente sin tener que correr el pipeline localmente (ver
+  `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ⬜ Todavía no se publica en PyPI — por ahora la instalación es vía
   `git clone` + `make bootstrap`, o consumiendo el bundle del Release.
 - ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en

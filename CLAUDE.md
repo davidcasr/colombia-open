@@ -151,3 +151,4 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 | Entender la API pública | `README.md` sección "Uso" + `src/colombia_open/core.py` |
 | Revisar calidad de datos antes de mergear | agente `.claude/agents/data-quality-reviewer.md` |
 | Tocar la landing page o la marca | `docs/brand/design-system.md` (tokens) + `site/index.html`/`site/styles.css` (implementación) |
+| Cortar o versionar un release | `.claude/rules/releases.md` |

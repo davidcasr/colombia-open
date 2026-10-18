@@ -1,11 +1,11 @@
 name: Release (bundle de datos)
 
-# Manual-only a propósito: este proyecto todavía no ha hecho su primer
-# release. NO publica a PyPI (ver README.md "Estado del proyecto") — solo
-# construye el pipeline, lo verifica en modo --require-live, empaqueta
-# data/normalized/ y lo adjunta como asset de un GitHub Release con su
-# SHA256. Activar esto a un trigger automático es una decisión del
-# mantenedor, no algo que un agente deba habilitar solo.
+# Manual-only a propósito. NO publica a PyPI (ver README.md "Estado del
+# proyecto") — solo construye el pipeline, lo verifica en modo
+# --require-live, empaqueta data/normalized/ y lo adjunta como asset de un
+# GitHub Release con su SHA256. Activar esto a un trigger automático es
+# una decisión del mantenedor, no algo que un agente deba habilitar solo.
+# Convención de versionado del tag: ver .claude/rules/releases.md.
 
 on:
   workflow_dispatch:
