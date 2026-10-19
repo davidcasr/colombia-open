@@ -13,19 +13,18 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 3 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 4 — `divipola` (geografía: departamentos +
   municipios, DANE), `demografia` (proyecciones de población municipal
-  2018-2042, DANE) y `educacion_establecimientos` (directorio de
-  establecimientos educativos 2015-2025, MEN).
-- **Próxima candidata sugerida**: delincuencia (endpoints Socrata
-  confirmados en vivo, ver tabla) o Saber 11/ICFES (segunda iteración del
-  dominio educación, ver fila propia abajo — requiere diseño de
-  agregación antes de implementar por su volumen de microdato). Para
-  delincuencia, solo el endpoint de hurto a personas (`4rxi-8m8d`) tiene
-  códigos DANE limpios (`cod_depto`/`cod_muni`); los otros 2 endpoints de
-  ese dominio (lesiones, hurto a residencias/comercios) solo traen
-  `codigo_dane` de 8-9 dígitos y nombres de municipio inconsistentes —
-  más trabajo de normalización de lo que sugiere la tabla.
+  2018-2042, DANE), `educacion_establecimientos` (directorio de
+  establecimientos educativos 2015-2025, MEN) y
+  `delincuencia_hurto_personas` (víctimas de hurto a personas por
+  municipio y día, 2003 a la fecha, MinDefensa/Policía).
+- **Próxima candidata sugerida**: Saber 11/ICFES (segunda iteración del
+  dominio educación — requiere diseño de agregación antes de implementar
+  por su volumen de microdato), o la segunda iteración de delincuencia
+  (lesiones `72sg-cybi` / hurto por modalidades `6sqw-8cg5`), que traen
+  `codigo_dane` de 8 dígitos y nombres de municipio con sufijos tipo
+  "(CT)" — más trabajo de normalización que hurto a personas.
 
 ## Tabla de fuentes
 
@@ -46,7 +45,8 @@
 | Salud | MinSalud — SISPRO (nacional); REPS departamental sí existe en Socrata | Nacional: portal "bodega de datos", sin API pública clara. **Pista parcial 2026-10-17**: Gobernación de Antioquia publica su propio REPS (prestadores de salud) en Socrata — confirma que el dato existe en ese formato, pero es departamental, no nacional. Buscar si MinSalud publica un REPS nacional equivalente antes de implementar | 🟠 Difícil (nacional) | ⬜ No implementada |
 | Clima | IDEAM | Catálogo fragmentado — podría terminar siendo un proyecto de investigación propio | 🟠 Difícil | ⬜ No implementada |
 | Electoral | Registraduría — Observatorio Electoral | Sin API; datos no legibles por máquina según IDEA. Alternativa: `datoselectorales.org` (MOE, sociedad civil) | 🔴 Bloqueada sin scraping serio | ⬜ No implementada |
-| Delincuencia | Policía Nacional / DIJIN, vía Observatorio del Ministerio de Defensa | **3 endpoints Socrata confirmados en vivo 2026-10-17** (CC BY-SA 4.0): hurto a personas → `datos.gov.co/resource/4rxi-8m8d.json`; lesiones personales → `datos.gov.co/resource/72sg-cybi.json`; hurto a residencias/comercios → `datos.gov.co/resource/6sqw-8cg5.json` | 🟡 Fácil (bajó de 🔴) | ⬜ No implementada |
+| Delincuencia (hurto a personas) | Policía Nacional, vía Ministerio de Defensa | **Confirmado en vivo 2026-10-19**: `datos.gov.co/resource/4rxi-8m8d.json` (CC BY-SA 4.0). 651200 filas ya agregadas por fecha + municipio, 2003 a la fecha, ~1.5 min por build. Defecto conocido de la fuente: 2008 casi sin desagregación municipal (365 filas "SIN ESTABLECER", excluidas — ver `docs/datasets/delincuencia_hurto_personas.md`) | 🟡 Fácil | ✅ `delincuencia_hurto_personas` — ver `src/extractors/delincuencia_hurto_personas_extractor.py` |
+| Delincuencia (lesiones personales, hurto por modalidades) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmados en vivo 2026-10-19** (CC BY-SA 4.0): lesiones → `datos.gov.co/resource/72sg-cybi.json` (1381416 filas); hurto por modalidades (residencias, comercio, etc.) → `datos.gov.co/resource/6sqw-8cg5.json` (653384 filas). Microdato por hecho (género, grupo etario, arma), `codigo_dane` de 8 dígitos y nombres con sufijo "(CT)" | 🟡 Media (normalización de códigos) | ⬜ No implementada |
 
 > Esta tabla se investigó por búsqueda web además de verificación directa de
 > endpoints (curl/fetch). Las filas de geografía (ambas), demografía,

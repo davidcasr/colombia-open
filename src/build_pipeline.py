@@ -19,6 +19,9 @@ from typing import Any
 from src.builders.catalog import build_catalog_entry, write_dataset_catalog
 from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
+from src.extractors.delincuencia_hurto_personas_extractor import (
+    DelincuenciaHurtoPersonasExtractor,
+)
 from src.extractors.demografia_extractor import DemografiaExtractor
 from src.extractors.divipola_extractor import DivipolaExtractor
 from src.extractors.educacion_establecimientos_extractor import (
@@ -26,6 +29,7 @@ from src.extractors.educacion_establecimientos_extractor import (
 )
 from src.registry import load_registry
 from src.validation import (
+    validate_delincuencia_hurto_personas,
     validate_demografia,
     validate_departamentos,
     validate_educacion_establecimientos,
@@ -103,6 +107,23 @@ def build() -> list[dict[str, Any]]:
             spec=registry["educacion_establecimientos"],
             extraction_metadata=educacion_staging_metadata,
             validation_result=educacion_validation,
+        )
+    )
+
+    # --- delincuencia_hurto_personas: dataset normalizado 1:1, sin derive_* ---
+    hurto_extraction = DelincuenciaHurtoPersonasExtractor().run()
+    hurto_staging_metadata = hurto_extraction.to_staging_metadata()
+    hurto_df = hurto_extraction.dataframe
+    hurto_validation = validate_delincuencia_hurto_personas(
+        hurto_df, hurto_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(hurto_df, NORMALIZED_DIR / "delincuencia_hurto_personas.parquet")
+    write_json_atomic(hurto_df, NORMALIZED_DIR / "delincuencia_hurto_personas.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["delincuencia_hurto_personas"],
+            extraction_metadata=hurto_staging_metadata,
+            validation_result=hurto_validation,
         )
     )
 

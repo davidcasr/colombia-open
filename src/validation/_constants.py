@@ -28,3 +28,13 @@ EXPECTED_EDUCACION_ESTABLECIMIENTOS_MIN_COUNT = 500_000
 # (warning), no como clave primaria duplicada (error) — ver nota en
 # src/extractors/educacion_establecimientos_extractor.py sobre el año 2023.
 EDUCACION_CODIGO_DANE_LOW_CARDINALITY_RATIO = 0.5
+
+# Hurto a personas (MinDefensa / Policía). Mismo umbral que usa el extractor
+# (EXPECTED_MIN_ROWS): 651200 filas en vivo el 2026-10-19, menos ~365
+# excluidas por "SIN ESTABLECER".
+EXPECTED_DELINCUENCIA_HURTO_PERSONAS_MIN_COUNT = 600_000
+# Un año con menos municipios distintos que esta fracción de la mediana
+# entre años se reporta como posible falta de desagregación municipal en la
+# fuente (warning) — ver nota sobre 2008 en
+# src/extractors/delincuencia_hurto_personas_extractor.py.
+DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO = 0.5

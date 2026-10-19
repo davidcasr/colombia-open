@@ -61,6 +61,7 @@ más permisiva).
 | `municipios` | DANE, vía datos.gov.co (`gdxc-w37w`) | CC BY-SA 4.0 | Sí — "DANE" | Sí, bajo CC BY-SA 4.0 |
 | `demografia` | DANE, descarga directa (dane.gov.co, PPED) | Sin CC explícito — términos de uso del DANE (`public-api-review-terms`) | Sí — "Fuente: Departamento Administrativo Nacional de Estadística: www.dane.gov.co" | Sí, bajo la presunción de apertura de la Ley 1712/2014 — ver nota abajo |
 | `educacion_establecimientos` | MEN, vía datos.gov.co (`cfw5-qzt5`) | CC BY-SA 4.0 | Sí — "MinEducación" | Sí, bajo CC BY-SA 4.0 |
+| `delincuencia_hurto_personas` | MinDefensa / Policía Nacional, vía datos.gov.co (`4rxi-8m8d`) | CC BY-SA 4.0 | Sí — "Ministerio de Defensa Nacional" | Sí, bajo CC BY-SA 4.0 |
 
 ## Nota sobre `demografia` (public-api-review-terms)
 

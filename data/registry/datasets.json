@@ -65,5 +65,22 @@
       "cli": "colombia-open path educacion_establecimientos --output parquet"
     },
     "documentation": "docs/datasets/educacion_establecimientos.md"
+  },
+  "delincuencia_hurto_personas": {
+    "description": "Víctimas de hurto a personas por municipio y día, 2003 a la fecha (MinDefensa / Policía Nacional).",
+    "extractor": "src/extractors/delincuencia_hurto_personas_extractor.py",
+    "source_name": "MinDefensa / Policía Nacional — Hurto a personas (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "fecha"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 650835,
+    "outputs": {
+      "parquet": "data/normalized/delincuencia_hurto_personas.parquet",
+      "json": "data/normalized/delincuencia_hurto_personas.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_hurto_personas')",
+      "cli": "colombia-open path delincuencia_hurto_personas --output parquet"
+    },
+    "documentation": "docs/datasets/delincuencia_hurto_personas.md"
   }
 }
