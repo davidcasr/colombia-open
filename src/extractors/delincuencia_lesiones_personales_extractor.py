@@ -26,7 +26,7 @@ Notas de calidad de dato conocidas (2026-10-19):
 
 - 4 filas traen `codigo_dane` = "00000000" (sin municipio). Se EXCLUYEN —
   no se fabrica un código — y el conteo queda en las `notes` de staging.
-- ~20 filas traen un código que contradice el nombre de municipio y
+- ~25 filas traen un código que contradice el nombre de municipio y
   departamento de la misma fila (ej. `25754001` = Soacha, Cundinamarca, con
   municipio "Jamundí" / departamento "VALLE"). Se confía en el código (es la
   clave de join) y el nombre publicado por `cod_mpio` es el más frecuente en
