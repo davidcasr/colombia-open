@@ -91,13 +91,32 @@ menos que verifiques explícitamente el ancho (ver
 Nunca se escribe el CSV sin su metadata.json hermano — un builder que lo
 encuentre sin metadata debe fallar fuerte, no asumir valores.
 
-## 5. Red: reintentos solo en errores de red, nunca en 4xx/5xx
+## 5. Red: reintentos en fallas transitorias, nunca en 4xx "reales"
 
 Usa `src/extractors/http_utils.py::get_json`/`get_bytes` — ya tienen
-backoff exponencial para `ConnectionError`/`Timeout` (vía `tenacity`).
-**No reintentes en respuestas 4xx/5xx** — eso es una respuesta real del
-servidor (dato cambió de formato, endpoint movido, bloqueo anti-bot), no
-un problema de red transitorio; cae a fallback o deja que falle.
+backoff exponencial (vía `tenacity`, hasta `MAX_ATTEMPTS` intentos) para:
+
+- errores de red: `ConnectionError`/`Timeout`;
+- respuestas HTTP transitorias (`TRANSIENT_HTTP_STATUS`): **429, 500, 502,
+  503 y 504** — significan "el servidor está mal ahora", no "el dato
+  cambió".
+
+**No reintentes ningún otro 4xx** (400, 403, 404…) — eso es una respuesta
+real del servidor (endpoint movido, parámetro inválido, bloqueo anti-bot),
+no un problema transitorio; cae a fallback o deja que falle. Si tras los
+reintentos un 5xx persiste, también cae a fallback, y
+`scripts/verify_pipeline.py --require-live` bloquea la publicación — los
+reintentos nunca convierten una fuente caída en un dataset "live".
+
+No agregues reintentos propios dentro de un extractor: si una fuente
+necesita otra política, cámbiala en `http_utils.py` (un solo lugar) y
+actualiza esta sección.
+
+> Historia (2026-10-19): la regla original no reintentaba ningún 4xx/5xx.
+> Con datos.gov.co devolviendo 500/503 intermitentes en ~1 de cada 6
+> páginas, una fuente paginada en ~28 páginas
+> (`delincuencia_lesiones_personales`) tenía ~1% de probabilidad de un
+> build en vivo completo. Con 4 intentos por página sube a ~99%.
 
 ## 6. Siempre se invoca como módulo, nunca como script suelto
 
