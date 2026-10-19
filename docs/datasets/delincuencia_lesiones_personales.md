@@ -126,6 +126,14 @@ desde 2018.
   víctimas cambia con prácticas de registro y denuncia, no solo con la
   criminalidad. 2020 cae por las restricciones de movilidad de la
   pandemia.
+- **`culposa_otra` no es homogénea en el tiempo.** La etiqueta genérica
+  "ARTICULO 120 LESIONES CULPOSAS" (sin "en accidente de tránsito") solo
+  aparece entre 2017 y 2022 (~1300 víctimas en 2017, ~2600 en 2020, ~6400
+  en 2021, ~2400 en 2022) y desaparece desde 2023; el resto de
+  `culposa_otra` es el art. 126 (lesiones culposas al feto, <100 al año).
+  Parece una codificación de la fuente en esos años, no un fenómeno real —
+  para series largas de lesiones culposas, considera sumar
+  `culposa_transito` + `culposa_otra`.
 - **El año en curso está incompleto**: la fuente se actualiza con corte
   mensual (último corte observado: 2026-07-31).
 - **Discrepancia de `cod_mpio` con `municipios` (DIVIPOLA)** — igual que en
