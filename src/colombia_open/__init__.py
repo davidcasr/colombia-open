@@ -5,6 +5,8 @@ hub = ColombiaOpen()
 df = hub.load_polars("municipios")
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from .core import ColombiaOpen as ColombiaOpen
 from .datasets import Dataset as Dataset
 from .exceptions import ColombiaOpenCacheError as ColombiaOpenCacheError
@@ -13,7 +15,12 @@ from .exceptions import ColombiaOpenDatasetError as ColombiaOpenDatasetError
 from .exceptions import ColombiaOpenError as ColombiaOpenError
 from .exceptions import ColombiaOpenOutputError as ColombiaOpenOutputError
 
-__version__ = "0.1.0"
+# Leída de la metadata instalada, no hardcodeada: pyproject.toml es la única
+# fuente de verdad de la versión (estuvo fija en "0.1.0" hasta 0.3.0).
+try:
+    __version__ = version("colombia-open")
+except PackageNotFoundError:  # corriendo desde el árbol sin instalar
+    __version__ = "0.0.0+unknown"
 
 __all__ = [
     "ColombiaOpen",

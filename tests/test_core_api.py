@@ -217,3 +217,14 @@ def test_validate_dataset_departamentos_unaffected_by_references(
     hub = ColombiaOpen(data_dir=catalog_dir_with_orphan_municipio)
     result = hub.validate_dataset("departamentos")
     assert not any("no existe en departamentos" in e for e in result["errors"])
+
+
+def test_version_matches_pyproject():
+    import tomllib
+    from pathlib import Path
+
+    import colombia_open
+
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    expected = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["version"]
+    assert colombia_open.__version__ == expected

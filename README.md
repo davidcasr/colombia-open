@@ -186,7 +186,7 @@ directamente `data/normalized/` si ya corriste `make build`.
   (DIVIPOLA, demografía y educación) de dominios distintos (API Socrata
   pequeña, descarga directa de Excel, API Socrata grande y paginada).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.3.0`, bundle de datos con SHA256, incluye las
+  publicados (último: `v0.4.0`, bundle de datos con SHA256, incluye las
   tres fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
@@ -195,6 +195,10 @@ directamente `data/normalized/` si ya corriste `make build`.
   `.github/workflows/publish.yml`, sin token almacenado) — verificado
   end-to-end el 2026-10-18 instalando desde PyPI real en un venv limpio: los
   4 datasets cargan correctamente.
+- ✅ Servidor MCP (desde `v0.4.0`, extra `mcp`): agentes de IA pueden
+  listar, describir y consultar con SQL de solo lectura todo el catálogo
+  vía `colombia-open mcp` — ver [Servidor MCP](#servidor-mcp) y
+  `docs/mcp.md`.
 - ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en
   [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
 - Ver `docs/roadmap/roadmap.md` para qué sigue.
