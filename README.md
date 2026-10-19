@@ -190,8 +190,8 @@ directamente `data/normalized/` si ya corriste `make build`.
   distintos (API Socrata pequeña, descarga directa de Excel, API Socrata
   grande y paginada).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.5.0`, bundle de datos con SHA256, incluye las
-  cuatro fuentes) — `ColombiaOpen()` descarga y cachea el bundle
+  publicados (último: `v0.6.0`, bundle de datos con SHA256, incluye las
+  cinco fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**
