@@ -67,7 +67,8 @@ from colombia_open import ColombiaOpen
 hub = ColombiaOpen()
 
 hub.list_datasets()
-# ["departamentos", "municipios", "demografia", "educacion_establecimientos"]
+# ["departamentos", "municipios", "demografia", "educacion_establecimientos",
+#  "delincuencia_hurto_personas"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -101,6 +102,7 @@ colombia-open validate municipios
 | `municipios`    | Municipios: código DIVIPOLA (5 dígitos), nombre, departamento, centroide lon/lat | DANE, vía datos.gov.co | ~1122 | CC BY-SA 4.0 |
 | `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 | `educacion_establecimientos` | Directorio único de establecimientos educativos, 2015-2025            | MEN, vía datos.gov.co  | ~606206 | CC BY-SA 4.0 |
+| `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~650835 | CC BY-SA 4.0 |
 
 Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
@@ -182,9 +184,10 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con tres fuentes
-  (DIVIPOLA, demografía y educación) de dominios distintos (API Socrata
-  pequeña, descarga directa de Excel, API Socrata grande y paginada).
+- ✅ Patrón extractor/builder/validación/registro probado con cuatro
+  fuentes (DIVIPOLA, demografía, educación y delincuencia) de dominios
+  distintos (API Socrata pequeña, descarga directa de Excel, API Socrata
+  grande y paginada).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
   publicados (último: `v0.4.0`, bundle de datos con SHA256, incluye las
   tres fuentes) — `ColombiaOpen()` descarga y cachea el bundle
