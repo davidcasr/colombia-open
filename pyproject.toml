@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "colombia-open"
-version = "0.4.0"
+version = "0.5.0"
 description = "Datasets públicos de Colombia, curados, normalizados y validados — sin lidiar con los portales/APIs/Excel de cada institución oficial."
 readme = "README.md"
 license = "MIT"
