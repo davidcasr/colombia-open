@@ -27,7 +27,12 @@ MAX_ATTEMPTS = 4
 
 
 def _is_transient(exc: BaseException) -> bool:
-    if isinstance(exc, (requests.ConnectionError, requests.Timeout)):
+    # ChunkedEncodingError = la conexión se cortó a mitad del cuerpo de la
+    # respuesta (observado en vivo en datos.gov.co el 2026-10-19); es una
+    # falla de red igual que ConnectionError, aunque requests no la herede.
+    if isinstance(
+        exc, (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError)
+    ):
         return True
     if isinstance(exc, requests.HTTPError) and exc.response is not None:
         return exc.response.status_code in TRANSIENT_HTTP_STATUS

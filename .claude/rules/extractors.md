@@ -96,7 +96,8 @@ encuentre sin metadata debe fallar fuerte, no asumir valores.
 Usa `src/extractors/http_utils.py::get_json`/`get_bytes` — ya tienen
 backoff exponencial (vía `tenacity`, hasta `MAX_ATTEMPTS` intentos) para:
 
-- errores de red: `ConnectionError`/`Timeout`;
+- errores de red: `ConnectionError`/`Timeout`/`ChunkedEncodingError`
+  (conexión cortada a mitad de la respuesta);
 - respuestas HTTP transitorias (`TRANSIENT_HTTP_STATUS`): **429, 500, 502,
   503 y 504** — significan "el servidor está mal ahora", no "el dato
   cambió".

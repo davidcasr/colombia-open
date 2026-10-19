@@ -52,10 +52,15 @@ def test_get_json_retries_transient_http_status_then_succeeds(monkeypatch, statu
 def test_get_json_retries_network_errors(monkeypatch):
     calls = _sequence(
         monkeypatch,
-        [requests.ConnectionError("caída"), requests.Timeout("lento"), _FakeResponse(200, [])],
+        [
+            requests.ConnectionError("caída"),
+            requests.Timeout("lento"),
+            requests.exceptions.ChunkedEncodingError("cuerpo cortado"),
+            _FakeResponse(200, []),
+        ],
     )
     assert get_json("https://example.test") == []
-    assert calls["n"] == 3
+    assert calls["n"] == 4
 
 
 @pytest.mark.parametrize("status", [400, 403, 404])
