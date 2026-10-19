@@ -102,8 +102,7 @@ poblacion = hub.load_polars("demografia").filter(pl.col("area_geografica") == "T
   entidades distintas (Policía vs. DANE). El validador reporta cualquier
   `cod_mpio` que no exista en el `municipios` vigente como warning, no
   como error.
-- **Solo hurto a personas.** Los otros dos endpoints de delincuencia de la
-  Policía en datos.gov.co (lesiones personales `72sg-cybi`, hurto por
-  modalidades `6sqw-8cg5`) no están incluidos: usan un `codigo_dane` de 8
-  dígitos y nombres de municipio con sufijos tipo "(CT)" que requieren su
-  propia normalización — ver `docs/roadmap/roadmap.md`.
+- **Solo hurto a personas.** Las lesiones personales (`72sg-cybi`) se
+  publican como dataset aparte, `delincuencia_lesiones_personales`; el
+  hurto por modalidades (`6sqw-8cg5`) sigue pendiente — ver
+  `docs/roadmap/roadmap.md`.

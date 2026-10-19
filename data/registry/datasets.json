@@ -82,5 +82,24 @@
       "cli": "colombia-open path delincuencia_hurto_personas --output parquet"
     },
     "documentation": "docs/datasets/delincuencia_hurto_personas.md"
+  },
+  "delincuencia_lesiones_personales": {
+    "description": "Víctimas de lesiones personales (dolosas y culposas, incluidas las de tránsito) por municipio, día, conducta, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).",
+    "extractor": "src/extractors/delincuencia_lesiones_personales_extractor.py",
+    "source_name": "Policía Nacional (DIPON) — Lesiones personales y en accidente de tránsito (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "fecha"],
+    "references": {
+      "cod_mpio": "municipios"
+    },
+    "expected_record_count": 1377323,
+    "outputs": {
+      "parquet": "data/normalized/delincuencia_lesiones_personales.parquet",
+      "json": "data/normalized/delincuencia_lesiones_personales.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_lesiones_personales')",
+      "cli": "colombia-open path delincuencia_lesiones_personales --output parquet"
+    },
+    "documentation": "docs/datasets/delincuencia_lesiones_personales.md"
   }
 }

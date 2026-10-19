@@ -23,10 +23,11 @@ víctimas excluidas queda en las `notes` de la metadata de staging. El
 validador (`src/validation/_delincuencia.py`) reporta el año de cobertura
 municipal anómala como warning.
 
-Los otros dos endpoints del dominio delincuencia (lesiones `72sg-cybi`,
-hurto por modalidades `6sqw-8cg5`) NO se implementan acá: traen
-`codigo_dane` de 8 dígitos y nombres de municipio con sufijos tipo
-"(CT)" — requieren su propia normalización (ver docs/roadmap/roadmap.md).
+Los otros dos endpoints del dominio delincuencia traen `codigo_dane` de 8
+dígitos y nombres de municipio con sufijos tipo "(CT)": lesiones
+(`72sg-cybi`) tiene su propio extractor
+(`delincuencia_lesiones_personales_extractor.py`); hurto por modalidades
+(`6sqw-8cg5`) sigue pendiente (ver docs/roadmap/roadmap.md).
 
 Se invoca siempre como módulo, nunca como script suelto:
 `python -m src.extractors.delincuencia_hurto_personas_extractor` desde la

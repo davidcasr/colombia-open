@@ -68,7 +68,7 @@ hub = ColombiaOpen()
 
 hub.list_datasets()
 # ["departamentos", "municipios", "demografia", "educacion_establecimientos",
-#  "delincuencia_hurto_personas"]
+#  "delincuencia_hurto_personas", "delincuencia_lesiones_personales"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -103,6 +103,7 @@ colombia-open validate municipios
 | `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 | `educacion_establecimientos` | Directorio único de establecimientos educativos, 2015-2025            | MEN, vía datos.gov.co  | ~606206 | CC BY-SA 4.0 |
 | `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~650835 | CC BY-SA 4.0 |
+| `delincuencia_lesiones_personales` | Víctimas de lesiones personales (incl. tránsito) por municipio, día, conducta, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~1377323 | CC BY-SA 4.0 |
 
 Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
@@ -184,8 +185,8 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con cuatro
-  fuentes (DIVIPOLA, demografía, educación y delincuencia) de dominios
+- ✅ Patrón extractor/builder/validación/registro probado con cinco
+  fuentes (DIVIPOLA, demografía, educación y dos de delincuencia) de dominios
   distintos (API Socrata pequeña, descarga directa de Excel, API Socrata
   grande y paginada).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)

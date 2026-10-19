@@ -62,6 +62,7 @@ más permisiva).
 | `demografia` | DANE, descarga directa (dane.gov.co, PPED) | Sin CC explícito — términos de uso del DANE (`public-api-review-terms`) | Sí — "Fuente: Departamento Administrativo Nacional de Estadística: www.dane.gov.co" | Sí, bajo la presunción de apertura de la Ley 1712/2014 — ver nota abajo |
 | `educacion_establecimientos` | MEN, vía datos.gov.co (`cfw5-qzt5`) | CC BY-SA 4.0 | Sí — "MinEducación" | Sí, bajo CC BY-SA 4.0 |
 | `delincuencia_hurto_personas` | MinDefensa / Policía Nacional, vía datos.gov.co (`4rxi-8m8d`) | CC BY-SA 4.0 | Sí — "Ministerio de Defensa Nacional" | Sí, bajo CC BY-SA 4.0 |
+| `delincuencia_lesiones_personales` | Policía Nacional (DIPON), vía datos.gov.co (`72sg-cybi`) | CC BY-SA 4.0 | Sí — "Dirección General de la Policía Nacional - DIPON" | Sí, bajo CC BY-SA 4.0 |
 
 ## Nota sobre `demografia` (public-api-review-terms)
 
