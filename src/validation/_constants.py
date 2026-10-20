@@ -40,6 +40,26 @@ EDUCACION_CODIGO_DANE_LOW_CARDINALITY_RATIO = 0.5
 EXPECTED_DELINCUENCIA_HURTO_PERSONAS_MIN_COUNT = 600_000
 # 1377323 filas tras agregar centro poblado -> municipio (2026-10-19).
 EXPECTED_DELINCUENCIA_LESIONES_PERSONALES_MIN_COUNT = 1_300_000
+
+# Infraestructura / puntos de interés (OpenStreetMap vía Geofabrik). 58046
+# filas confirmadas en vivo (2026-10-20), tras geocodificar y excluir ~450
+# POI fuera de cualquier polígono de municipios_geometria.
+EXPECTED_INFRAESTRUCTURA_POI_MIN_COUNT = 50_000
+# Categorías cívicas curadas — ver
+# src/extractors/infraestructura_poi_extractor.py (_CATEGORIAS_AMENITY /
+# _CATEGORIAS_SHOP). Una categoría fuera de esta lista es un bug de
+# clasificación en el extractor, no un dato legítimo nuevo.
+CATEGORIAS_POI_VALIDAS = {
+    "salud",
+    "educacion",
+    "seguridad",
+    "finanzas",
+    "religion",
+    "gobierno",
+    "transporte",
+    "comercio",
+}
+
 # Un año con menos municipios distintos que esta fracción de la mediana
 # entre años se reporta como posible falta de desagregación municipal en la
 # fuente (warning) — ver nota sobre 2008 en

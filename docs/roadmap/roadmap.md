@@ -13,7 +13,7 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 7 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 8 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
   municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
@@ -22,13 +22,15 @@
   personas por municipio y día, 2003 a la fecha, MinDefensa/Policía),
   `delincuencia_lesiones_personales` (víctimas de lesiones personales y en
   accidente de tránsito por municipio, día, conducta, arma, género y grupo
-  etario, 2010 a la fecha, Policía) y `delincuencia_hurto_modalidades`
+  etario, 2010 a la fecha, Policía), `delincuencia_hurto_modalidades`
   (víctimas de hurto a residencias y entidades comerciales por municipio,
-  día, arma, género y grupo etario, 2010 a la fecha, Policía).
+  día, arma, género y grupo etario, 2010 a la fecha, Policía) e
+  `infraestructura_poi` (puntos de interés urbanos — salud, educación,
+  seguridad, finanzas, religión, gobierno, transporte, comercio —
+  geocodificados por municipio, OpenStreetMap vía Geofabrik).
 - **Próxima candidata sugerida**: Saber 11/ICFES (requiere diseño de
   agregación antes de implementar por su volumen de microdato, ~7.1
-  millones de filas) — o infraestructura/POIs vía OSM Geofabrik (confirmada
-  en vivo, pero requiere geoprocesamiento con osmium/GDAL).
+  millones de filas).
 
 ## Tabla de fuentes
 
@@ -44,7 +46,7 @@
 | Pobreza | DANE (monetaria / multidimensional) | Excel anual | 🟡 Media | ⬜ No implementada |
 | Consumo eléctrico | XM (operador del mercado eléctrico) / UPME | XM tiene API pública (SINERGOX) — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
 | Macroeconomía | Banco de la República | Tiene API de series — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
-| Infraestructura urbana / puntos de interés | OpenStreetMap, vía extracto Geofabrik | **Confirmado en vivo 2026-10-17**: `download.geofabrik.de/south-america/colombia-latest.osm.pbf` (ODbL 1.0, © OpenStreetMap contributors). Requiere recorte con osmium/GDAL y filtrado por etiqueta (ej. `shop=supermarket`, `amenity=pharmacy`) — más trabajo de geoprocesamiento que un fetch de API | 🟡 Media | ⬜ No implementada — dominio nuevo, no mapeado antes de 2026-10-17 |
+| Infraestructura urbana / puntos de interés | OpenStreetMap, vía extracto Geofabrik | **Confirmado en vivo 2026-10-20**: `download.geofabrik.de/south-america/colombia-latest.osm.pbf` (~332MB, ODbL 1.0, © OpenStreetMap contributors). Filtrado con pyosmium (`FileProcessor` + `KeyFilter` a nivel C++, ~5s en vez de ~25min) por lista curada de `amenity`/`shop`; geocodificado con join espacial contra `municipios_geometria`. 58046 filas publicadas (58494 nodos clasificados, ~450 excluidos por geocodificación) | 🟡 Media (geoprocesamiento) | ✅ `infraestructura_poi` — ver `src/extractors/infraestructura_poi_extractor.py` |
 | Economía municipal / finanzas territoriales | DNP Terridata (basado en el FUT) | Sin API confirmada; solo descarga web por año (2000-2024) | 🟠 Difícil (requiere scraping) | ⬜ No implementada |
 | Salud | MinSalud — SISPRO (nacional); REPS departamental sí existe en Socrata | Nacional: portal "bodega de datos", sin API pública clara. **Pista parcial 2026-10-17**: Gobernación de Antioquia publica su propio REPS (prestadores de salud) en Socrata — confirma que el dato existe en ese formato, pero es departamental, no nacional. Buscar si MinSalud publica un REPS nacional equivalente antes de implementar | 🟠 Difícil (nacional) | ⬜ No implementada |
 | Clima | IDEAM | Catálogo fragmentado — podría terminar siendo un proyecto de investigación propio | 🟠 Difícil | ⬜ No implementada |

@@ -33,6 +33,7 @@ from src.extractors.divipola_extractor import DivipolaExtractor
 from src.extractors.educacion_establecimientos_extractor import (
     EducacionEstablecimientosExtractor,
 )
+from src.extractors.infraestructura_poi_extractor import InfraestructuraPoiExtractor
 from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
 from src.registry import load_registry
 from src.validation import (
@@ -42,6 +43,7 @@ from src.validation import (
     validate_demografia,
     validate_departamentos,
     validate_educacion_establecimientos,
+    validate_infraestructura_poi,
     validate_municipios,
     validate_municipios_geometria,
 )
@@ -189,6 +191,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["municipios_geometria"],
             extraction_metadata=geometria_staging_metadata,
             validation_result=geometria_validation,
+        )
+    )
+
+    # --- infraestructura_poi: 1:1 desde staging (geocodificado contra la
+    # geometría ya extraída arriba), sin derive_* ---
+    poi_extraction = InfraestructuraPoiExtractor().run(municipios_geometria=geometria_df)
+    poi_staging_metadata = poi_extraction.to_staging_metadata()
+    poi_df = poi_extraction.dataframe
+    poi_validation = validate_infraestructura_poi(
+        poi_df, poi_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(poi_df, NORMALIZED_DIR / "infraestructura_poi.parquet")
+    write_json_atomic(poi_df, NORMALIZED_DIR / "infraestructura_poi.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["infraestructura_poi"],
+            extraction_metadata=poi_staging_metadata,
+            validation_result=poi_validation,
         )
     )
 

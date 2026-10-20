@@ -26,7 +26,7 @@ colombia-open show <dataset>   # incluye reuse_policy completo
 ## Semáforo de licencias (criterio para aceptar una fuente nueva)
 
 🟢 **`open-attribution`** — licencia abierta explícita (CC BY, CC BY-SA,
-CC BY-IGO, dominio público, Ley 1712 de 2014 sin restricción declarada). Se publica,
+CC BY-IGO, ODbL, dominio público, Ley 1712 de 2014 sin restricción declarada). Se publica,
 con atribución a la fuente siempre visible (nunca se remueve el link al
 dato oficial — ver `.claude/rules/extractors.md`).
 
@@ -65,6 +65,7 @@ más permisiva).
 | `delincuencia_lesiones_personales` | Policía Nacional (DIPON), vía datos.gov.co (`72sg-cybi`) | CC BY-SA 4.0 | Sí — "Dirección General de la Policía Nacional - DIPON" | Sí, bajo CC BY-SA 4.0 |
 | `delincuencia_hurto_modalidades` | Policía Nacional (DIPON), vía datos.gov.co (`6sqw-8cg5`) | CC BY-SA 4.0 | Sí — "Dirección General de la Policía Nacional - DIPON" | Sí, bajo CC BY-SA 4.0 |
 | `municipios_geometria` | DANE (MGN), vía HDX (`cod-ab-col`) | CC BY-IGO 3.0 | Sí — "DANE" y "OCHA" | Sí, bajo CC BY-IGO (sin exigir share-alike) |
+| `infraestructura_poi` | OpenStreetMap, vía Geofabrik | ODbL 1.0 | Sí — "© OpenStreetMap contributors" | Sí, bajo ODbL 1.0 (share-alike de base de datos) |
 
 ## Nota sobre `demografia` (public-api-review-terms)
 

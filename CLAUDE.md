@@ -81,6 +81,21 @@ make doctor       # gates anti-drift (hoy: check_validation_registration.py)
 > OPENSSL_Applink`, crashea cualquier `requests.get` sobre HTTPS). **Usa
 > Python 3.11** vía `uv venv --python 3.11 .venv` — es el que se verificó
 > funcionando end-to-end en esta sesión.
+>
+> **Nota de entorno (Avast en esta máquina, 2026-10-20)**: si `requests.get`
+> empieza a fallar con `SSLCertVerificationError: unable to get local
+> issuer certificate` para **cualquier** host HTTPS (no solo uno), es Avast
+> ("Web/Mail Shield") interceptando TLS e inyectando su propio root CA —
+> `curl`/Windows sí lo confían (vía el almacén de certificados del SO),
+> pero `certifi` (el bundle que usa `requests`) no. No es un problema del
+> certificado real de la fuente ni del código del extractor — confirmado
+> con `openssl s_client` (el emisor del cert cambia a "Avast Web/Mail
+> Shield Root"). Para validar un extractor en vivo en esta máquina cuando
+> esto pase: instalar temporalmente `pip-system-certs` en el venv (parcha
+> `requests` para usar el almacén de certificados de Windows) y
+> desinstalarlo después — **nunca** agregarlo a `pyproject.toml`, es un
+> workaround de esta máquina, no una dependencia del proyecto. En CI
+> (GitHub Actions) este problema no existe.
 
 ## Stack
 

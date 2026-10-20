@@ -137,5 +137,22 @@
       "cli": "colombia-open path municipios_geometria --output parquet"
     },
     "documentation": "docs/datasets/municipios_geometria.md"
+  },
+  "infraestructura_poi": {
+    "description": "Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio), geocodificados por municipio — OpenStreetMap vía Geofabrik.",
+    "extractor": "src/extractors/infraestructura_poi_extractor.py",
+    "source_name": "OpenStreetMap contributors, vía Geofabrik — extracto Colombia",
+    "join_keys": ["cod_mpio", "cod_dpto"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 58046,
+    "outputs": {
+      "parquet": "data/normalized/infraestructura_poi.parquet",
+      "json": "data/normalized/infraestructura_poi.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('infraestructura_poi')",
+      "cli": "colombia-open path infraestructura_poi --output parquet"
+    },
+    "documentation": "docs/datasets/infraestructura_poi.md"
   }
 }

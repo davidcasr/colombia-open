@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "colombia-open"
-version = "0.8.0"
+version = "0.9.0"
 description = "Datasets públicos de Colombia, curados, normalizados y validados — sin lidiar con los portales/APIs/Excel de cada institución oficial."
 readme = "README.md"
 license = "MIT"
@@ -57,12 +57,14 @@ scraping = [
     "beautifulsoup4>=4.12,<5",
     "defusedxml>=0.7,<1",
 ]
-# Lookups geoespaciales (polígonos MGN, resolve_by_coords). Sin este extra,
-# esas funciones levantan ImportError explicando qué instalar.
+# Lookups geoespaciales (polígonos MGN) y lectura de extractos OSM (.osm.pbf,
+# vía pyosmium) para infraestructura_poi. Sin este extra, correr esos
+# extractores levanta ImportError explicando qué instalar.
 geo = [
     "geopandas>=1.0,<2",
     "shapely>=2.0,<3",
     "pyarrow>=23.0.1,<25",
+    "osmium>=4.0,<5",
 ]
 # Validación de esquema estricta vía Frictionless Data Package.
 validation = [
