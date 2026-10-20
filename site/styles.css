@@ -190,7 +190,12 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
   flex-direction: column;
   gap: 0.7rem;
 }
-.dataset-card h3 { font-style: normal; font-weight: 700; font-size: 1.05rem; font-family: "IBM Plex Mono", monospace; overflow-wrap: anywhere; }
+.dataset-title { display: flex; flex-direction: column; gap: 0.2rem; }
+.dataset-card h3 { font-style: normal; font-weight: 600; font-size: 1.05rem; font-family: Inter, system-ui, -apple-system, sans-serif; overflow-wrap: anywhere; }
+.dataset-slug {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.74rem;
+  color: var(--fg-muted); overflow-wrap: anywhere;
+}
 .dataset-card p { margin: 0; color: var(--fg-muted); font-size: 0.92rem; }
 .dataset-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.3rem; }
 .pill {
