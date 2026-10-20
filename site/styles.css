@@ -237,7 +237,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
   margin: 0; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--fg); font-weight: 600;
 }
-.foot-col a, .foot-note { font-size: 0.86rem; color: var(--fg-muted); text-decoration: none; }
+.foot-col a { font-size: 0.86rem; color: var(--fg-muted); text-decoration: none; }
 .foot-col a:hover { color: var(--accent); }
 .foot-bottom {
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;
