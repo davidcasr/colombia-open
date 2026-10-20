@@ -19,6 +19,9 @@ from typing import Any
 from src.builders.catalog import build_catalog_entry, write_dataset_catalog
 from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
+from src.extractors.delincuencia_hurto_modalidades_extractor import (
+    DelincuenciaHurtoModalidadesExtractor,
+)
 from src.extractors.delincuencia_hurto_personas_extractor import (
     DelincuenciaHurtoPersonasExtractor,
 )
@@ -32,6 +35,7 @@ from src.extractors.educacion_establecimientos_extractor import (
 )
 from src.registry import load_registry
 from src.validation import (
+    validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
     validate_demografia,
@@ -146,6 +150,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["delincuencia_lesiones_personales"],
             extraction_metadata=lesiones_staging_metadata,
             validation_result=lesiones_validation,
+        )
+    )
+
+    # --- delincuencia_hurto_modalidades: 1:1 desde staging (el extractor ya
+    # agrega centro poblado -> municipio), sin derive_* ---
+    modalidades_extraction = DelincuenciaHurtoModalidadesExtractor().run()
+    modalidades_staging_metadata = modalidades_extraction.to_staging_metadata()
+    modalidades_df = modalidades_extraction.dataframe
+    modalidades_validation = validate_delincuencia_hurto_modalidades(
+        modalidades_df, modalidades_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(modalidades_df, NORMALIZED_DIR / "delincuencia_hurto_modalidades.parquet")
+    write_json_atomic(modalidades_df, NORMALIZED_DIR / "delincuencia_hurto_modalidades.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["delincuencia_hurto_modalidades"],
+            extraction_metadata=modalidades_staging_metadata,
+            validation_result=modalidades_validation,
         )
     )
 

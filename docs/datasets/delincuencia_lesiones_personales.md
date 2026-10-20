@@ -140,5 +140,6 @@ desde 2018.
   los demás datasets de entidades distintas al DANE: el validador reporta
   cualquier `cod_mpio` que no exista en el `municipios` vigente como
   warning, no como error.
-- **Solo lesiones personales.** El endpoint de hurto por modalidades
-  (`6sqw-8cg5`) sigue pendiente — ver `docs/roadmap/roadmap.md`.
+- **Solo lesiones personales.** El hurto por modalidades (residencias y
+  entidades comerciales) vive en un dataset separado:
+  `delincuencia_hurto_modalidades`.

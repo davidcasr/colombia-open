@@ -101,5 +101,24 @@
       "cli": "colombia-open path delincuencia_lesiones_personales --output parquet"
     },
     "documentation": "docs/datasets/delincuencia_lesiones_personales.md"
+  },
+  "delincuencia_hurto_modalidades": {
+    "description": "Víctimas de hurto por modalidades (residencias y entidades comerciales) por municipio, día, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).",
+    "extractor": "src/extractors/delincuencia_hurto_modalidades_extractor.py",
+    "source_name": "Policía Nacional (DIPON) — Hurto por modalidades (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "fecha"],
+    "references": {
+      "cod_mpio": "municipios"
+    },
+    "expected_record_count": 397361,
+    "outputs": {
+      "parquet": "data/normalized/delincuencia_hurto_modalidades.parquet",
+      "json": "data/normalized/delincuencia_hurto_modalidades.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_hurto_modalidades')",
+      "cli": "colombia-open path delincuencia_hurto_modalidades --output parquet"
+    },
+    "documentation": "docs/datasets/delincuencia_hurto_modalidades.md"
   }
 }

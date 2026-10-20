@@ -13,20 +13,20 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 5 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 6 — `divipola` (geografía: departamentos +
   municipios, DANE), `demografia` (proyecciones de población municipal
   2018-2042, DANE), `educacion_establecimientos` (directorio de
   establecimientos educativos 2015-2025, MEN),
   `delincuencia_hurto_personas` (víctimas de hurto a personas por
-  municipio y día, 2003 a la fecha, MinDefensa/Policía) y
+  municipio y día, 2003 a la fecha, MinDefensa/Policía),
   `delincuencia_lesiones_personales` (víctimas de lesiones personales y en
   accidente de tránsito por municipio, día, conducta, arma, género y grupo
-  etario, 2010 a la fecha, Policía).
-- **Próxima candidata sugerida**: hurto por modalidades (`6sqw-8cg5`) —
-  mismo formato que lesiones (`codigo_dane` de 8 dígitos, sufijo "(CT)"),
-  así que reutiliza la normalización ya resuelta — o Saber 11/ICFES
-  (requiere diseño de agregación antes de implementar por su volumen de
-  microdato).
+  etario, 2010 a la fecha, Policía) y `delincuencia_hurto_modalidades`
+  (víctimas de hurto a residencias y entidades comerciales por municipio,
+  día, arma, género y grupo etario, 2010 a la fecha, Policía).
+- **Próxima candidata sugerida**: Saber 11/ICFES (requiere diseño de
+  agregación antes de implementar por su volumen de microdato, ~7.1
+  millones de filas).
 
 ## Tabla de fuentes
 
@@ -49,7 +49,7 @@
 | Electoral | Registraduría — Observatorio Electoral | Sin API; datos no legibles por máquina según IDEA. Alternativa: `datoselectorales.org` (MOE, sociedad civil) | 🔴 Bloqueada sin scraping serio | ⬜ No implementada |
 | Delincuencia (hurto a personas) | Policía Nacional, vía Ministerio de Defensa | **Confirmado en vivo 2026-10-19**: `datos.gov.co/resource/4rxi-8m8d.json` (CC BY-SA 4.0). 651200 filas ya agregadas por fecha + municipio, 2003 a la fecha, ~1.5 min por build. Defecto conocido de la fuente: 2008 casi sin desagregación municipal (365 filas "SIN ESTABLECER", excluidas — ver `docs/datasets/delincuencia_hurto_personas.md`) | 🟡 Fácil | ✅ `delincuencia_hurto_personas` — ver `src/extractors/delincuencia_hurto_personas_extractor.py` |
 | Delincuencia (lesiones personales) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmado en vivo 2026-10-19**: `datos.gov.co/resource/72sg-cybi.json` (CC BY-SA 4.0). 1381416 filas, 2010 a la fecha, con conducta, arma, género y grupo etario; `codigo_dane` de 8 dígitos (municipio + centro poblado) que se colapsa a municipio → ~1377323 filas, ~1 min por build. Mezcla lesiones dolosas y culposas en tránsito (columna derivada `tipo_lesion`) — ver `docs/datasets/delincuencia_lesiones_personales.md` | 🟡 Media (normalización de códigos) | ✅ `delincuencia_lesiones_personales` — ver `src/extractors/delincuencia_lesiones_personales_extractor.py` |
-| Delincuencia (hurto por modalidades) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmado en vivo 2026-10-19** (CC BY-SA 4.0): `datos.gov.co/resource/6sqw-8cg5.json` (653384 filas; residencias, comercio, etc.). Mismo formato que lesiones: microdato por hecho, `codigo_dane` de 8 dígitos y nombres con sufijo "(CT)" | 🟡 Media (normalización de códigos; puede reusar la de lesiones) | ⬜ No implementada |
+| Delincuencia (hurto por modalidades) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmado en vivo 2026-10-20** (CC BY-SA 4.0): `datos.gov.co/resource/6sqw-8cg5.json` (653384 filas crudas; residencias y entidades comerciales). Mismo formato que lesiones: microdato por hecho, `codigo_dane` de 8 dígitos y nombres con sufijo "(CT)" | 🟡 Media (normalización de códigos; reusó la de lesiones) | ✅ `delincuencia_hurto_modalidades` — ver `src/extractors/delincuencia_hurto_modalidades_extractor.py` |
 
 > Esta tabla se investigó por búsqueda web además de verificación directa de
 > endpoints (curl/fetch). Las filas de geografía (ambas), demografía,

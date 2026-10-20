@@ -40,3 +40,6 @@ EXPECTED_DELINCUENCIA_LESIONES_PERSONALES_MIN_COUNT = 1_300_000
 # fuente (warning) — ver nota sobre 2008 en
 # src/extractors/delincuencia_hurto_personas_extractor.py.
 DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO = 0.5
+# 397361 filas tras agregar centro poblado -> municipio (confirmado en vivo
+# 2026-10-20, de 653384 filas crudas con cantidad siempre "1").
+EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT = 350_000

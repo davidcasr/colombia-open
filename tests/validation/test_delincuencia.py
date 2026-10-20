@@ -3,6 +3,7 @@ import datetime
 import polars as pl
 
 from src.validation import (
+    validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
 )
@@ -227,5 +228,116 @@ def test_validate_lesiones_live_with_too_few_rows_is_error():
 
 def test_validate_lesiones_fallback_adds_warning():
     result = validate_delincuencia_lesiones_personales(_lesiones_df(), {"source_mode": "fallback"})
+    assert result.status == "ok"
+    assert any("fallback" in w for w in result.warnings)
+
+
+# --- delincuencia_hurto_modalidades ---
+
+
+def _modalidades_df() -> pl.DataFrame:
+    return pl.DataFrame(
+        {
+            "fecha": [datetime.date(2025, 3, 14)] * 3,
+            "anio": [2025, 2025, 2025],
+            "cod_dpto": ["05", "05", "11"],
+            "nombre_dpto": ["ANTIOQUIA", "ANTIOQUIA", "BOGOTA"],
+            "cod_mpio": ["05001", "05001", "11001"],
+            "nombre_mpio": ["Medellín", "Medellín", "Bogotá D.C."],
+            "tipo_hurto": [
+                "ARTÍCULO 239. HURTO RESIDENCIAS",
+                "ARTÍCULO 239. HURTO ENTIDADES COMERCIALES",
+                "ARTÍCULO 239. HURTO RESIDENCIAS",
+            ],
+            "modalidad": ["residencias", "comercio", "residencias"],
+            "arma_medio": ["CONTUNDENTES", "NO REPORTADO", "CONTUNDENTES"],
+            "genero": ["MASCULINO", None, None],
+            "grupo_etario": ["ADULTOS", "ADULTOS", None],
+            "cantidad": [2, 1, 5],
+        }
+    )
+
+
+def test_validate_modalidades_ok():
+    result = validate_delincuencia_hurto_modalidades(
+        _modalidades_df(), references={"cod_mpio": {"05001", "11001"}}
+    )
+    assert result.status == "ok"
+    assert result.record_count == 3
+    assert result.errors == []
+    assert result.warnings == []
+
+
+def test_validate_modalidades_detects_duplicate_primary_key():
+    df = pl.concat([_modalidades_df(), _modalidades_df().head(1)])
+    result = validate_delincuencia_hurto_modalidades(df)
+    assert result.status == "error"
+    assert any("duplicada" in e for e in result.errors)
+
+
+def test_validate_modalidades_same_day_mpio_different_dimension_is_not_duplicate():
+    # Mismo día y municipio, distinto tipo_hurto: filas distintas, no duplicado.
+    result = validate_delincuencia_hurto_modalidades(_modalidades_df().head(2))
+    assert result.status == "ok"
+
+
+def test_validate_modalidades_detects_bad_code_width():
+    df = _modalidades_df().with_columns(pl.Series("cod_mpio", ["5001", "05001", "11001"]))
+    result = validate_delincuencia_hurto_modalidades(df)
+    assert result.status == "error"
+    assert any("5 dígitos" in e for e in result.errors)
+
+
+def test_validate_modalidades_detects_mpio_not_matching_dpto():
+    df = _modalidades_df().with_columns(pl.Series("cod_dpto", ["05", "05", "05"]))
+    result = validate_delincuencia_hurto_modalidades(df)
+    assert result.status == "error"
+    assert any("no empieza por su cod_dpto" in e for e in result.errors)
+
+
+def test_validate_modalidades_detects_non_positive_cantidad():
+    df = _modalidades_df().with_columns(pl.Series("cantidad", [2, 0, -1]))
+    result = validate_delincuencia_hurto_modalidades(df)
+    assert result.status == "error"
+    assert any("> 0" in e for e in result.errors)
+
+
+def test_validate_modalidades_unclassified_modalidad_is_warning():
+    df = _modalidades_df().with_columns(
+        pl.Series("modalidad", ["residencias", None, "residencias"])
+    )
+    result = validate_delincuencia_hurto_modalidades(df)
+    assert result.status == "ok"
+    assert any("modalidad sin clasificar" in w for w in result.warnings)
+
+
+def test_validate_modalidades_orphan_mpio_is_warning_not_error():
+    result = validate_delincuencia_hurto_modalidades(
+        _modalidades_df(), references={"cod_mpio": {"05001"}}
+    )
+    assert result.status == "ok"
+    assert any("no existe en el municipios vigente" in w for w in result.warnings)
+
+
+def test_validate_modalidades_empty_dataframe_is_error_not_traceback():
+    result = validate_delincuencia_hurto_modalidades(_modalidades_df().clear())
+    assert result.status == "error"
+    assert any("vacío" in e for e in result.errors)
+
+
+def test_validate_modalidades_missing_columns_is_error_not_traceback():
+    result = validate_delincuencia_hurto_modalidades(pl.DataFrame({"fecha": []}))
+    assert result.status == "error"
+    assert any("faltan columnas" in e for e in result.errors)
+
+
+def test_validate_modalidades_live_with_too_few_rows_is_error():
+    result = validate_delincuencia_hurto_modalidades(_modalidades_df(), {"source_mode": "live"})
+    assert result.status == "error"
+    assert any("incompleto" in e for e in result.errors)
+
+
+def test_validate_modalidades_fallback_adds_warning():
+    result = validate_delincuencia_hurto_modalidades(_modalidades_df(), {"source_mode": "fallback"})
     assert result.status == "ok"
     assert any("fallback" in w for w in result.warnings)

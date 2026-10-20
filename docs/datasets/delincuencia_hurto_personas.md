@@ -102,7 +102,6 @@ poblacion = hub.load_polars("demografia").filter(pl.col("area_geografica") == "T
   entidades distintas (Policía vs. DANE). El validador reporta cualquier
   `cod_mpio` que no exista en el `municipios` vigente como warning, no
   como error.
-- **Solo hurto a personas.** Las lesiones personales (`72sg-cybi`) se
-  publican como dataset aparte, `delincuencia_lesiones_personales`; el
-  hurto por modalidades (`6sqw-8cg5`) sigue pendiente — ver
-  `docs/roadmap/roadmap.md`.
+- **Solo hurto a personas.** Las lesiones personales (`72sg-cybi`) y el
+  hurto por modalidades (`6sqw-8cg5`) se publican como datasets aparte:
+  `delincuencia_lesiones_personales` y `delincuencia_hurto_modalidades`.

@@ -5,6 +5,9 @@ registro — ver `scripts/check_validation_registration.py`)."""
 from collections.abc import Callable
 
 from ._delincuencia import (
+    validate_delincuencia_hurto_modalidades as validate_delincuencia_hurto_modalidades,
+)
+from ._delincuencia import (
     validate_delincuencia_hurto_personas as validate_delincuencia_hurto_personas,
 )
 from ._delincuencia import (
@@ -23,11 +26,13 @@ VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
     "educacion_establecimientos": validate_educacion_establecimientos,
     "delincuencia_hurto_personas": validate_delincuencia_hurto_personas,
     "delincuencia_lesiones_personales": validate_delincuencia_lesiones_personales,
+    "delincuencia_hurto_modalidades": validate_delincuencia_hurto_modalidades,
 }
 
 __all__ = [
     "VALIDATORS",
     "ValidationResult",
+    "validate_delincuencia_hurto_modalidades",
     "validate_delincuencia_hurto_personas",
     "validate_delincuencia_lesiones_personales",
     "validate_demografia",

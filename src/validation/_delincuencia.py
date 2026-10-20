@@ -1,5 +1,5 @@
-"""Validaciones del dominio delincuencia: hurto a personas y lesiones
-personales por municipio y día (Policía Nacional)."""
+"""Validaciones del dominio delincuencia: hurto a personas, lesiones
+personales y hurto por modalidades por municipio y día (Policía Nacional)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import polars as pl
 
 from ._constants import (
     DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO,
+    EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT,
     EXPECTED_DELINCUENCIA_HURTO_PERSONAS_MIN_COUNT,
     EXPECTED_DELINCUENCIA_LESIONES_PERSONALES_MIN_COUNT,
 )
@@ -25,6 +26,22 @@ _HURTO_PRIMARY_KEY = ["fecha", "cod_mpio"]
 
 _LESIONES_PRIMARY_KEY = ["fecha", "cod_mpio", "conducta", "arma_medio", "genero", "grupo_etario"]
 _LESIONES_REQUIRED_COLUMNS = ["anio", "cod_dpto", "tipo_lesion", "cantidad", *_LESIONES_PRIMARY_KEY]
+
+_MODALIDADES_PRIMARY_KEY = [
+    "fecha",
+    "cod_mpio",
+    "tipo_hurto",
+    "arma_medio",
+    "genero",
+    "grupo_etario",
+]
+_MODALIDADES_REQUIRED_COLUMNS = [
+    "anio",
+    "cod_dpto",
+    "modalidad",
+    "cantidad",
+    *_MODALIDADES_PRIMARY_KEY,
+]
 
 
 def _check_mpio_coverage_per_year(df: pl.DataFrame, doc: str) -> list[str]:
@@ -192,6 +209,51 @@ def validate_delincuencia_lesiones_personales(
 
     return ValidationResult(
         dataset="delincuencia_lesiones_personales",
+        status="error" if errors else "ok",
+        record_count=df.height,
+        errors=errors,
+        warnings=warnings,
+    )
+
+
+def validate_delincuencia_hurto_modalidades(
+    df: pl.DataFrame,
+    metadata: dict[str, Any] | None = None,
+    *,
+    references: dict[str, set[str]] | None = None,
+) -> ValidationResult:
+    missing = missing_columns(df, _MODALIDADES_REQUIRED_COLUMNS)
+    if missing:
+        return ValidationResult(
+            dataset="delincuencia_hurto_modalidades",
+            status="error",
+            record_count=df.height,
+            errors=[f"faltan columnas requeridas: {missing}"],
+            warnings=[],
+        )
+
+    errors, warnings = _check_common(
+        df,
+        metadata,
+        references,
+        primary_key=_MODALIDADES_PRIMARY_KEY,
+        min_live_count=EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT,
+        doc="docs/datasets/delincuencia_hurto_modalidades.md",
+    )
+
+    # modalidad se deriva de tipo_hurto (residencias/comercio); un nulo
+    # significa que la fuente empezó a reportar una modalidad nueva que el
+    # extractor no clasifica. Warning: el dato es real, solo falta mapearlo.
+    unclassified = df.filter(pl.col("modalidad").is_null())
+    if unclassified.height > 0:
+        tipos = sorted(unclassified["tipo_hurto"].drop_nulls().unique().to_list())
+        warnings.append(
+            f"modalidad sin clasificar en {unclassified.height} filas — tipo_hurto "
+            f"no mapeado en el extractor: {tipos}"
+        )
+
+    return ValidationResult(
+        dataset="delincuencia_hurto_modalidades",
         status="error" if errors else "ok",
         record_count=df.height,
         errors=errors,
