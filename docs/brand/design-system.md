@@ -78,10 +78,20 @@ site/
 ├── index.html                      # landing page (usa los tokens de este archivo)
 ├── styles.css                      # implementación real de los tokens
 ├── favicon.svg                     # versión reducida para el tab del navegador
-└── assets/brand/
-    ├── mark-gold.svg                # logomarca, punto central dorado (fondo oscuro)
-    └── mark-indigo.svg              # logomarca, punto central índigo (fondo claro)
+└── assets/
+    ├── og-image.png                 # 1200×630, usado en <meta property="og:image">
+    └── brand/
+        ├── mark-gold.svg             # logomarca, punto central dorado (fondo oscuro)
+        └── mark-indigo.svg           # logomarca, punto central índigo (fondo claro)
 ```
+
+`og-image.png` es la vista previa que muestran Twitter/X, Slack, WhatsApp,
+LinkedIn, etc. al compartir la URL del sitio (`<meta property="og:image">`
+y `twitter:image` en `index.html`). Se regenera con el script ad-hoc que
+generó la versión actual (fondo `--bg` oscuro, mark dorado escalado,
+wordmark en Fraunces itálica, tagline en Inter) — no hay pipeline
+automatizado todavía; si cambia el wordmark o la paleta, regenerar a mano
+y mantener 1200×630.
 
 Todo lo que GitHub Pages publica vive dentro de `site/` — la raíz del repo
 es del paquete Python (`src/`, `data/`, `tests/`...), no de la web. El
