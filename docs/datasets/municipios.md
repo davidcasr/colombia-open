@@ -37,9 +37,10 @@ hub.cross_view(["municipios", "departamentos"], on="cod_dpto")
 ## Limitaciones conocidas
 
 - **Sin geometría de polígonos.** Este dataset tiene código + nombre +
-  centroide, NO los polígonos del Marco Geoestadístico Nacional (MGN). Ver
-  `docs/roadmap/roadmap.md`, sección "Por qué geografía fue primero", para el estado de
-  esa segunda iteración.
+  centroide, NO los polígonos del Marco Geoestadístico Nacional (MGN) —
+  esos viven en el dataset separado `municipios_geometria` (join por
+  `cod_mpio`), para no cargarle a quien solo necesita nombre/centroide con
+  el peso de los polígonos.
 - `resolve_municipios()` hace coincidencia **exacta tras normalizar**
   (sin tildes, minúsculas), no fuzzy matching — "Cali" no resuelve porque
   el nombre oficial DIVIPOLA es "SANTIAGO DE CALI". Usa el nombre oficial

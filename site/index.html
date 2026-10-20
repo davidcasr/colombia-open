@@ -33,7 +33,7 @@
           </svg>
           colombia-open
         </a>
-        <a class="version-badge" id="versionBadge" href="https://github.com/davidcasr/colombia-open/releases" target="_blank" rel="noopener">v0.7.0</a>
+        <a class="version-badge" id="versionBadge" href="https://github.com/davidcasr/colombia-open/releases" target="_blank" rel="noopener">v0.8.0</a>
       </div>
       <div class="nav-links">
         <a href="#catalogo">Catálogo</a>
@@ -136,13 +136,26 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
             <h3>Municipios</h3>
             <span class="dataset-slug">municipios</span>
           </div>
-          <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Sin geometría de polígonos todavía.</p>
+          <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en un dataset aparte.</p>
           <div class="dataset-meta">
             <span class="pill">1,122 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
           <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a></p>
+        </div>
+        <div class="dataset-card">
+          <div class="dataset-title">
+            <h3>Municipios geometría</h3>
+            <span class="dataset-slug">municipios_geometria</span>
+          </div>
+          <p>Geometría de polígonos municipales (Marco Geoestadístico Nacional), simplificada, con área geodésica.</p>
+          <div class="dataset-meta">
+            <span class="pill">1,122 filas</span>
+            <span class="pill">parquet · json</span>
+            <span class="pill">CC BY-IGO 3.0</span>
+          </div>
+          <p class="dataset-source">Fuente: <a href="https://data.humdata.org/dataset/cod-ab-col" target="_blank" rel="noopener">DANE (MGN), vía HDX — Colombia Subnational Administrative Boundaries</a></p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
@@ -224,7 +237,7 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
           </thead>
           <tbody>
             <tr><td>Geografía (códigos + centroides)</td><td>DANE, vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Geografía (geometría de polígonos, MGN)</td><td>DANE Geoportal</td><td><span class="status-dot pending"></span>Por verificar</td></tr>
+            <tr><td>Geografía (geometría de polígonos, MGN)</td><td>DANE, vía HDX</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Demografía (censo / proyecciones)</td><td>DANE — proyecciones de población</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Educación (directorio de establecimientos)</td><td>MinEducación (MEN)</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Educación (Saber 11)</td><td>ICFES</td><td><span class="status-dot pending"></span>Pendiente</td></tr>

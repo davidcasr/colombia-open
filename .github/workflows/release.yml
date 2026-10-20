@@ -27,7 +27,7 @@ jobs:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
-        run: uv pip install -e ".[pipeline,dev]" --system
+        run: uv pip install -e ".[pipeline,geo,dev]" --system
       - name: Build
         run: python -m src.build_pipeline
       - name: Verificar (requiere source_mode=live en todos los datasets)

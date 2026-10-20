@@ -13,12 +13,13 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 6 — `divipola` (geografía: departamentos +
-  municipios, DANE), `demografia` (proyecciones de población municipal
-  2018-2042, DANE), `educacion_establecimientos` (directorio de
-  establecimientos educativos 2015-2025, MEN),
-  `delincuencia_hurto_personas` (víctimas de hurto a personas por
-  municipio y día, 2003 a la fecha, MinDefensa/Policía),
+- **Fuentes implementadas**: 7 — `divipola` (geografía: departamentos +
+  municipios, DANE), `municipios_geometria` (geometría de polígonos
+  municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
+  `demografia` (proyecciones de población municipal 2018-2042, DANE),
+  `educacion_establecimientos` (directorio de establecimientos educativos
+  2015-2025, MEN), `delincuencia_hurto_personas` (víctimas de hurto a
+  personas por municipio y día, 2003 a la fecha, MinDefensa/Policía),
   `delincuencia_lesiones_personales` (víctimas de lesiones personales y en
   accidente de tránsito por municipio, día, conducta, arma, género y grupo
   etario, 2010 a la fecha, Policía) y `delincuencia_hurto_modalidades`
@@ -26,14 +27,15 @@
   día, arma, género y grupo etario, 2010 a la fecha, Policía).
 - **Próxima candidata sugerida**: Saber 11/ICFES (requiere diseño de
   agregación antes de implementar por su volumen de microdato, ~7.1
-  millones de filas).
+  millones de filas) — o infraestructura/POIs vía OSM Geofabrik (confirmada
+  en vivo, pero requiere geoprocesamiento con osmium/GDAL).
 
 ## Tabla de fuentes
 
 | Dominio | Fuente oficial | Acceso | Dificultad | Estado |
 |---|---|---|---|---|
 | Geografía (códigos DIVIPOLA + centroides) | DANE, vía API Socrata de datos.gov.co (dataset `gdxc-w37w`) | API JSON directa, confirmada y estable | 🟢 Implementada | ✅ `divipola` — ver `src/extractors/divipola_extractor.py` |
-| Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | Geoportal DANE: shapefile por vigencia, mecanismo sin JS no confirmado. **Mirror HDX confirmado en vivo 2026-10-17** (`data.humdata.org`, dataset `50ea7fee-...`, capa ADM2 = municipio, licencia CC BY-IGO, responde 302 a S3 firmado — ver nota abajo) | 🟢 Fácil vía HDX / 🟡 Media vía Geoportal directo | ⬜ No implementada — ver nota abajo |
+| Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | **Confirmado en vivo 2026-10-20** vía HDX: dataset `cod-ab-col` (`50ea7fee-f9af-45a7-8a52-abb9c790a0b6`), recurso "COL Administrative Divisions Shapefiles.zip" (~117MB), capa ADM2 = municipio (1122 filas), licencia CC BY-IGO 3.0 | 🟢 Fácil vía HDX | ✅ `municipios_geometria` — ver `src/extractors/municipios_geometria_extractor.py` |
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
 | Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
 | Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-17**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). ~7.1 millones de filas de microdato por estudiante — requiere decidir una estrategia de agregación (ej. por municipio-año) antes de implementar, no se puede publicar tal cual | 🟡 Fácil (acceso) / requiere diseño de agregación | ⬜ No implementada |
@@ -86,6 +88,11 @@ del DANE con descarga directa (sin JS) y licencia CC BY-IGO. Ver la fila de
 geometría en la tabla arriba. Sigue siendo segunda iteración de `divipola`,
 no fuente nueva — pero el bloqueo original (sin mecanismo de descarga
 confirmado) ya no aplica.
+
+**Actualización (2026-10-20)**: implementada como `municipios_geometria`,
+dataset separado de `municipios` (mismo `cod_mpio` como join key) para no
+cargarle a quien solo necesita nombre/centroide con el peso de los
+polígonos — ver `docs/datasets/municipios_geometria.md`.
 
 ## Cómo agregar la siguiente fuente
 

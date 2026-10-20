@@ -12,7 +12,9 @@ from ._constants import (
     COLOMBIA_LON_MAX,
     COLOMBIA_LON_MIN,
     EXPECTED_DEPARTAMENTOS_COUNT,
+    EXPECTED_MUNICIPIOS_GEOMETRIA_MIN_COUNT,
     EXPECTED_MUNICIPIOS_MIN_COUNT,
+    GEOM_TYPES_VALIDOS,
 )
 from ._helpers import (
     duplicate_count,
@@ -134,3 +136,74 @@ def validate_municipios(
         warnings.append("source_mode=fallback: cobertura limitada por diseño, no se publica")
 
     return _result("municipios", df.height, errors, warnings)
+
+
+def validate_municipios_geometria(
+    df: pl.DataFrame,
+    metadata: dict[str, Any] | None = None,
+    *,
+    references: dict[str, set[str]] | None = None,
+) -> ValidationResult:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    missing = missing_columns(df, ["cod_dpto", "cod_mpio", "geom_type", "area_km2", "geometry_wkt"])
+    if missing:
+        errors.append(f"faltan columnas requeridas: {missing}")
+        return _result("municipios_geometria", df.height, errors, warnings)
+
+    dupes = duplicate_count(df, "cod_mpio")
+    if dupes > 0:
+        errors.append(f"cod_mpio debe ser único, se encontraron {dupes} duplicados")
+
+    bad_dpto = invalid_fixed_length_count(df, "cod_dpto", 2)
+    if bad_dpto > 0:
+        errors.append(f"cod_dpto debe tener 2 dígitos, {bad_dpto} filas no cumplen")
+
+    bad_mpio = invalid_fixed_length_count(df, "cod_mpio", 5)
+    if bad_mpio > 0:
+        errors.append(f"cod_mpio debe tener 5 dígitos, {bad_mpio} filas no cumplen")
+
+    bad_geom_type = df.filter(~pl.col("geom_type").is_in(GEOM_TYPES_VALIDOS)).height
+    if bad_geom_type > 0:
+        errors.append(
+            f"geom_type debe ser uno de {sorted(GEOM_TYPES_VALIDOS)}, {bad_geom_type} filas no cumplen"
+        )
+
+    null_wkt = int(df["geometry_wkt"].null_count())
+    empty_wkt = int((df["geometry_wkt"].fill_null("") == "").sum())
+    if null_wkt > 0 or empty_wkt > 0:
+        errors.append(f"geometry_wkt nulo o vacío en {max(null_wkt, empty_wkt)} filas")
+
+    null_area = int(df["area_km2"].null_count())
+    if null_area > 0:
+        errors.append(f"area_km2 es nulo en {null_area} filas")
+    non_positive_area = int((df["area_km2"].fill_null(1) <= 0).sum())
+    if non_positive_area > 0:
+        errors.append(f"area_km2 debe ser > 0, {non_positive_area} filas no cumplen")
+
+    valid_mpio_codes = references.get("cod_mpio") if references else None
+    if valid_mpio_codes:
+        orphans = unknown_codes_count(df, "cod_mpio", valid_mpio_codes)
+        if orphans > 0:
+            # Mismo criterio que demografia/educacion/delincuencia: MGN
+            # (DANE, vigencia 2020) y municipios (DIVIPOLA, vigencia actual)
+            # son productos con ciclos de actualización propios.
+            warnings.append(
+                f"{orphans} filas referencian un cod_mpio que no existe en el municipios vigente"
+            )
+
+    if (
+        metadata
+        and metadata.get("source_mode") == "live"
+        and df.height < EXPECTED_MUNICIPIOS_GEOMETRIA_MIN_COUNT
+    ):
+        errors.append(
+            f"dataset en vivo luce incompleto: {df.height} filas, se esperaban "
+            f"al menos {EXPECTED_MUNICIPIOS_GEOMETRIA_MIN_COUNT}"
+        )
+
+    if metadata and metadata.get("source_mode") == "fallback":
+        warnings.append("source_mode=fallback: cobertura limitada por diseño, no se publica")
+
+    return _result("municipios_geometria", df.height, errors, warnings)

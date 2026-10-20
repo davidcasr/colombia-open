@@ -16,7 +16,7 @@
     "documentation": "docs/datasets/departamentos.md"
   },
   "municipios": {
-    "description": "Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). No incluye geometría de polígonos (MGN) todavía — ver docs/roadmap/roadmap.md.",
+    "description": "Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en el dataset separado `municipios_geometria`.",
     "extractor": "src/extractors/divipola_extractor.py",
     "source_name": "DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)",
     "join_keys": ["cod_mpio", "cod_dpto"],
@@ -120,5 +120,22 @@
       "cli": "colombia-open path delincuencia_hurto_modalidades --output parquet"
     },
     "documentation": "docs/datasets/delincuencia_hurto_modalidades.md"
+  },
+  "municipios_geometria": {
+    "description": "Geometría de polígonos municipales (Marco Geoestadístico Nacional, DANE), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
+    "extractor": "src/extractors/municipios_geometria_extractor.py",
+    "source_name": "DANE (Marco Geoestadístico Nacional), vía HDX — Colombia Subnational Administrative Boundaries (cod-ab-col)",
+    "join_keys": ["cod_mpio", "cod_dpto"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 1122,
+    "outputs": {
+      "parquet": "data/normalized/municipios_geometria.parquet",
+      "json": "data/normalized/municipios_geometria.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('municipios_geometria')",
+      "cli": "colombia-open path municipios_geometria --output parquet"
+    },
+    "documentation": "docs/datasets/municipios_geometria.md"
   }
 }

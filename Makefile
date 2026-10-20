@@ -5,7 +5,7 @@ PYTHON := $(VENV)/Scripts/python.exe
 
 bootstrap:
 	uv venv --python 3.11 $(VENV)
-	uv pip install -e ".[pipeline,dev,mcp]" -p $(VENV)
+	uv pip install -e ".[pipeline,geo,dev,mcp]" -p $(VENV)
 	$(PYTHON) -m pre_commit install
 
 doctor:

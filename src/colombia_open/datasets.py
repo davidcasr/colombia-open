@@ -10,6 +10,7 @@ from difflib import get_close_matches
 class Dataset(enum.StrEnum):
     DEPARTAMENTOS = "departamentos"
     MUNICIPIOS = "municipios"
+    MUNICIPIOS_GEOMETRIA = "municipios_geometria"
     DEMOGRAFIA = "demografia"
     EDUCACION_ESTABLECIMIENTOS = "educacion_establecimientos"
     DELINCUENCIA_HURTO_PERSONAS = "delincuencia_hurto_personas"

@@ -33,6 +33,7 @@ from src.extractors.divipola_extractor import DivipolaExtractor
 from src.extractors.educacion_establecimientos_extractor import (
     EducacionEstablecimientosExtractor,
 )
+from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
 from src.registry import load_registry
 from src.validation import (
     validate_delincuencia_hurto_modalidades,
@@ -42,6 +43,7 @@ from src.validation import (
     validate_departamentos,
     validate_educacion_establecimientos,
     validate_municipios,
+    validate_municipios_geometria,
 )
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -168,6 +170,25 @@ def build() -> list[dict[str, Any]]:
             spec=registry["delincuencia_hurto_modalidades"],
             extraction_metadata=modalidades_staging_metadata,
             validation_result=modalidades_validation,
+        )
+    )
+
+    # --- municipios_geometria: 1:1 desde staging (segunda iteración de
+    # divipola/municipios, geometría de un dominio/fuente distinto: HDX, no
+    # Socrata), sin derive_* ---
+    geometria_extraction = MunicipiosGeometriaExtractor().run()
+    geometria_staging_metadata = geometria_extraction.to_staging_metadata()
+    geometria_df = geometria_extraction.dataframe
+    geometria_validation = validate_municipios_geometria(
+        geometria_df, geometria_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(geometria_df, NORMALIZED_DIR / "municipios_geometria.parquet")
+    write_json_atomic(geometria_df, NORMALIZED_DIR / "municipios_geometria.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["municipios_geometria"],
+            extraction_metadata=geometria_staging_metadata,
+            validation_result=geometria_validation,
         )
     )
 

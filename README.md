@@ -67,9 +67,9 @@ from colombia_open import ColombiaOpen
 hub = ColombiaOpen()
 
 hub.list_datasets()
-# ["departamentos", "municipios", "demografia", "educacion_establecimientos",
-#  "delincuencia_hurto_personas", "delincuencia_lesiones_personales",
-#  "delincuencia_hurto_modalidades"]
+# ["departamentos", "municipios", "municipios_geometria", "demografia",
+#  "educacion_establecimientos", "delincuencia_hurto_personas",
+#  "delincuencia_lesiones_personales", "delincuencia_hurto_modalidades"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -101,6 +101,7 @@ colombia-open validate municipios
 | --------------- | -------------------------------------------------------------------------------- | ---------------------- | ----- | ------------ |
 | `departamentos` | Departamentos: código DIVIPOLA (2 dígitos) + nombre                              | DANE, vía datos.gov.co | 33    | CC BY-SA 4.0 |
 | `municipios`    | Municipios: código DIVIPOLA (5 dígitos), nombre, departamento, centroide lon/lat | DANE, vía datos.gov.co | ~1122 | CC BY-SA 4.0 |
+| `municipios_geometria` | Geometría de polígonos municipales (MGN), simplificada, con área geodésica | DANE (MGN), vía HDX | ~1122 | CC BY-IGO 3.0 |
 | `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 | `educacion_establecimientos` | Directorio único de establecimientos educativos, 2015-2025            | MEN, vía datos.gov.co  | ~606206 | CC BY-SA 4.0 |
 | `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~650835 | CC BY-SA 4.0 |
@@ -117,7 +118,7 @@ pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una
 | (base)       | Solo **leer** datos ya publicados                         | polars, pyarrow, requests, platformdirs       |
 | `pipeline`   | Correr extract→build→validate localmente                  | duckdb, pandas, openpyxl, tenacity, structlog |
 | `scraping`   | Fuentes sin API/descarga directa (entorno aparte)         | curl_cffi, beautifulsoup4, defusedxml         |
-| `geo`        | Lookups geoespaciales (polígonos, cuando existan)         | geopandas, shapely                            |
+| `geo`        | Correr el extractor de `municipios_geometria` localmente (leer el dataset publicado no lo necesita: `geometry_wkt` es texto plano) | geopandas, shapely |
 | `validation` | Validación estricta de esquema (Frictionless)             | frictionless                                  |
 | `mcp`        | Servidor MCP para que agentes de IA consulten el catálogo | mcp                                           |
 
@@ -187,13 +188,13 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con seis
-  fuentes (DIVIPOLA, demografía, educación y tres de delincuencia) de dominios
-  distintos (API Socrata pequeña, descarga directa de Excel, API Socrata
-  grande y paginada).
+- ✅ Patrón extractor/builder/validación/registro probado con siete
+  fuentes (DIVIPOLA, geometría MGN vía HDX, demografía, educación y tres de
+  delincuencia) de dominios distintos (API Socrata pequeña, descarga
+  directa de Excel, API Socrata grande y paginada, shapefile geoespacial).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.7.0`, bundle de datos con SHA256, incluye las
-  seis fuentes) — `ColombiaOpen()` descarga y cachea el bundle
+  publicados (último: `v0.8.0`, bundle de datos con SHA256, incluye las
+  siete fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**

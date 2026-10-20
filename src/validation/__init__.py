@@ -17,11 +17,13 @@ from ._demografia import validate_demografia as validate_demografia
 from ._educacion import validate_educacion_establecimientos as validate_educacion_establecimientos
 from ._territorio import validate_departamentos as validate_departamentos
 from ._territorio import validate_municipios as validate_municipios
+from ._territorio import validate_municipios_geometria as validate_municipios_geometria
 from .result import ValidationResult as ValidationResult
 
 VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
     "departamentos": validate_departamentos,
     "municipios": validate_municipios,
+    "municipios_geometria": validate_municipios_geometria,
     "demografia": validate_demografia,
     "educacion_establecimientos": validate_educacion_establecimientos,
     "delincuencia_hurto_personas": validate_delincuencia_hurto_personas,
@@ -39,4 +41,5 @@ __all__ = [
     "validate_departamentos",
     "validate_educacion_establecimientos",
     "validate_municipios",
+    "validate_municipios_geometria",
 ]

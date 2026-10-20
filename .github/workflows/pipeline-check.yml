@@ -27,7 +27,7 @@ jobs:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
-        run: uv pip install -e ".[pipeline,dev,mcp]" --system
+        run: uv pip install -e ".[pipeline,geo,dev,mcp]" --system
       - name: Actualizar setuptools (la imagen base del runner trae una versión vieja y vulnerable)
         run: uv pip install --upgrade setuptools --system
       - name: ruff check
@@ -51,7 +51,7 @@ jobs:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v3
       - name: Instalar dependencias
-        run: uv pip install -e ".[pipeline,dev,mcp]" --system
+        run: uv pip install -e ".[pipeline,geo,dev,mcp]" --system
       - name: Chequeo anti-drift del registro de validación
         run: python scripts/check_validation_registration.py
       - name: Build (extract -> normalize -> validate -> catalog)
