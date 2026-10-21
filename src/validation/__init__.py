@@ -15,6 +15,7 @@ from ._delincuencia import (
 )
 from ._demografia import validate_demografia as validate_demografia
 from ._educacion import validate_educacion_establecimientos as validate_educacion_establecimientos
+from ._educacion import validate_educacion_saber11 as validate_educacion_saber11
 from ._infraestructura import validate_infraestructura_poi as validate_infraestructura_poi
 from ._territorio import validate_departamentos as validate_departamentos
 from ._territorio import validate_municipios as validate_municipios
@@ -31,6 +32,7 @@ VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
     "delincuencia_lesiones_personales": validate_delincuencia_lesiones_personales,
     "delincuencia_hurto_modalidades": validate_delincuencia_hurto_modalidades,
     "infraestructura_poi": validate_infraestructura_poi,
+    "educacion_saber11": validate_educacion_saber11,
 }
 
 __all__ = [
@@ -42,6 +44,7 @@ __all__ = [
     "validate_demografia",
     "validate_departamentos",
     "validate_educacion_establecimientos",
+    "validate_educacion_saber11",
     "validate_infraestructura_poi",
     "validate_municipios",
     "validate_municipios_geometria",

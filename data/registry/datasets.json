@@ -154,5 +154,25 @@
       "cli": "colombia-open path infraestructura_poi --output parquet"
     },
     "documentation": "docs/datasets/infraestructura_poi.md"
+  },
+  "educacion_saber11": {
+    "description": "Resultados Saber 11 (ICFES) agregados por establecimiento y periodo — promedio por materia y número de estudiantes, 2010-2022.",
+    "extractor": "src/extractors/educacion_saber11_extractor.py",
+    "source_name": "ICFES — Resultados Saber 11, agregado por establecimiento (vía datos.gov.co)",
+    "join_keys": ["codigo_dane_establecimiento", "cod_mpio", "cod_dpto", "anio"],
+    "references": {
+      "cod_mpio": "municipios",
+      "codigo_dane_establecimiento": "educacion_establecimientos"
+    },
+    "expected_record_count": 105110,
+    "outputs": {
+      "parquet": "data/normalized/educacion_saber11.parquet",
+      "json": "data/normalized/educacion_saber11.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('educacion_saber11')",
+      "cli": "colombia-open path educacion_saber11 --output parquet"
+    },
+    "documentation": "docs/datasets/educacion_saber11.md"
   }
 }

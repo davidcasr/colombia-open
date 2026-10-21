@@ -9,8 +9,14 @@ import polars as pl
 from ._constants import (
     EDUCACION_CODIGO_DANE_LOW_CARDINALITY_RATIO,
     EXPECTED_EDUCACION_ESTABLECIMIENTOS_MIN_COUNT,
+    EXPECTED_EDUCACION_SABER11_MIN_COUNT,
 )
-from ._helpers import invalid_fixed_length_count, missing_columns, unknown_codes_count
+from ._helpers import (
+    duplicate_count_multi,
+    invalid_fixed_length_count,
+    missing_columns,
+    unknown_codes_count,
+)
 from .result import ValidationResult
 
 _REQUIRED_COLUMNS = [
@@ -19,6 +25,24 @@ _REQUIRED_COLUMNS = [
     "cod_mpio",
     "codigo_dane_establecimiento",
     "nombre_establecimiento",
+]
+
+_SABER11_PRIMARY_KEY = ["codigo_dane_establecimiento", "periodo"]
+_SABER11_REQUIRED_COLUMNS = [
+    "anio",
+    "cod_dpto",
+    "cod_mpio",
+    "naturaleza",
+    "n_estudiantes",
+    *_SABER11_PRIMARY_KEY,
+]
+_SABER11_PROM_COLUMNS = [
+    "prom_matematicas",
+    "prom_ingles",
+    "prom_lectura_critica",
+    "prom_sociales_ciudadanas",
+    "prom_c_naturales",
+    "prom_global",
 ]
 
 
@@ -142,6 +166,106 @@ def validate_educacion_establecimientos(
 
     return ValidationResult(
         dataset="educacion_establecimientos",
+        status="error" if errors else "ok",
+        record_count=df.height,
+        errors=errors,
+        warnings=warnings,
+    )
+
+
+def validate_educacion_saber11(
+    df: pl.DataFrame,
+    metadata: dict[str, Any] | None = None,
+    *,
+    references: dict[str, set[str]] | None = None,
+) -> ValidationResult:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    missing = missing_columns(df, _SABER11_REQUIRED_COLUMNS)
+    if missing:
+        return ValidationResult(
+            dataset="educacion_saber11",
+            status="error",
+            record_count=df.height,
+            errors=[f"faltan columnas requeridas: {missing}"],
+            warnings=[],
+        )
+
+    if df.height == 0:
+        errors.append("dataset vacío")
+
+    dupes = duplicate_count_multi(df, _SABER11_PRIMARY_KEY)
+    if dupes > 0:
+        errors.append(
+            f"clave primaria ({', '.join(_SABER11_PRIMARY_KEY)}) duplicada en {dupes} filas"
+        )
+
+    bad_dpto = invalid_fixed_length_count(df, "cod_dpto", 2)
+    if bad_dpto > 0:
+        errors.append(f"cod_dpto debe tener 2 dígitos, {bad_dpto} filas no cumplen")
+
+    bad_mpio = invalid_fixed_length_count(df, "cod_mpio", 5)
+    if bad_mpio > 0:
+        errors.append(f"cod_mpio debe tener 5 dígitos, {bad_mpio} filas no cumplen")
+
+    bad_codigo = invalid_fixed_length_count(df, "codigo_dane_establecimiento", 12)
+    if bad_codigo > 0:
+        errors.append(
+            f"codigo_dane_establecimiento debe tener 12 dígitos, {bad_codigo} filas no cumplen"
+        )
+
+    null_n = int(df["n_estudiantes"].null_count())
+    if null_n > 0:
+        errors.append(f"n_estudiantes es nulo en {null_n} filas")
+    non_positive_n = int((df["n_estudiantes"].fill_null(1) <= 0).sum())
+    if non_positive_n > 0:
+        errors.append(f"n_estudiantes debe ser > 0, {non_positive_n} filas no cumplen")
+
+    # Los 6 promedios son nulos por diseño antes del periodo 20142 (4 de
+    # ellos) o si la fuente no trae el puntaje para ningún estudiante del
+    # grupo — nunca error. Solo un promedio negativo sería un bug real
+    # (puntaje ICFES no puede ser negativo).
+    for col in _SABER11_PROM_COLUMNS:
+        if col not in df.columns:
+            continue
+        negative = int((df[col].fill_null(0) < 0).sum())
+        if negative > 0:
+            errors.append(f"{col} tiene {negative} filas negativas")
+
+    unclassified_naturaleza = df.filter(pl.col("naturaleza").is_null()).height
+    if unclassified_naturaleza > 0:
+        warnings.append(
+            f"naturaleza nula en {unclassified_naturaleza} filas (la fuente no la "
+            "reportó para ningún estudiante de ese establecimiento-periodo)"
+        )
+
+    valid_mpio_codes = references.get("cod_mpio") if references else None
+    if valid_mpio_codes:
+        orphans = unknown_codes_count(df, "cod_mpio", valid_mpio_codes)
+        if orphans > 0:
+            # Mismo criterio que educacion_establecimientos: ICFES y DANE/
+            # DIVIPOLA son productos de entidades distintas con ciclos de
+            # actualización propios.
+            warnings.append(
+                f"{orphans} filas referencian un cod_mpio que no existe en el municipios vigente"
+            )
+
+    if (
+        metadata
+        and metadata.get("source_mode") == "live"
+        and df.height < EXPECTED_EDUCACION_SABER11_MIN_COUNT
+    ):
+        errors.append(
+            f"dataset en vivo luce incompleto: {df.height} filas, se esperaban "
+            f"al menos {EXPECTED_EDUCACION_SABER11_MIN_COUNT}"
+        )
+
+    if metadata and metadata.get("source_mode") == "fallback":
+        warnings.append("source_mode=fallback: cobertura limitada por diseño, no se publica")
+
+    return ValidationResult(
+        dataset="educacion_saber11",
         status="error" if errors else "ok",
         record_count=df.height,
         errors=errors,

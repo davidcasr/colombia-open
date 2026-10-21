@@ -13,13 +13,15 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 8 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 9 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
   municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
   `educacion_establecimientos` (directorio de establecimientos educativos
-  2015-2025, MEN), `delincuencia_hurto_personas` (víctimas de hurto a
-  personas por municipio y día, 2003 a la fecha, MinDefensa/Policía),
+  2015-2025, MEN), `educacion_saber11` (resultados Saber 11 agregados por
+  establecimiento y periodo, 2010-2022, ICFES),
+  `delincuencia_hurto_personas` (víctimas de hurto a personas por
+  municipio y día, 2003 a la fecha, MinDefensa/Policía),
   `delincuencia_lesiones_personales` (víctimas de lesiones personales y en
   accidente de tránsito por municipio, día, conducta, arma, género y grupo
   etario, 2010 a la fecha, Policía), `delincuencia_hurto_modalidades`
@@ -28,9 +30,10 @@
   `infraestructura_poi` (puntos de interés urbanos — salud, educación,
   seguridad, finanzas, religión, gobierno, transporte, comercio —
   geocodificados por municipio, OpenStreetMap vía Geofabrik).
-- **Próxima candidata sugerida**: Saber 11/ICFES (requiere diseño de
-  agregación antes de implementar por su volumen de microdato, ~7.1
-  millones de filas).
+- **Próxima candidata sugerida**: ninguna fuente 🟡/🟢 verificada queda sin
+  implementar — las que faltan (calidad del aire, vivienda, pobreza,
+  consumo eléctrico, macroeconomía) necesitan primero una sesión de
+  investigación de acceso (ver fila correspondiente en la tabla).
 
 ## Tabla de fuentes
 
@@ -40,7 +43,7 @@
 | Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | **Confirmado en vivo 2026-10-20** vía HDX: dataset `cod-ab-col` (`50ea7fee-f9af-45a7-8a52-abb9c790a0b6`), recurso "COL Administrative Divisions Shapefiles.zip" (~117MB), capa ADM2 = municipio (1122 filas), licencia CC BY-IGO 3.0 | 🟢 Fácil vía HDX | ✅ `municipios_geometria` — ver `src/extractors/municipios_geometria_extractor.py` |
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
 | Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
-| Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-17**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). ~7.1 millones de filas de microdato por estudiante — requiere decidir una estrategia de agregación (ej. por municipio-año) antes de implementar, no se puede publicar tal cual | 🟡 Fácil (acceso) / requiere diseño de agregación | ⬜ No implementada |
+| Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-21**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). 7109704 filas de microdato (2010-2022) agregadas por `(codigo_dane_establecimiento, periodo)` — join directo hacia `educacion_establecimientos` — a 105110 filas publicadas. Paginado por keyset (`:id`), no `$offset` (~7x más rápido a esta escala, ver docstring del extractor) | 🟡 Fácil (acceso) | ✅ `educacion_saber11` — ver `src/extractors/educacion_saber11_extractor.py` |
 | Calidad del aire | IDEAM — SISAIRE | Portal con descargas | 🟡 Media | ⬜ No implementada |
 | Vivienda / edificación | DANE / Camacol | Boletines + censo (Excel) | 🟡 Media | ⬜ No implementada |
 | Pobreza | DANE (monetaria / multidimensional) | Excel anual | 🟡 Media | ⬜ No implementada |

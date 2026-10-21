@@ -33,6 +33,7 @@ from src.extractors.divipola_extractor import DivipolaExtractor
 from src.extractors.educacion_establecimientos_extractor import (
     EducacionEstablecimientosExtractor,
 )
+from src.extractors.educacion_saber11_extractor import EducacionSaber11Extractor
 from src.extractors.infraestructura_poi_extractor import InfraestructuraPoiExtractor
 from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
 from src.registry import load_registry
@@ -43,6 +44,7 @@ from src.validation import (
     validate_demografia,
     validate_departamentos,
     validate_educacion_establecimientos,
+    validate_educacion_saber11,
     validate_infraestructura_poi,
     validate_municipios,
     validate_municipios_geometria,
@@ -119,6 +121,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["educacion_establecimientos"],
             extraction_metadata=educacion_staging_metadata,
             validation_result=educacion_validation,
+        )
+    )
+
+    # --- educacion_saber11: agregado por establecimiento+periodo desde
+    # microdato, sin derive_* (la agregación ya ocurre dentro del extractor) ---
+    saber11_extraction = EducacionSaber11Extractor().run()
+    saber11_staging_metadata = saber11_extraction.to_staging_metadata()
+    saber11_df = saber11_extraction.dataframe
+    saber11_validation = validate_educacion_saber11(
+        saber11_df, saber11_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(saber11_df, NORMALIZED_DIR / "educacion_saber11.parquet")
+    write_json_atomic(saber11_df, NORMALIZED_DIR / "educacion_saber11.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["educacion_saber11"],
+            extraction_metadata=saber11_staging_metadata,
+            validation_result=saber11_validation,
         )
     )
 

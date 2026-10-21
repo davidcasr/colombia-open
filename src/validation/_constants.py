@@ -28,6 +28,9 @@ DEMOGRAFIA_AREA_GEOGRAFICA_VALUES = {
 
 # Directorio de establecimientos educativos (MEN).
 EXPECTED_EDUCACION_ESTABLECIMIENTOS_MIN_COUNT = 500_000
+# Saber 11 (ICFES), agregado por (codigo_dane_establecimiento, periodo).
+# 105110 filas confirmadas en vivo (2026-10-21), de 7109704 de microdato.
+EXPECTED_EDUCACION_SABER11_MIN_COUNT = 90_000
 # Bajo este umbral de (valores distintos de codigo_dane / filas) para un
 # año dado, se trata como un defecto conocido de la fuente para ese año
 # (warning), no como clave primaria duplicada (error) — ver nota en
