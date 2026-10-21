@@ -35,6 +35,7 @@ from src.extractors.educacion_establecimientos_extractor import (
 )
 from src.extractors.educacion_saber11_extractor import EducacionSaber11Extractor
 from src.extractors.infraestructura_poi_extractor import InfraestructuraPoiExtractor
+from src.extractors.macroeconomia_trm_extractor import MacroeconomiaTrmExtractor
 from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
 from src.registry import load_registry
 from src.validation import (
@@ -46,6 +47,7 @@ from src.validation import (
     validate_educacion_establecimientos,
     validate_educacion_saber11,
     validate_infraestructura_poi,
+    validate_macroeconomia_trm,
     validate_municipios,
     validate_municipios_geometria,
 )
@@ -229,6 +231,22 @@ def build() -> list[dict[str, Any]]:
             spec=registry["infraestructura_poi"],
             extraction_metadata=poi_staging_metadata,
             validation_result=poi_validation,
+        )
+    )
+
+    # --- macroeconomia_trm: dataset normalizado 1:1, sin derive_* (serie
+    # nacional, sin dimensión territorial, sin references) ---
+    trm_extraction = MacroeconomiaTrmExtractor().run()
+    trm_staging_metadata = trm_extraction.to_staging_metadata()
+    trm_df = trm_extraction.dataframe
+    trm_validation = validate_macroeconomia_trm(trm_df, trm_staging_metadata)
+    write_parquet_atomic(trm_df, NORMALIZED_DIR / "macroeconomia_trm.parquet")
+    write_json_atomic(trm_df, NORMALIZED_DIR / "macroeconomia_trm.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["macroeconomia_trm"],
+            extraction_metadata=trm_staging_metadata,
+            validation_result=trm_validation,
         )
     )
 

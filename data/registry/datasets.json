@@ -174,5 +174,21 @@
       "cli": "colombia-open path educacion_saber11 --output parquet"
     },
     "documentation": "docs/datasets/educacion_saber11.md"
+  },
+  "macroeconomia_trm": {
+    "description": "Tasa de Cambio Representativa del Mercado (TRM, COP/USD) diaria, 1991 a la fecha.",
+    "extractor": "src/extractors/macroeconomia_trm_extractor.py",
+    "source_name": "Superintendencia Financiera de Colombia (SUPERFINANCIERA) — TRM (vía datos.gov.co)",
+    "join_keys": ["fecha"],
+    "expected_record_count": 8372,
+    "outputs": {
+      "parquet": "data/normalized/macroeconomia_trm.parquet",
+      "json": "data/normalized/macroeconomia_trm.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('macroeconomia_trm')",
+      "cli": "colombia-open path macroeconomia_trm --output parquet"
+    },
+    "documentation": "docs/datasets/macroeconomia_trm.md"
   }
 }

@@ -13,7 +13,7 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 9 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 10 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
   municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
@@ -26,14 +26,20 @@
   accidente de tránsito por municipio, día, conducta, arma, género y grupo
   etario, 2010 a la fecha, Policía), `delincuencia_hurto_modalidades`
   (víctimas de hurto a residencias y entidades comerciales por municipio,
-  día, arma, género y grupo etario, 2010 a la fecha, Policía) e
+  día, arma, género y grupo etario, 2010 a la fecha, Policía),
   `infraestructura_poi` (puntos de interés urbanos — salud, educación,
   seguridad, finanzas, religión, gobierno, transporte, comercio —
-  geocodificados por municipio, OpenStreetMap vía Geofabrik).
-- **Próxima candidata sugerida**: ninguna fuente 🟡/🟢 verificada queda sin
-  implementar — las que faltan (calidad del aire, vivienda, pobreza,
-  consumo eléctrico, macroeconomía) necesitan primero una sesión de
-  investigación de acceso (ver fila correspondiente en la tabla).
+  geocodificados por municipio, OpenStreetMap vía Geofabrik) y
+  `macroeconomia_trm` (Tasa de Cambio Representativa del Mercado diaria,
+  1991 a la fecha, Superintendencia Financiera).
+- **Próxima candidata sugerida**: calidad del aire (IDEAM) — se encontró y
+  verificó en vivo un dataset nacional directo en datos.gov.co
+  (`g4t8-zkc3`/`kekd-7v7h`, 30665 filas, 344 municipios, 2011-2025) que
+  reemplaza la pista vieja de SISAIRE sin API clara. Requiere una decisión
+  de alcance chica: filtrar la lista de 20 "variable" mezcladas
+  (contaminantes reales vs. meteorológicas) — ver la fila correspondiente.
+  El resto (vivienda, pobreza municipal, consumo eléctrico) sigue
+  necesitando una sesión de investigación de acceso aparte.
 
 ## Tabla de fuentes
 
@@ -44,11 +50,12 @@
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
 | Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
 | Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-21**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). 7109704 filas de microdato (2010-2022) agregadas por `(codigo_dane_establecimiento, periodo)` — join directo hacia `educacion_establecimientos` — a 105110 filas publicadas. Paginado por keyset (`:id`), no `$offset` (~7x más rápido a esta escala, ver docstring del extractor) | 🟡 Fácil (acceso) | ✅ `educacion_saber11` — ver `src/extractors/educacion_saber11_extractor.py` |
-| Calidad del aire | IDEAM — SISAIRE | Portal con descargas | 🟡 Media | ⬜ No implementada |
+| Calidad del aire | IDEAM, vía datos.gov.co (no SISAIRE directo) | **Confirmado en vivo 2026-10-22**: `datos.gov.co/resource/kekd-7v7h.json` ("Calidad del Aire en Colombia (Promedio Anual)", CC BY-SA 4.0, atribución IDEAM). 30665 filas, 2011-2025, 344 municipios — mezcla 20 "variable" distintas (contaminantes: PM10/PM2.5/SO2/O3/NO2/CO/PST; meteorológicas: temperatura/viento/lluvia/radiación). Requiere decidir si se publican solo los contaminantes o todas — reemplaza la pista vieja de SISAIRE (sin API encontrada) | 🟡 Media (curación de variables, no de acceso) | ⬜ No implementada |
 | Vivienda / edificación | DANE / Camacol | Boletines + censo (Excel) | 🟡 Media | ⬜ No implementada |
-| Pobreza | DANE (monetaria / multidimensional) | Excel anual | 🟡 Media | ⬜ No implementada |
-| Consumo eléctrico | XM (operador del mercado eléctrico) / UPME | XM tiene API pública (SINERGOX) — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
-| Macroeconomía | Banco de la República | Tiene API de series — acceso sin verificar en detalle | 🟡 Media | ⬜ No implementada |
+| Pobreza | DANE (monetaria / multidimensional) | **Investigado 2026-10-22**: no hay tasa de pobreza municipal anual en datos.gov.co — la pobreza monetaria/multidimensional del DANE solo se calcula a nivel municipal en años censales (2005, 2018; ver `qgpk-sefn`), y el dato anual (GEIH) es departamental/13 ciudades, no municipal. Implementar esto requeriría publicar solo años censales o cambiar la granularidad — decisión de alcance antes de empezar | 🟡 Media / requiere diseño de alcance | ⬜ No implementada |
+| Consumo eléctrico | XM (operador del mercado eléctrico) / UPME | **Investigado 2026-10-22**: no se encontró una API pública confirmable de SINERGOX/SiMEM — solo un portal de descarga interactivo. Búsqueda en el catálogo de datos.gov.co tampoco encontró demanda eléctrica por municipio | 🟡 Media / acceso no confirmado | ⬜ No implementada |
+| Macroeconomía (TRM) | Superintendencia Financiera (metodología Banco de la República) | **Confirmado en vivo 2026-10-22**: `datos.gov.co/resource/32sa-8pi3.json` (CC BY-SA 4.0). 8372 filas, 1991 a la fecha, serie diaria sin dimensión territorial — la fuente más simple del catálogo | 🟢 Fácil | ✅ `macroeconomia_trm` — ver `src/extractors/macroeconomia_trm_extractor.py` |
+| Macroeconomía (otros indicadores: DTF, IBR, UVR) | Banco de la República, vía datos.gov.co | **Encontrados en vivo 2026-10-22** junto con TRM en el mismo catálogo (`gtwv-4pxq`, `ev8i-uzwt`, `mtic-nvgq`) — no verificados en detalle, candidatos naturales para ampliar el dominio macroeconomía si hay demanda | 🟢 Probablemente fácil (mismo patrón que TRM) | ⬜ No implementada |
 | Infraestructura urbana / puntos de interés | OpenStreetMap, vía extracto Geofabrik | **Confirmado en vivo 2026-10-20**: `download.geofabrik.de/south-america/colombia-latest.osm.pbf` (~332MB, ODbL 1.0, © OpenStreetMap contributors). Filtrado con pyosmium (`FileProcessor` + `KeyFilter` a nivel C++, ~5s en vez de ~25min) por lista curada de `amenity`/`shop`; geocodificado con join espacial contra `municipios_geometria`. 58046 filas publicadas (58494 nodos clasificados, ~450 excluidos por geocodificación) | 🟡 Media (geoprocesamiento) | ✅ `infraestructura_poi` — ver `src/extractors/infraestructura_poi_extractor.py` |
 | Economía municipal / finanzas territoriales | DNP Terridata (basado en el FUT) | Sin API confirmada; solo descarga web por año (2000-2024) | 🟠 Difícil (requiere scraping) | ⬜ No implementada |
 | Salud | MinSalud — SISPRO (nacional); REPS departamental sí existe en Socrata | Nacional: portal "bodega de datos", sin API pública clara. **Pista parcial 2026-10-17**: Gobernación de Antioquia publica su propio REPS (prestadores de salud) en Socrata — confirma que el dato existe en ese formato, pero es departamental, no nacional. Buscar si MinSalud publica un REPS nacional equivalente antes de implementar | 🟠 Difícil (nacional) | ⬜ No implementada |

@@ -67,6 +67,7 @@ más permisiva).
 | `municipios_geometria` | DANE (MGN), vía HDX (`cod-ab-col`) | CC BY-IGO 3.0 | Sí — "DANE" y "OCHA" | Sí, bajo CC BY-IGO (sin exigir share-alike) |
 | `infraestructura_poi` | OpenStreetMap, vía Geofabrik | ODbL 1.0 | Sí — "© OpenStreetMap contributors" | Sí, bajo ODbL 1.0 (share-alike de base de datos) |
 | `educacion_saber11` | ICFES, vía datos.gov.co (`kgxf-xxbe`) | CC BY-SA 4.0 | Sí — "ICFES" | Sí, bajo CC BY-SA 4.0 |
+| `macroeconomia_trm` | Superintendencia Financiera, vía datos.gov.co (`32sa-8pi3`) | CC BY-SA 4.0 | Sí — "Superintendencia Financiera" | Sí, bajo CC BY-SA 4.0 |
 
 ## Nota sobre `demografia` (public-api-review-terms)
 
