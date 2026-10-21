@@ -35,6 +35,15 @@ que agregó esta fuente):
   2010-2022 en vez de truncar a solo el periodo post-reforma, y los 4
   campos nuevos quedan `null` (no fabricados) en los periodos viejos.
 
+Nota de calidad de dato — `punt_ingles = "-1"` es un valor centinela de la
+fuente, no un puntaje real: confirmado en vivo el 2026-10-21, 1516 filas de
+microdato (de 7.1M) lo traen, todas de periodos `20101`-`20132` (nunca en
+`punt_matematicas` ni en periodos modernos) — significa "no se administró
+esta parte de la prueba ese periodo". `_parse_float()` lo convierte a
+`None` antes de promediar; descubierto porque `make build` en CI falló con
+`prom_ingles` negativo en 9 establecimientos (un solo estudiante con "-1"
+entre pocos estudiantes basta para volver negativo el promedio).
+
 Nota de paginación — distinta a los demás extractores del proyecto: con
 7.1M filas, paginar con `$offset` se vuelve progresivamente más lento
 (confirmado en vivo: una página de 100k filas tardó 87.5s en offset~7M,
@@ -270,13 +279,27 @@ _SCHEMA = {
 }
 
 
+_SENTINEL_NO_ADMINISTRADO = -1.0
+
+
 def _parse_float(value: Any) -> float | None:
+    """Un puntaje real nunca es negativo. Confirmado en vivo el 2026-10-21:
+    `punt_ingles` trae literalmente "-1" en 1516 filas de microdato, todas
+    de periodos 2010-2013 (nunca en `punt_matematicas` ni en periodos
+    modernos) — es el valor centinela de la fuente para "no se administró
+    esta parte de la prueba ese periodo", no un puntaje real. Se convierte
+    a `None` para que no contamine el promedio del establecimiento (sin
+    esto, un solo -1 entre 20+ estudiantes basta para volver negativo el
+    promedio publicado — ver el commit que agregó este chequeo)."""
     if value is None or value == "":
         return None
     try:
-        return float(value)
+        parsed = float(value)
     except (ValueError, TypeError):
         return None
+    if parsed == _SENTINEL_NO_ADMINISTRADO:
+        return None
+    return parsed
 
 
 def _zfill_or_none(value: Any, width: int) -> str | None:

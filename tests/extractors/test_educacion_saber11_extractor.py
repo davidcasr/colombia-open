@@ -36,6 +36,15 @@ def test_parse_float_handles_blank_and_missing():
     assert _parse_float(None) is None
 
 
+def test_parse_float_treats_minus_one_as_sentinel_not_a_real_score():
+    # Confirmado en vivo el 2026-10-21: punt_ingles trae literalmente "-1"
+    # en periodos legacy (2010-2013) como centinela de "no administrado",
+    # nunca un puntaje real negativo.
+    assert _parse_float("-1") is None
+    assert _parse_float("-1.0") is None
+    assert _parse_float("0") == 0.0
+
+
 def test_normalize_fallback_rows_have_fixed_width_codes():
     df, _excluded, skipped = _normalize(EDUCACION_SABER11_FALLBACK_DATA)
     assert skipped == 0
@@ -93,6 +102,17 @@ def test_normalize_keeps_legacy_scores_null_for_fields_not_reported_pre_reforma(
     assert row["prom_ingles"] == 94.0
     assert row["prom_global"] is None
     assert row["prom_lectura_critica"] is None
+
+
+def test_normalize_excludes_sentinel_minus_one_from_average():
+    rows = [
+        _row(periodo="20102", punt_ingles="-1"),
+        _row(periodo="20102", punt_ingles="80"),
+    ]
+    df, _excluded, _skipped = _normalize(rows)
+    row = df.row(0, named=True)
+    # Promedio solo del estudiante real (80), el -1 no cuenta como dato.
+    assert row["prom_ingles"] == 80.0
 
 
 def test_normalize_derives_anio_from_periodo():

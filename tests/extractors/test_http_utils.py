@@ -63,6 +63,22 @@ def test_get_json_retries_network_errors(monkeypatch):
     assert calls["n"] == 4
 
 
+def test_get_json_retries_truncated_json_body(monkeypatch):
+    # HTTP 200 pero el cuerpo quedó cortado a mitad del JSON — observado en
+    # vivo el 2026-10-21 en una página grande de educacion_saber11. Ver
+    # docstring de `_is_transient`.
+    class _TruncatedResponse(_FakeResponse):
+        def json(self) -> object:
+            raise requests.exceptions.JSONDecodeError("Expecting value", "", 0)
+
+    calls = _sequence(
+        monkeypatch,
+        [_TruncatedResponse(200), _FakeResponse(200, [{"a": 1}])],
+    )
+    assert get_json("https://example.test") == [{"a": 1}]
+    assert calls["n"] == 2
+
+
 @pytest.mark.parametrize("status", [400, 403, 404])
 def test_get_json_never_retries_non_transient_4xx(monkeypatch, status):
     calls = _sequence(monkeypatch, [_FakeResponse(status), _FakeResponse(200, [])])

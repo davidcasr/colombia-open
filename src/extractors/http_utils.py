@@ -30,8 +30,19 @@ def _is_transient(exc: BaseException) -> bool:
     # ChunkedEncodingError = la conexión se cortó a mitad del cuerpo de la
     # respuesta (observado en vivo en datos.gov.co el 2026-10-19); es una
     # falla de red igual que ConnectionError, aunque requests no la herede.
+    # JSONDecodeError = la respuesta llegó con HTTP 200 pero el cuerpo quedó
+    # truncado a mitad del JSON (observado en vivo el 2026-10-21, en una
+    # página de 100k filas de educacion_saber11 — mismo síntoma de red
+    # inestable que ChunkedEncodingError, solo que acá `requests` no detecta
+    # el corte a nivel de conexión y el error aparece recién al parsear).
     if isinstance(
-        exc, (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError)
+        exc,
+        (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.JSONDecodeError,
+        ),
     ):
         return True
     if isinstance(exc, requests.HTTPError) and exc.response is not None:

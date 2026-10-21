@@ -42,6 +42,8 @@ def main() -> int:
         source_mode = entry.get("source_mode")
         if status != "ok":
             print(f"[ERROR] {name}: validation_status={status}")
+            for error in entry.get("errors", []):
+                print(f"    error: {error}")
             had_errors = True
         elif args.require_live and source_mode != "live":
             print(f"[ERROR] {name}: source_mode={source_mode}, se requiere 'live' para publicar")

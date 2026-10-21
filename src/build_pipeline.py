@@ -245,6 +245,9 @@ def main() -> int:
         print(
             f"[{marker}] {entry['dataset']}: {entry['record_count']} filas ({entry['source_mode']})"
         )
+        if entry["errors"]:
+            for error in entry["errors"]:
+                print(f"    error: {error}")
         if entry["warnings"]:
             for warning in entry["warnings"]:
                 print(f"    warning: {warning}")

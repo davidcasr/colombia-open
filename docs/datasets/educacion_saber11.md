@@ -116,6 +116,14 @@ saber11.filter(pl.col("cod_mpio") == "05001").sort("periodo")
 - **`prom_lectura_critica`/`prom_sociales_ciudadanas`/`prom_c_naturales`/
   `prom_global` son `null` antes del periodo `20142`** — no es un dato
   faltante de este extractor, la prueba no los reportaba en esa época.
+- **`punt_ingles = "-1"` es un valor centinela de la fuente en periodos
+  legacy (2010-2013), no un puntaje real.** Confirmado en vivo el
+  2026-10-21: 1516 filas de microdato (de 7.1M), todas de periodos
+  `20101`-`20132`, nunca en `punt_matematicas` ni en periodos modernos —
+  significa "no se administró esta parte de la prueba ese periodo". Se
+  convierte a `null` antes de promediar (si no, un solo estudiante con
+  "-1" entre 20+ vuelve negativo el promedio del establecimiento). Ver
+  `_parse_float()` en el extractor.
 - **Sin variables socioeconómicas.** `fami_estratovivienda`,
   `fami_tieneinternet`, etc. existen en la fuente cruda pero no se
   publican en esta primera iteración — candidata a segunda iteración si

@@ -45,6 +45,7 @@ def build_catalog_entry(
         "join_keys": spec.join_keys,
         "reuse_policy": extraction_metadata.get("reuse_policy"),
         "validation_status": validation_result.status,
+        "errors": validation_result.errors,
         "warnings": validation_result.warnings,
         "usage_examples": spec.usage_examples,
         "outputs": spec.outputs,
