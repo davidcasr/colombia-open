@@ -147,6 +147,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 .hero-mark { width: 120px; height: 120px; margin-bottom: 1.5rem; }
 .hero h1 { font-size: clamp(2.1rem, 5.5vw, 3.1rem); max-width: 18ch; }
 .hero .lede { max-width: 54ch; color: var(--fg-muted); font-size: 1.1rem; margin-top: 1rem; }
+.hero .lede-audience { font-size: 0.92rem; margin-top: 0.8rem; }
 .hero-ctas { display: flex; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; gap: 0.4rem;
@@ -181,6 +182,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 
 /* ---------- Catalog ---------- */
 .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
+.catalog-group-label { grid-column: 1 / -1; margin: 1.6rem 0 0.2rem; }
+.catalog-group-label:first-of-type { margin-top: 0; }
 .dataset-card {
   background: var(--bg-alt);
   border: 1px solid var(--line);
@@ -201,7 +204,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 .pill {
   font-family: "IBM Plex Mono", monospace; font-size: 0.72rem;
   background: var(--bg); border: 1px solid var(--line); border-radius: 999px;
-  padding: 0.25rem 0.65rem; color: var(--fg-muted);
+  padding: 0.25rem 0.65rem; color: var(--fg-muted); text-decoration: none;
 }
 .dataset-source { font-size: 0.82rem; color: var(--fg-muted); margin-top: 0.4rem; }
 .dataset-source a { color: var(--accent); text-decoration: none; }

@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>colombia-open — Datos públicos de Colombia para Python</title>
-  <meta name="description" content="Datasets públicos de Colombia, curados y normalizados para Python. Empezando por la división político-administrativa (DIVIPOLA/DANE), con una fuente nueva agregándose cada semana.">
+  <meta name="description" content="Datos públicos de Colombia, limpios y listos para usar en Python: geografía, demografía, educación, seguridad, calidad del aire y más. Cada dataset con su fuente y licencia a la vista.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="colombia-open">
   <meta property="og:title" content="colombia-open — Datos públicos de Colombia para Python">
-  <meta property="og:description" content="Datasets públicos de Colombia, curados y normalizados para Python. Empezando por la división político-administrativa (DIVIPOLA/DANE), con una fuente nueva agregándose cada semana.">
+  <meta property="og:description" content="Datos públicos de Colombia, limpios y listos para usar en Python: geografía, demografía, educación, seguridad, calidad del aire y más. Cada dataset con su fuente y licencia a la vista.">
   <meta property="og:url" content="https://davidcasr.github.io/colombia-open/">
   <meta property="og:image" content="https://davidcasr.github.io/colombia-open/assets/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -18,7 +18,7 @@
   <meta property="og:image:alt" content="colombia-open — logomarca de constelación sobre fondo índigo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="colombia-open — Datos públicos de Colombia para Python">
-  <meta name="twitter:description" content="Datasets públicos de Colombia, curados y normalizados para Python.">
+  <meta name="twitter:description" content="Datos públicos de Colombia, limpios y listos para usar en Python. Cada dataset con su fuente y licencia a la vista.">
   <meta name="twitter:image" content="https://davidcasr.github.io/colombia-open/assets/og-image.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +97,8 @@
       </svg>
       <p class="eyebrow">colombia-open</p>
       <h1>Datos públicos de Colombia, listos para usar en Python.</h1>
-      <p class="lede">Cada fuente oficial empieza dispersa, en su propio formato. La curamos, la normalizamos, la validamos — y la distribuimos como un dataset limpio, con su fuente y licencia siempre visibles.</p>
+      <p class="lede">Los datos públicos de Colombia existen, pero cada uno en su portal y en su formato. Aquí los encuentras limpios, en un mismo lugar y listos para cargar, con su fuente y licencia siempre a la vista.</p>
+      <p class="lede lede-audience">Para analistas, periodistas de datos, investigadores y quien esté construyendo agentes con datos de Colombia.</p>
       <div class="hero-ctas">
         <a class="btn btn-primary" href="#catalogo">Ver catálogo</a>
         <a class="btn btn-secondary" href="https://github.com/davidcasr/colombia-open">
@@ -121,9 +122,10 @@ hub = ColombiaOpen()
 municipios = hub.load_polars(<span class="gold">"municipios"</span>)
 municipios.filter(municipios[<span class="gold">"cod_dpto"</span>] == <span class="gold">"05"</span>)  <span class="muted"># municipios de Antioquia</span>
 
-hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold">"cali"</span>, <span class="gold">"BOGOTA"</span>])
-<span class="muted"># resuelve nombres a código DIVIPOLA</span></pre>
+hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold">"BOGOTÁ, D.C."</span>, <span class="gold">"santiago de cali"</span>])
+<span class="muted"># tolera tildes y mayúsculas → cod_mpio: 05001, 11001, 76001</span></pre>
       </div>
+      <p class="terminal-note">Hace coincidencia exacta tras normalizar tildes y mayúsculas, no adivina apodos — por eso el ejemplo usa "santiago de cali" y no "cali".</p>
       <p class="terminal-note">Paquete en <a href="https://pypi.org/project/colombia-open/" target="_blank" rel="noopener">PyPI</a>. ¿Usas agentes de IA? Instala el extra mcp y conecta el catálogo a tu agente — ver <a href="https://github.com/davidcasr/colombia-open/blob/main/docs/mcp.md" target="_blank" rel="noopener">servidor MCP</a>.</p>
     </div>
   </section>
@@ -133,6 +135,7 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
       <h2>Catálogo</h2>
       <p class="intro">Lo que hay disponible hoy. Crece una fuente a la vez — ver el roadmap completo abajo.</p>
       <div class="catalog-grid">
+        <p class="eyebrow catalog-group-label">Geografía</p>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Departamentos</h3>
@@ -144,7 +147,7 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
@@ -153,129 +156,135 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
           </div>
           <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en un dataset aparte.</p>
           <div class="dataset-meta">
-            <span class="pill">1,122 filas</span>
+            <span class="pill">1.122 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Municipios geometría</h3>
+            <h3>Geometría municipal</h3>
             <span class="dataset-slug">municipios_geometria</span>
           </div>
           <p>Geometría de polígonos municipales (Marco Geoestadístico Nacional), simplificada, con área geodésica.</p>
           <div class="dataset-meta">
-            <span class="pill">1,122 filas</span>
+            <span class="pill">1.122 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-IGO 3.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://data.humdata.org/dataset/cod-ab-col" target="_blank" rel="noopener">DANE (MGN), vía HDX — Colombia Subnational Administrative Boundaries</a></p>
+          <p class="dataset-source">Fuente: <a href="https://data.humdata.org/dataset/cod-ab-col" target="_blank" rel="noopener">DANE (MGN), vía HDX — Colombia Subnational Administrative Boundaries</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Demografía</p>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Demografía</h3>
+            <h3>Proyecciones de población</h3>
             <span class="dataset-slug">demografia</span>
           </div>
           <p>Proyecciones de población municipal por área geográfica (cabecera, centros poblados y rural disperso, total), años 2018-2042.</p>
           <div class="dataset-meta">
-            <span class="pill">84,225 filas</span>
+            <span class="pill">84.225 filas</span>
             <span class="pill">parquet · json</span>
-            <span class="pill">Términos DANE</span>
+            <a class="pill" href="https://www.dane.gov.co/index.php/servicios-al-ciudadano/tramites/transparencia-y-acceso-a-la-informacion-publica/terminos-y-condiciones" target="_blank" rel="noopener">Términos DANE</a>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx" target="_blank" rel="noopener">DANE — Proyecciones de Población (PPED)</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx" target="_blank" rel="noopener">DANE — Proyecciones de Población (PPED)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Educación</p>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Educación establecimientos</h3>
+            <h3>Establecimientos educativos</h3>
             <span class="dataset-slug">educacion_establecimientos</span>
           </div>
           <p>Directorio único de establecimientos educativos de Colombia (preescolar, básica y media), años 2015-2025.</p>
           <div class="dataset-meta">
-            <span class="pill">606,206 filas</span>
+            <span class="pill">606.206 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/cfw5-qzt5" target="_blank" rel="noopener">MEN — Directorio de establecimientos, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/cfw5-qzt5" target="_blank" rel="noopener">MEN — Directorio de establecimientos, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Educación Saber 11</h3>
+            <h3>Resultados Saber 11</h3>
             <span class="dataset-slug">educacion_saber11</span>
           </div>
           <p>Resultados Saber 11 agregados por establecimiento y periodo (promedio por materia, número de estudiantes), 2010-2022.</p>
           <div class="dataset-meta">
-            <span class="pill">105,110 filas</span>
+            <span class="pill">105.110 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kgxf-xxbe" target="_blank" rel="noopener">ICFES — Resultados Saber 11, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kgxf-xxbe" target="_blank" rel="noopener">ICFES — Resultados Saber 11, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Seguridad y convivencia</p>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Delincuencia hurto personas</h3>
+            <h3>Hurto a personas</h3>
             <span class="dataset-slug">delincuencia_hurto_personas</span>
           </div>
           <p>Víctimas de hurto a personas por municipio y día, desde 2003 hasta el último corte mensual de la fuente.</p>
           <div class="dataset-meta">
-            <span class="pill">650,835 filas</span>
+            <span class="pill">654.351 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/4rxi-8m8d" target="_blank" rel="noopener">MinDefensa / Policía Nacional — Hurto a personas, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/4rxi-8m8d" target="_blank" rel="noopener">MinDefensa / Policía Nacional — Hurto a personas, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Delincuencia lesiones personales</h3>
+            <h3>Lesiones personales y de tránsito</h3>
             <span class="dataset-slug">delincuencia_lesiones_personales</span>
           </div>
           <p>Víctimas de lesiones personales y en accidente de tránsito por municipio y día, con conducta, arma, género y grupo etario, desde 2010.</p>
           <div class="dataset-meta">
-            <span class="pill">1,377,323 filas</span>
+            <span class="pill">1.377.323 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/72sg-cybi" target="_blank" rel="noopener">Policía Nacional — Lesiones personales y en accidente de tránsito, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/72sg-cybi" target="_blank" rel="noopener">Policía Nacional — Lesiones personales y en accidente de tránsito, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Delincuencia hurto modalidades</h3>
+            <h3>Hurto a residencias y comercios</h3>
             <span class="dataset-slug">delincuencia_hurto_modalidades</span>
           </div>
           <p>Víctimas de hurto a residencias y entidades comerciales por municipio y día, con arma, género y grupo etario, desde 2010.</p>
           <div class="dataset-meta">
-            <span class="pill">397,361 filas</span>
+            <span class="pill">397.361 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/6sqw-8cg5" target="_blank" rel="noopener">Policía Nacional — Hurto por modalidades, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/6sqw-8cg5" target="_blank" rel="noopener">Policía Nacional — Hurto por modalidades, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Infraestructura</p>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Infraestructura POI</h3>
+            <h3>Puntos de interés urbanos</h3>
             <span class="dataset-slug">infraestructura_poi</span>
           </div>
           <p>Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) geocodificados por municipio.</p>
           <div class="dataset-meta">
-            <span class="pill">58,046 filas</span>
+            <span class="pill">58.049 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">ODbL 1.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://download.geofabrik.de/south-america/colombia.html" target="_blank" rel="noopener">OpenStreetMap contributors, vía Geofabrik</a></p>
+          <p class="dataset-source">Fuente: <a href="https://download.geofabrik.de/south-america/colombia.html" target="_blank" rel="noopener">OpenStreetMap contributors, vía Geofabrik</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Economía</p>
         <div class="dataset-card">
           <div class="dataset-title">
-            <h3>Macroeconomía TRM</h3>
+            <h3>TRM diaria</h3>
             <span class="dataset-slug">macroeconomia_trm</span>
           </div>
           <p>Tasa de Cambio Representativa del Mercado (TRM, COP/USD) diaria, 1991 a la fecha.</p>
           <div class="dataset-meta">
-            <span class="pill">8,372 filas</span>
+            <span class="pill">8.372 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/32sa-8pi3" target="_blank" rel="noopener">Superintendencia Financiera — TRM, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/32sa-8pi3" target="_blank" rel="noopener">Superintendencia Financiera — TRM, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <p class="eyebrow catalog-group-label">Medio ambiente</p>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Calidad del aire</h3>
@@ -283,11 +292,11 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
           </div>
           <p>Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación de monitoreo, 2011 a la fecha.</p>
           <div class="dataset-meta">
-            <span class="pill">8,985 filas</span>
+            <span class="pill">8.985 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kekd-7v7h" target="_blank" rel="noopener">IDEAM — Calidad del Aire en Colombia, vía datos.gov.co</a></p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kekd-7v7h" target="_blank" rel="noopener">IDEAM — Calidad del Aire en Colombia, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
       </div>
     </div>
@@ -296,7 +305,7 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
   <section class="band roadmap" id="roadmap">
     <div class="wrap">
       <h2>Roadmap</h2>
-      <p class="intro">Una fuente por fin de semana, de punta a punta. Esta tabla es el mapa completo — implementadas y por venir.</p>
+      <p class="intro">Crece una fuente a la vez, de punta a punta. Esta tabla es el mapa completo: implementadas y por venir.</p>
       <div class="roadmap-table-wrap">
         <table class="roadmap-table">
           <thead>
@@ -309,18 +318,18 @@ hub.resolve_municipios([<span class="gold">"Medellín"</span>, <span class="gold
             <tr><td>Educación (directorio de establecimientos)</td><td>MinEducación (MEN)</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Educación (Saber 11)</td><td>ICFES</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Calidad del aire</td><td>IDEAM, vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Macroeconomía (TRM)</td><td>Superintendencia Financiera</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Infraestructura urbana / puntos de interés</td><td>OpenStreetMap (Geofabrik)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (hurto a personas)</td><td>Policía Nacional / MinDefensa</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (lesiones personales)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (hurto por modalidades)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Vivienda / edificación</td><td>DANE / Camacol</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Pobreza</td><td>DANE</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Consumo eléctrico</td><td>XM / UPME</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
-            <tr><td>Macroeconomía (TRM)</td><td>Superintendencia Financiera</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Infraestructura urbana / puntos de interés</td><td>OpenStreetMap (Geofabrik)</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Economía municipal / finanzas territoriales</td><td>DNP Terridata</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Salud</td><td>MinSalud — SISPRO</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Clima</td><td>IDEAM</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Electoral</td><td>Registraduría</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
-            <tr><td>Delincuencia (hurto a personas)</td><td>Policía Nacional / MinDefensa</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Delincuencia (lesiones personales)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Delincuencia (hurto por modalidades)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
           </tbody>
         </table>
       </div>
