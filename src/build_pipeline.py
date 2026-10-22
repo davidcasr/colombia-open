@@ -19,6 +19,7 @@ from typing import Any
 from src.builders.catalog import build_catalog_entry, write_dataset_catalog
 from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
+from src.extractors.calidad_aire_extractor import CalidadAireExtractor
 from src.extractors.delincuencia_hurto_modalidades_extractor import (
     DelincuenciaHurtoModalidadesExtractor,
 )
@@ -39,6 +40,7 @@ from src.extractors.macroeconomia_trm_extractor import MacroeconomiaTrmExtractor
 from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
 from src.registry import load_registry
 from src.validation import (
+    validate_calidad_aire,
     validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
@@ -247,6 +249,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["macroeconomia_trm"],
             extraction_metadata=trm_staging_metadata,
             validation_result=trm_validation,
+        )
+    )
+
+    # --- calidad_aire: dataset normalizado 1:1 (filtrado server-side a los
+    # 6 contaminantes ICA), sin derive_* ---
+    aire_extraction = CalidadAireExtractor().run()
+    aire_staging_metadata = aire_extraction.to_staging_metadata()
+    aire_df = aire_extraction.dataframe
+    aire_validation = validate_calidad_aire(
+        aire_df, aire_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(aire_df, NORMALIZED_DIR / "calidad_aire.parquet")
+    write_json_atomic(aire_df, NORMALIZED_DIR / "calidad_aire.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["calidad_aire"],
+            extraction_metadata=aire_staging_metadata,
+            validation_result=aire_validation,
         )
     )
 

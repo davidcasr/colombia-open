@@ -4,6 +4,7 @@ registro — ver `scripts/check_validation_registration.py`)."""
 
 from collections.abc import Callable
 
+from ._calidad_aire import validate_calidad_aire as validate_calidad_aire
 from ._delincuencia import (
     validate_delincuencia_hurto_modalidades as validate_delincuencia_hurto_modalidades,
 )
@@ -24,6 +25,7 @@ from ._territorio import validate_municipios_geometria as validate_municipios_ge
 from .result import ValidationResult as ValidationResult
 
 VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
+    "calidad_aire": validate_calidad_aire,
     "departamentos": validate_departamentos,
     "municipios": validate_municipios,
     "municipios_geometria": validate_municipios_geometria,
@@ -40,6 +42,7 @@ VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
 __all__ = [
     "VALIDATORS",
     "ValidationResult",
+    "validate_calidad_aire",
     "validate_delincuencia_hurto_modalidades",
     "validate_delincuencia_hurto_personas",
     "validate_delincuencia_lesiones_personales",

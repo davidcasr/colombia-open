@@ -13,7 +13,7 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 10 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 11 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
   municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
@@ -29,17 +29,18 @@
   día, arma, género y grupo etario, 2010 a la fecha, Policía),
   `infraestructura_poi` (puntos de interés urbanos — salud, educación,
   seguridad, finanzas, religión, gobierno, transporte, comercio —
-  geocodificados por municipio, OpenStreetMap vía Geofabrik) y
+  geocodificados por municipio, OpenStreetMap vía Geofabrik),
   `macroeconomia_trm` (Tasa de Cambio Representativa del Mercado diaria,
-  1991 a la fecha, Superintendencia Financiera).
-- **Próxima candidata sugerida**: calidad del aire (IDEAM) — se encontró y
-  verificó en vivo un dataset nacional directo en datos.gov.co
-  (`g4t8-zkc3`/`kekd-7v7h`, 30665 filas, 344 municipios, 2011-2025) que
-  reemplaza la pista vieja de SISAIRE sin API clara. Requiere una decisión
-  de alcance chica: filtrar la lista de 20 "variable" mezcladas
-  (contaminantes reales vs. meteorológicas) — ver la fila correspondiente.
-  El resto (vivienda, pobreza municipal, consumo eléctrico) sigue
-  necesitando una sesión de investigación de acceso aparte.
+  1991 a la fecha, Superintendencia Financiera) y `calidad_aire` (los 6
+  contaminantes del Índice de Calidad del Aire por estación, 2011 a la
+  fecha, IDEAM).
+- **Próxima candidata sugerida**: ninguna queda con acceso ya confirmado
+  sin diseño pendiente — vivienda (Camacol/DANE) sigue sin verificar,
+  pobreza municipal solo existe en años censales (requiere decisión de
+  alcance), consumo eléctrico sin API confirmable, y los otros
+  indicadores del Banco de la República (DTF, IBR, UVR) son candidatos
+  fáciles (mismo patrón que `macroeconomia_trm`) pero sin verificar en
+  detalle todavía.
 
 ## Tabla de fuentes
 
@@ -50,7 +51,7 @@
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
 | Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
 | Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-21**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). 7109704 filas de microdato (2010-2022) agregadas por `(codigo_dane_establecimiento, periodo)` — join directo hacia `educacion_establecimientos` — a 105110 filas publicadas. Paginado por keyset (`:id`), no `$offset` (~7x más rápido a esta escala, ver docstring del extractor) | 🟡 Fácil (acceso) | ✅ `educacion_saber11` — ver `src/extractors/educacion_saber11_extractor.py` |
-| Calidad del aire | IDEAM, vía datos.gov.co (no SISAIRE directo) | **Confirmado en vivo 2026-10-22**: `datos.gov.co/resource/kekd-7v7h.json` ("Calidad del Aire en Colombia (Promedio Anual)", CC BY-SA 4.0, atribución IDEAM). 30665 filas, 2011-2025, 344 municipios — mezcla 20 "variable" distintas (contaminantes: PM10/PM2.5/SO2/O3/NO2/CO/PST; meteorológicas: temperatura/viento/lluvia/radiación). Requiere decidir si se publican solo los contaminantes o todas — reemplaza la pista vieja de SISAIRE (sin API encontrada) | 🟡 Media (curación de variables, no de acceso) | ⬜ No implementada |
+| Calidad del aire | IDEAM, vía datos.gov.co (no SISAIRE directo) | **Confirmado en vivo 2026-10-22**: `datos.gov.co/resource/kekd-7v7h.json` ("Calidad del Aire en Colombia (Promedio Anual)", CC BY-SA 4.0, atribución IDEAM). 30665 filas totales, 2011-2025, 513 estaciones, 344 municipios. Se publican solo los 6 contaminantes del ICA (PM10/PM2.5/SO2/O3/NO2/CO, ~15600 filas de microdato) — las 14 variables meteorológicas y PST/NO quedan fuera, documentado como alcance. Defecto real de la fuente: ~6600 combinaciones estación+contaminante+ventana+año vienen publicadas DOS VECES — colapsadas a 8985 filas publicadas | 🟡 Media (curación de variables, no de acceso) | ✅ `calidad_aire` — ver `src/extractors/calidad_aire_extractor.py` |
 | Vivienda / edificación | DANE / Camacol | Boletines + censo (Excel) | 🟡 Media | ⬜ No implementada |
 | Pobreza | DANE (monetaria / multidimensional) | **Investigado 2026-10-22**: no hay tasa de pobreza municipal anual en datos.gov.co — la pobreza monetaria/multidimensional del DANE solo se calcula a nivel municipal en años censales (2005, 2018; ver `qgpk-sefn`), y el dato anual (GEIH) es departamental/13 ciudades, no municipal. Implementar esto requeriría publicar solo años censales o cambiar la granularidad — decisión de alcance antes de empezar | 🟡 Media / requiere diseño de alcance | ⬜ No implementada |
 | Consumo eléctrico | XM (operador del mercado eléctrico) / UPME | **Investigado 2026-10-22**: no se encontró una API pública confirmable de SINERGOX/SiMEM — solo un portal de descarga interactivo. Búsqueda en el catálogo de datos.gov.co tampoco encontró demanda eléctrica por municipio | 🟡 Media / acceso no confirmado | ⬜ No implementada |

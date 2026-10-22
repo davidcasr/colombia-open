@@ -71,7 +71,7 @@ hub.list_datasets()
 #  "educacion_establecimientos", "educacion_saber11",
 #  "delincuencia_hurto_personas", "delincuencia_lesiones_personales",
 #  "delincuencia_hurto_modalidades", "infraestructura_poi",
-#  "macroeconomia_trm"]
+#  "macroeconomia_trm", "calidad_aire"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -112,6 +112,7 @@ colombia-open validate municipios
 | `delincuencia_hurto_modalidades` | Víctimas de hurto a residencias y entidades comerciales por municipio, día, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~397361 | CC BY-SA 4.0 |
 | `infraestructura_poi` | Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) por municipio | OpenStreetMap, vía Geofabrik | ~58046 | ODbL 1.0 |
 | `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8372 | CC BY-SA 4.0 |
+| `calidad_aire` | Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación, 2011 a la fecha | IDEAM, vía datos.gov.co | ~8985 | CC BY-SA 4.0 |
 
 Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
@@ -193,15 +194,16 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con diez
+- ✅ Patrón extractor/builder/validación/registro probado con once
   fuentes (DIVIPOLA, geometría MGN vía HDX, demografía, dos de educación,
-  tres de delincuencia, POI de OpenStreetMap y TRM) de dominios distintos
-  (API Socrata pequeña, descarga directa de Excel, API Socrata grande y
-  paginada —incluida una de 7.1M filas con paginación por keyset—,
-  shapefile geoespacial, extracto `.osm.pbf` con geoprocesamiento).
+  tres de delincuencia, POI de OpenStreetMap, TRM y calidad del aire) de
+  dominios distintos (API Socrata pequeña, descarga directa de Excel, API
+  Socrata grande y paginada —incluida una de 7.1M filas con paginación por
+  keyset—, shapefile geoespacial, extracto `.osm.pbf` con
+  geoprocesamiento).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.11.0`, bundle de datos con SHA256, incluye las
-  diez fuentes) — `ColombiaOpen()` descarga y cachea el bundle
+  publicados (último: `v0.12.0`, bundle de datos con SHA256, incluye las
+  once fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**

@@ -35,6 +35,14 @@ EXPECTED_EDUCACION_SABER11_MIN_COUNT = 90_000
 # TRM (Superintendencia Financiera). 8372 filas confirmadas en vivo
 # (2026-10-22), serie diaria desde 1991-12-02.
 EXPECTED_MACROECONOMIA_TRM_MIN_COUNT = 8_000
+
+# Calidad del aire (IDEAM), filtrado a los 6 contaminantes del Índice de
+# Calidad del Aire (ICA) colombiano. ~15600 filas de microdato en la
+# fuente (de 30665 totales; el resto son variables meteorológicas y
+# PST/NO, fuera de alcance — ver el extractor), colapsadas a ~8985 tras
+# deduplicar la fila publicada dos veces (ver docstring del extractor).
+CONTAMINANTES_ICA_VALIDOS = {"PM10", "PM2.5", "SO2", "O3", "NO2", "CO"}
+EXPECTED_CALIDAD_AIRE_MIN_COUNT = 8_000
 # Bajo este umbral de (valores distintos de codigo_dane / filas) para un
 # año dado, se trata como un defecto conocido de la fuente para ese año
 # (warning), no como clave primaria duplicada (error) — ver nota en

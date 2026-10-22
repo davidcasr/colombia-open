@@ -190,5 +190,22 @@
       "cli": "colombia-open path macroeconomia_trm --output parquet"
     },
     "documentation": "docs/datasets/macroeconomia_trm.md"
+  },
+  "calidad_aire": {
+    "description": "Calidad del aire por estación de monitoreo: 6 contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO), promedio anual, 2011 a la fecha.",
+    "extractor": "src/extractors/calidad_aire_extractor.py",
+    "source_name": "IDEAM — Calidad del Aire en Colombia (Promedio Anual), vía datos.gov.co",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 8985,
+    "outputs": {
+      "parquet": "data/normalized/calidad_aire.parquet",
+      "json": "data/normalized/calidad_aire.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('calidad_aire')",
+      "cli": "colombia-open path calidad_aire --output parquet"
+    },
+    "documentation": "docs/datasets/calidad_aire.md"
   }
 }
