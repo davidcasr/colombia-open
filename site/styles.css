@@ -147,7 +147,11 @@ h1, h2, h3 { text-wrap: balance; margin: 0; font-family: Fraunces, "Iowan Old St
 .hero-mark { width: 120px; height: 120px; margin-bottom: 1.5rem; }
 .hero h1 { font-size: clamp(2.1rem, 5.5vw, 3.1rem); max-width: 18ch; }
 .hero .lede { max-width: 54ch; color: var(--fg-muted); font-size: 1.1rem; margin-top: 1rem; }
-.hero .lede-audience { font-size: 0.92rem; margin-top: 0.8rem; }
+.hero-audience {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.82rem;
+  color: var(--fg-muted); margin-top: 0.9rem; max-width: 54ch;
+}
+.hero-audience-label { text-transform: uppercase; letter-spacing: 0.1em; }
 .hero-ctas { display: flex; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; gap: 0.4rem;
