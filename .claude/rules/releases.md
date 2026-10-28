@@ -8,12 +8,9 @@ workflow manual:
   cachea automáticamente en el primer uso (ver `data_manager.py`).
 - **Paquete**: el código de `colombia_open/` a [PyPI](https://pypi.org/project/colombia-open/)
   (`pip install colombia-open`), vía trusted publishing — sin token
-  almacenado (`.github/workflows/publish.yml`). Primer publish real
-  (`0.3.0`) corrido el 2026-10-18, verificado instalando desde PyPI en un
-  venv limpio. El job corre en `ubuntu-latest`, no `windows-latest` como
-  `release.yml` — `pypa/gh-action-pypi-publish` es una Docker action, solo
-  corre en Linux (falló en el primer intento con `windows-latest`, no
-  copies ese valor de `release.yml` sin pensarlo).
+  almacenado (`.github/workflows/publish.yml`). El job corre en
+  `ubuntu-latest`, nunca `windows-latest` como `release.yml` —
+  `pypa/gh-action-pypi-publish` es una Docker action, solo corre en Linux.
 
 Usa SemVer (`MAJOR.MINOR.PATCH`) sobre `version` en `pyproject.toml` para
 ambos — el mismo número de versión identifica el release de datos
@@ -81,9 +78,8 @@ ambos — el mismo número de versión identifica el release de datos
 
 5. Después de un release exitoso, revisa que no haya quedado
    documentación desactualizada referenciando el tag anterior (README
-   "Estado del proyecto", landing page, etc.) — ver el incidente real de
-   esto en el historial de commits de 2026-10-18, donde el README quedó
-   mencionando `v0.1.0` después de publicarse `v0.2.0`.
+   "Estado del proyecto", landing page, etc.) — ya pasó que el README
+   quedó mencionando un tag viejo después de publicar uno nuevo.
 
 ## Publicar el paquete a PyPI
 
