@@ -113,11 +113,8 @@ No agregues reintentos propios dentro de un extractor: si una fuente
 necesita otra política, cámbiala en `http_utils.py` (un solo lugar) y
 actualiza esta sección.
 
-> Historia (2026-10-19): la regla original no reintentaba ningún 4xx/5xx.
-> Con datos.gov.co devolviendo 500/503 intermitentes en ~1 de cada 6
-> páginas, una fuente paginada en ~28 páginas
-> (`delincuencia_lesiones_personales`) tenía ~1% de probabilidad de un
-> build en vivo completo. Con 4 intentos por página sube a ~99%.
+> Los reintentos existen por 500/503 intermitentes reales de datos.gov.co
+> en fuentes paginadas (ver git log de `http_utils.py` para el detalle).
 
 ## 6. Siempre se invoca como módulo, nunca como script suelto
 

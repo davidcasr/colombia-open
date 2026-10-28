@@ -8,7 +8,7 @@ description: >
 category: ai-entrypoint
 audience: [claude-code, ai-agent]
 priority: critical
-related_docs: [docs/roadmap/roadmap.md, docs/licenses/data_licenses.md, docs/brand/design-system.md]
+related_docs: [docs/roadmap/roadmap.md, docs/licenses/data_licenses.md, docs/brand/design-system.md, docs/troubleshooting/entorno-windows.md]
 last_updated: 2026-10-17
 ---
 
@@ -35,26 +35,22 @@ tabla de `docs/roadmap/roadmap.md` sin que te lo pidan — ese mapeo ya está he
 
 ```
 src/
-├── colombia_open/     # librería PÚBLICA (pip install) — deps livianas, nunca importa de abajo
-│   ├── core.py          # ColombiaOpen — la API pública
-│   ├── cli.py            # CLI, dataset-agnóstica
+├── colombia_open/     # librería pública (pip install) — nunca importa de abajo
 │   ├── datasets.py       # Dataset(StrEnum) — actualizar a mano al agregar fuente
-│   ├── data_manager.py   # descarga/cachea el bundle de GitHub Releases (SHA256)
-│   ├── mcp_server.py      # servidor MCP opcional (extra `mcp`) — ver docs/mcp.md
-│   └── text.py            # clean_name() — normalización para joins/búsqueda
-├── extractors/         # uno por fuente institucional — fetch + fallback + raw snapshot
-├── builders/            # staging -> normalizado (parquet/json) + catálogo runtime
-├── validation/          # reglas por dominio, funciones puras (nunca lanzan)
-├── registry/             # DatasetSpec — qué datasets existen, su esquema, su licencia
-└── build_pipeline.py    # orquestador: `python -m src.build_pipeline` == `make build`
+│   └── data_manager.py   # descarga/cachea el bundle de GitHub Releases (SHA256)
+├── extractors/   # uno por fuente — fetch + fallback + raw snapshot
+├── builders/     # staging -> normalizado (parquet/json) + catálogo runtime
+├── validation/   # reglas por dominio, funciones puras (nunca lanzan)
+├── registry/     # DatasetSpec — qué datasets existen, esquema, licencia
+└── build_pipeline.py   # orquestador: `python -m src.build_pipeline` == `make build`
 
 data/
-├── raw/           # snapshots crudos, write-once — NUNCA se edita después de escrito
-├── staging/       # CSV normalizado + metadata.json, un par por extractor
-├── normalized/    # parquet/json finales + dataset_catalog.json (lo que lee la librería pública)
-└── registry/      # datasets.json — fuente de verdad estática (mantenida a mano)
+├── raw/        # snapshots crudos, write-once
+├── staging/    # CSV normalizado + metadata.json, un par por extractor
+├── normalized/ # parquet/json finales + dataset_catalog.json (lo que lee la lib pública)
+└── registry/   # datasets.json — fuente de verdad estática (a mano)
 
-tests/        # un archivo por módulo de src/, misma estructura de carpetas
+tests/        # un archivo por módulo de src/, misma estructura
 scripts/      # doctor/verify/bundle — ver Makefile
 docs/datasets/{name}.md   # un doc por dataset publicado
 ```
@@ -74,28 +70,10 @@ make check        # build + verify + test + lint + format-check + typecheck + se
 make doctor       # gates anti-drift (hoy: check_validation_registration.py)
 ```
 
-> **Nota de entorno (Windows)**: este repo se desarrolló con `uv` porque
-> `pip`/`venv` estándar en Python 3.14 falla al compilar `pyarrow` (sin
-> wheel precompilado todavía) y la build de Python 3.12 manejada por uv
-> tiene un bug conocido de OpenSSL en TLS (`OPENSSL_Uplink... no
-> OPENSSL_Applink`, crashea cualquier `requests.get` sobre HTTPS). **Usa
-> Python 3.11** vía `uv venv --python 3.11 .venv` — es el que se verificó
-> funcionando end-to-end en esta sesión.
->
-> **Nota de entorno (Avast en esta máquina, 2026-10-20)**: si `requests.get`
-> empieza a fallar con `SSLCertVerificationError: unable to get local
-> issuer certificate` para **cualquier** host HTTPS (no solo uno), es Avast
-> ("Web/Mail Shield") interceptando TLS e inyectando su propio root CA —
-> `curl`/Windows sí lo confían (vía el almacén de certificados del SO),
-> pero `certifi` (el bundle que usa `requests`) no. No es un problema del
-> certificado real de la fuente ni del código del extractor — confirmado
-> con `openssl s_client` (el emisor del cert cambia a "Avast Web/Mail
-> Shield Root"). Para validar un extractor en vivo en esta máquina cuando
-> esto pase: instalar temporalmente `pip-system-certs` en el venv (parcha
-> `requests` para usar el almacén de certificados de Windows) y
-> desinstalarlo después — **nunca** agregarlo a `pyproject.toml`, es un
-> workaround de esta máquina, no una dependencia del proyecto. En CI
-> (GitHub Actions) este problema no existe.
+> **Entorno Windows**: usa `uv venv --python 3.11 .venv` (no 3.12/3.14 —
+> hay bugs conocidos de wheel/OpenSSL). Detalle y errores SSL propios de
+> tu máquina → `docs/troubleshooting/entorno-windows.md` +
+> `CLAUDE.local.md` (no versionado).
 
 ## Stack
 

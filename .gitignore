@@ -34,3 +34,6 @@ Thumbs.db
 
 # Env
 .env
+
+# Notas de entorno locales, no versionadas (específicas de la máquina de cada dev)
+CLAUDE.local.md
