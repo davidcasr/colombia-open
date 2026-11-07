@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # para disparar pages-deploy.yml al final
 
 jobs:
   release:
@@ -41,3 +42,10 @@ jobs:
           files: |
             colombia-open-bundle.zip
             colombia-open-bundle.zip.sha256
+            data/normalized/dataset_catalog.json
+      - name: Actualizar la landing con el catálogo de este release
+        # Un release creado con GITHUB_TOKEN no dispara otros workflows por
+        # evento; workflow_dispatch sí está permitido.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages-deploy.yml --ref main --repo ${{ github.repository }}

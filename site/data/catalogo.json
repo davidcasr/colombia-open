@@ -1,0 +1,62 @@
+{
+  "_comentario": "Datos de presentación de la landing (site/index.html). El resto de cada tarjeta (descripción, filas, licencia, fuente, fecha) se genera desde dataset_catalog.json del último release — ver scripts/build_site.py.",
+  "grupos": [
+    "Geografía",
+    "Demografía",
+    "Educación",
+    "Seguridad y convivencia",
+    "Infraestructura",
+    "Economía",
+    "Medio ambiente"
+  ],
+  "datasets": {
+    "departamentos": {
+      "titulo": "Departamentos",
+      "grupo": "Geografía"
+    },
+    "municipios": {
+      "titulo": "Municipios",
+      "grupo": "Geografía"
+    },
+    "municipios_geometria": {
+      "titulo": "Geometría municipal",
+      "grupo": "Geografía"
+    },
+    "demografia": {
+      "titulo": "Proyecciones de población",
+      "grupo": "Demografía"
+    },
+    "educacion_establecimientos": {
+      "titulo": "Establecimientos educativos",
+      "grupo": "Educación"
+    },
+    "educacion_saber11": {
+      "titulo": "Resultados Saber 11",
+      "grupo": "Educación"
+    },
+    "delincuencia_hurto_personas": {
+      "titulo": "Hurto a personas",
+      "grupo": "Seguridad y convivencia"
+    },
+    "delincuencia_lesiones_personales": {
+      "titulo": "Lesiones personales y de tránsito",
+      "grupo": "Seguridad y convivencia"
+    },
+    "delincuencia_hurto_modalidades": {
+      "titulo": "Hurto a residencias y comercios",
+      "grupo": "Seguridad y convivencia"
+    },
+    "infraestructura_poi": {
+      "titulo": "Puntos de interés urbanos",
+      "grupo": "Infraestructura"
+    },
+    "macroeconomia_trm": {
+      "titulo": "TRM diaria",
+      "grupo": "Economía"
+    },
+    "calidad_aire": {
+      "titulo": "Calidad del aire",
+      "grupo": "Medio ambiente"
+    }
+  }
+}
