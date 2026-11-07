@@ -47,7 +47,7 @@ pipeline = [
     "pandas>=2.2,<3",
     "openpyxl>=3.1,<4",
     "tenacity>=9,<10",
-    "structlog>=24.4,<25",
+    "structlog>=24.4,<27",
 ]
 # Fuentes que requieren scraping real (no API/descarga directa) viven aparte:
 # entorno efímero en CI, para no mezclar deps de scraping con las del
