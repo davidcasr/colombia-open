@@ -22,7 +22,7 @@ departamentos = hub.load_polars("departamentos")
 
 > **Proyecto en MVP activo.** Once fuentes están implementadas de punta a
 > punta (DIVIPOLA: departamentos + municipios, DANE; geometría municipal,
-> MGN/HDX; demografía: proyecciones de población, DANE; educación:
+> IGAC vía SNR; demografía: proyecciones de población, DANE; educación:
 > establecimientos y Saber 11, MEN/ICFES; seguridad: hurto a personas,
 > lesiones personales e hurto a residencias/comercio, Policía;
 > infraestructura: puntos de interés urbanos, OpenStreetMap;
@@ -107,7 +107,7 @@ colombia-open validate municipios
 | --------------- | -------------------------------------------------------------------------------- | ---------------------- | ----- | ------------ |
 | `departamentos` | Departamentos: código DIVIPOLA (2 dígitos) + nombre                              | DANE, vía datos.gov.co | 33    | CC BY-SA 4.0 |
 | `municipios`    | Municipios: código DIVIPOLA (5 dígitos), nombre, departamento, centroide lon/lat | DANE, vía datos.gov.co | ~1122 | CC BY-SA 4.0 |
-| `municipios_geometria` | Geometría de polígonos municipales (MGN), simplificada, con área geodésica | DANE (MGN), vía HDX | ~1122 | CC BY-IGO 3.0 |
+| `municipios_geometria` | Geometría de polígonos municipales, simplificada, con área geodésica | IGAC, vía SNR (ArcGIS REST) | ~1122 | CC BY 4.0 |
 | `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 | `educacion_establecimientos` | Directorio único de establecimientos educativos, 2015-2025            | MEN, vía datos.gov.co  | ~606206 | CC BY-SA 4.0 |
 | `educacion_saber11` | Resultados Saber 11 agregados por establecimiento y periodo, 2010-2022 | ICFES, vía datos.gov.co | ~105110 | CC BY-SA 4.0 |
@@ -199,7 +199,7 @@ directamente `data/normalized/` si ya corriste `make build`.
 ## Estado del proyecto
 
 - ✅ Patrón extractor/builder/validación/registro probado con once
-  fuentes (DIVIPOLA, geometría MGN vía HDX, demografía, dos de educación,
+  fuentes (DIVIPOLA, geometría municipal IGAC vía SNR, demografía, dos de educación,
   tres de delincuencia, POI de OpenStreetMap, TRM y calidad del aire) de
   dominios distintos (API Socrata pequeña, descarga directa de Excel, API
   Socrata grande y paginada —incluida una de 7.1M filas con paginación por

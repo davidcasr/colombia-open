@@ -200,7 +200,7 @@ def build() -> list[dict[str, Any]]:
     )
 
     # --- municipios_geometria: 1:1 desde staging (segunda iteración de
-    # divipola/municipios, geometría de un dominio/fuente distinto: HDX, no
+    # divipola/municipios, geometría de un dominio/fuente distinto: ArcGIS REST, no
     # Socrata), sin derive_* ---
     geometria_extraction = MunicipiosGeometriaExtractor().run()
     geometria_staging_metadata = geometria_extraction.to_staging_metadata()
