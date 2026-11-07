@@ -1,7 +1,7 @@
 name: ✨ Mejora
 description: Una mejora a la librería, la API pública, el CLI, el servidor MCP, la documentación o el tooling.
 title: "feat: "
-labels: ["mejora", "needs-triage"]
+labels: ["enhancement", "needs-triage"]
 body:
   - type: markdown
     attributes:
