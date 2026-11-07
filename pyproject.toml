@@ -27,7 +27,7 @@ classifiers = [
 # Instalación mínima (consumidor): solo lo necesario para LEER datos ya publicados.
 dependencies = [
     "polars>=1.9,<2",
-    "pyarrow>=23.0.1,<25",
+    "pyarrow>=23.0.1,<27",
     "requests>=2.32,<3",
     "platformdirs>=4.3,<5",
 ]
@@ -63,7 +63,7 @@ scraping = [
 geo = [
     "geopandas>=1.0,<2",
     "shapely>=2.0,<3",
-    "pyarrow>=23.0.1,<25",
+    "pyarrow>=23.0.1,<27",
     "osmium>=4.0,<5",
 ]
 # Validación de esquema estricta vía Frictionless Data Package.
