@@ -122,9 +122,9 @@
     "documentation": "docs/datasets/delincuencia_hurto_modalidades.md"
   },
   "municipios_geometria": {
-    "description": "Geometría de polígonos municipales (Marco Geoestadístico Nacional, DANE), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
+    "description": "Geometría de polígonos municipales (IGAC), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
     "extractor": "src/extractors/municipios_geometria_extractor.py",
-    "source_name": "DANE (Marco Geoestadístico Nacional), vía HDX — Colombia Subnational Administrative Boundaries (cod-ab-col)",
+    "source_name": "IGAC (Instituto Geográfico Agustín Codazzi), vía Superintendencia de Notariado y Registro (SNR) — servicio ArcGIS REST 'MunicipiosSNR'",
     "join_keys": ["cod_mpio", "cod_dpto"],
     "references": { "cod_mpio": "municipios" },
     "expected_record_count": 1122,

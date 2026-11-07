@@ -10,7 +10,7 @@ COLOMBIA_LAT_MAX = 13.5
 
 EXPECTED_DEPARTAMENTOS_COUNT = 33
 EXPECTED_MUNICIPIOS_MIN_COUNT = 1100
-# Geometría de polígonos municipales (MGN vía HDX): mismo umbral que
+# Geometría de polígonos municipales (IGAC vía SNR): mismo umbral que
 # municipios, es prácticamente la misma población de filas (1122 vs. 1122
 # confirmado en vivo 2026-10-20, 1 discrepancia de código en cada sentido).
 EXPECTED_MUNICIPIOS_GEOMETRIA_MIN_COUNT = 1100

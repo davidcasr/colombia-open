@@ -48,7 +48,7 @@ Decisiones de alcance:
   no cargue el error de la simplificación.
 - **No se publica `nombre_mpio` aquí.** El nombre vive en `municipios`
   (mismo `cod_mpio`, join directo) — evita mantener dos copias del nombre
-  que puedan divergir entre fuentes (DANE/DIVIPOLA vs. MGN/HDX).
+  que puedan divergir entre fuentes (DANE/DIVIPOLA vs. IGAC/SNR).
 
 Se invoca siempre como módulo, nunca como script suelto:
 `python -m src.extractors.municipios_geometria_extractor` desde la raíz

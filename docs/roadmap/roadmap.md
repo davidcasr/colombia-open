@@ -15,7 +15,7 @@
 
 - **Fuentes implementadas**: 11 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
-  municipales, MGN/DANE vía HDX — segunda iteración de `divipola`),
+  municipales, IGAC vía SNR/ArcGIS — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
   `educacion_establecimientos` (directorio de establecimientos educativos
   2015-2025, MEN), `educacion_saber11` (resultados Saber 11 agregados por
@@ -47,7 +47,7 @@
 | Dominio | Fuente oficial | Acceso | Dificultad | Estado |
 |---|---|---|---|---|
 | Geografía (códigos DIVIPOLA + centroides) | DANE, vía API Socrata de datos.gov.co (dataset `gdxc-w37w`) | API JSON directa, confirmada y estable | 🟢 Implementada | ✅ `divipola` — ver `src/extractors/divipola_extractor.py` |
-| Geografía (geometría de polígonos, MGN) | DANE Geoportal, o mirror en HDX (Humanitarian Data Exchange) | **Confirmado en vivo 2026-10-20** vía HDX: dataset `cod-ab-col` (`50ea7fee-f9af-45a7-8a52-abb9c790a0b6`), recurso "COL Administrative Divisions Shapefiles.zip" (~117MB), capa ADM2 = municipio (1122 filas), licencia CC BY-IGO 3.0 | 🟢 Fácil vía HDX | ✅ `municipios_geometria` — ver `src/extractors/municipios_geometria_extractor.py` |
+| Geografía (geometría de polígonos municipales) | IGAC, vía servicio ArcGIS REST "MunicipiosSNR" de la Superintendencia de Notariado y Registro (antes: mirror DANE/MGN en HDX) | **Confirmado en vivo 2026-11-05** vía ArcGIS REST (`services2.arcgis.com/.../MunicipiosSNR/FeatureServer/0`), 1122 municipios, licencia CC BY 4.0. HDX (`cod-ab-col`) se abandonó: desde 2026-11 responde un reto AWS WAF a clientes no-navegador | 🟢 Fácil vía ArcGIS REST | ✅ `municipios_geometria` — ver `src/extractors/municipios_geometria_extractor.py` |
 | Demografía (censo/proyecciones) | DANE, proyecciones de población municipal 2018-2042 | **URL exacta confirmada en vivo 2026-10-18**: `dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx` (xlsx directo, HTTP 200, hoja `PobMunicipalxÁrea`) | 🟡 Fácil | ✅ `demografia` — ver `src/extractors/demografia_extractor.py` |
 | Educación (directorio de establecimientos) | MinEducación (MEN) | **Confirmado en vivo 2026-10-18**: `datos.gov.co/resource/cfw5-qzt5.json` (CC BY-SA 4.0 explícito). 606206 filas, 2015-2025, paginado — ~360MB/~7min por build. Defecto conocido de la fuente: `codigo_dane` tiene baja cardinalidad en 2023 (ver `docs/datasets/educacion_establecimientos.md`) | 🟡 Fácil | ✅ `educacion_establecimientos` — ver `src/extractors/educacion_establecimientos_extractor.py` |
 | Educación (Saber 11, ICFES) | ICFES | **Confirmado en vivo 2026-10-21**: `datos.gov.co/resource/kgxf-xxbe.json` (CC BY-SA 4.0). 7109704 filas de microdato (2010-2022) agregadas por `(codigo_dane_establecimiento, periodo)` — join directo hacia `educacion_establecimientos` — a 105110 filas publicadas. Paginado por keyset (`:id`), no `$offset` (~7x más rápido a esta escala, ver docstring del extractor) | 🟡 Fácil (acceso) | ✅ `educacion_saber11` — ver `src/extractors/educacion_saber11_extractor.py` |
@@ -101,6 +101,11 @@ del DANE con descarga directa (sin JS) y licencia CC BY-IGO. Ver la fila de
 geometría en la tabla arriba. Sigue siendo segunda iteración de `divipola`,
 no fuente nueva — pero el bloqueo original (sin mecanismo de descarga
 confirmado) ya no aplica.
+
+**Actualización (2026-11-05)**: HDX empezó a responder un reto AWS WAF
+(HTTP 202) en vez del shapefile. El extractor migró al servicio ArcGIS
+REST "MunicipiosSNR" (IGAC, vía SNR), licencia CC BY 4.0 — ver
+`docs/datasets/municipios_geometria.md`.
 
 **Actualización (2026-10-20)**: implementada como `municipios_geometria`,
 dataset separado de `municipios` (mismo `cod_mpio` como join key) para no

@@ -21,8 +21,8 @@ multipolígono) por municipio, con su área geodésica.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
-| `cod_dpto` | string (2 dígitos) | Código DIVIPOLA de departamento (derivado de `ADM1_PCODE`). **Nunca convertir a int.** |
-| `cod_mpio` | string (5 dígitos) | Código DIVIPOLA de municipio (derivado de `ADM2_PCODE`) — join key hacia `municipios`. **Nunca convertir a int.** |
+| `cod_dpto` | string (2 dígitos) | Código DIVIPOLA de departamento (primeros 2 dígitos de `MpCodigo` de la fuente). **Nunca convertir a int.** |
+| `cod_mpio` | string (5 dígitos) | Código DIVIPOLA de municipio (`MpCodigo` de la fuente) — join key hacia `municipios`. **Nunca convertir a int.** |
 | `geom_type` | string | `"Polygon"` (1113 municipios) o `"MultiPolygon"` (9 municipios con islas o exclaves, ej. San Andrés). |
 | `area_km2` | float | Área geodésica (`pyproj.Geod(ellps="WGS84")`), calculada sobre la geometría **original** antes de simplificar — no carga el error de la simplificación. |
 | `geometry_wkt` | string | Polígono en formato WKT (Well-Known Text), EPSG:4326 (lon/lat, WGS84). **Simplificado** (tolerancia Douglas-Peucker 0.0005°, ~55m en el ecuador) y redondeado a 6 decimales — ver Limitaciones. |
@@ -80,7 +80,7 @@ gdf = gpd.GeoDataFrame(
   directo a la fuente del Geoportal DANE.
 - **No incluye nombre de municipio.** `cod_mpio` es la única clave; haz
   join con `municipios` para el nombre, evitando mantener dos copias que
-  puedan divergir entre fuentes (DANE/DIVIPOLA vs. MGN/HDX).
+  puedan divergir entre fuentes (DANE/DIVIPOLA vs. IGAC/SNR).
 - **Vigencia de la cartografía fijada por el proceso de deslinde de cada
   entidad territorial**, no necesariamente la más reciente posible — el
   límite administrativo de un municipio cambia con poca frecuencia, así
