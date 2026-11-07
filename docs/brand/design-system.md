@@ -75,7 +75,11 @@ capa encima del DANE. Sin signos de exclamación cerca de datos o cifras.
 
 ```
 site/
-├── index.html                      # landing page (usa los tokens de este archivo)
+├── index.html                      # landing page (usa los tokens de este archivo);
+│                                   #   #catalogo y #roadmap los genera scripts/build_site.py
+├── data/
+│   ├── catalogo.json               # título y grupo de cada dataset en la landing
+│   └── roadmap.json                # filas del roadmap (implementadas ligadas a datasets)
 ├── styles.css                      # implementación real de los tokens
 ├── favicon.svg                     # versión reducida para el tab del navegador
 └── assets/

@@ -114,10 +114,13 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
    mapeo de `docs/roadmap/roadmap.md` puede estar desactualizado.
 10. **`site/index.html` (landing page) es código de marca, no un documento
     aparte.** Usa solo los tokens de `site/styles.css`/`docs/brand/design-system.md`
-    — nunca un color o fuente hardcodeada nueva. Al agregar una fuente,
-    actualiza también la tarjeta en `#catalogo` y la fila en `#roadmap` de
-    `site/index.html`, no solo los docs — la página pública no debe quedar
-    desincronizada del roadmap real. **Todo lo que se publica a GitHub
+    — nunca un color o fuente hardcodeada nueva. Las tarjetas de `#catalogo`
+    y las filas de `#roadmap` **no se editan a mano**: `scripts/build_site.py`
+    las genera en cada deploy desde el `dataset_catalog.json` del último
+    release (lo que de verdad está publicado). Al agregar una fuente, agrega
+    su título/grupo en `site/data/catalogo.json` y liga su fila en
+    `site/data/roadmap.json` (`"datasets": [...]`); aparece en la web al
+    cortar el release. **Todo lo que se publica a GitHub
     Pages vive dentro de `site/`** — nada de HTML/CSS de la web en la raíz
     del repo (la raíz es del paquete Python).
 

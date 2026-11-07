@@ -142,45 +142,46 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
       <h2>Catálogo</h2>
       <p class="intro">Lo que hay disponible hoy. Crece una fuente a la vez — ver el roadmap completo abajo.</p>
       <div class="catalog-grid">
+        <!-- catalogo:inicio -->
         <p class="eyebrow catalog-group-label">Geografía</p>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Departamentos</h3>
             <span class="dataset-slug">departamentos</span>
           </div>
-          <p>Departamentos de Colombia: código DIVIPOLA de 2 dígitos y nombre oficial.</p>
+          <p>Departamentos de Colombia: código DIVIPOLA de 2 dígitos y nombre oficial (DANE).</p>
           <div class="dataset-meta">
             <span class="pill">33 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Municipios</h3>
             <span class="dataset-slug">municipios</span>
           </div>
-          <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en un dataset aparte.</p>
+          <p>Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en el dataset separado municipios_geometria.</p>
           <div class="dataset-meta">
             <span class="pill">1.122 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/gdxc-w37w" target="_blank" rel="noopener">DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Geometría municipal</h3>
             <span class="dataset-slug">municipios_geometria</span>
           </div>
-          <p>Geometría de polígonos municipales, simplificada, con área geodésica.</p>
+          <p>Geometría de polígonos municipales (Marco Geoestadístico Nacional, DANE), simplificada, con área geodésica — segunda iteración de divipola/municipios.</p>
           <div class="dataset-meta">
             <span class="pill">1.122 filas</span>
             <span class="pill">parquet · json</span>
-            <span class="pill">CC BY 4.0</span>
+            <span class="pill">CC BY-IGO 3.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://services2.arcgis.com/RVvWzU3lgJISqdke/arcgis/rest/services/MunicipiosSNR/FeatureServer/0" target="_blank" rel="noopener">IGAC, vía Superintendencia de Notariado y Registro (ArcGIS REST)</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://data.humdata.org/dataset/50ea7fee-f9af-45a7-8a52-abb9c790a0b6/resource/32fba556-0109-4d1c-84cb-c8abddf7775b/download/col-administrative-divisions-shapefiles.zip" target="_blank" rel="noopener">DANE (Marco Geoestadístico Nacional), vía HDX — Colombia Subnational Administrative Boundaries (cod-ab-col)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Demografía</p>
         <div class="dataset-card">
@@ -188,13 +189,13 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <h3>Proyecciones de población</h3>
             <span class="dataset-slug">demografia</span>
           </div>
-          <p>Proyecciones de población municipal por área geográfica (cabecera, centros poblados y rural disperso, total), años 2018-2042.</p>
+          <p>Proyecciones de población municipal de Colombia por área geográfica (cabecera / centros poblados y rural disperso / total), años 2018-2042 (DANE).</p>
           <div class="dataset-meta">
             <span class="pill">84.225 filas</span>
             <span class="pill">parquet · json</span>
-            <a class="pill" href="https://www.dane.gov.co/index.php/servicios-al-ciudadano/tramites/transparencia-y-acceso-a-la-informacion-publica/terminos-y-condiciones" target="_blank" rel="noopener">Términos DANE</a>
+            <a class="pill" href="https://www.dane.gov.co/index.php/servicios-al-ciudadano/tramites/transparencia-y-acceso-a-la-informacion-publica/terminos-y-condiciones" target="_blank" rel="noopener" title="Sin licencia abierta explícita — términos de uso del DANE">Ver términos de uso</a>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx" target="_blank" rel="noopener">DANE — Proyecciones de Población (PPED)</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx" target="_blank" rel="noopener">DANE — Proyecciones de población municipal por área geográfica 2018-2042</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Educación</p>
         <div class="dataset-card">
@@ -202,26 +203,26 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <h3>Establecimientos educativos</h3>
             <span class="dataset-slug">educacion_establecimientos</span>
           </div>
-          <p>Directorio único de establecimientos educativos de Colombia (preescolar, básica y media), años 2015-2025.</p>
+          <p>Directorio único de establecimientos educativos de Colombia (preescolar, básica y media), 2015-2025 (MEN).</p>
           <div class="dataset-meta">
             <span class="pill">606.206 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/cfw5-qzt5" target="_blank" rel="noopener">MEN — Directorio de establecimientos, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/cfw5-qzt5" target="_blank" rel="noopener">MEN — Directorio único de establecimientos educativos (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Resultados Saber 11</h3>
             <span class="dataset-slug">educacion_saber11</span>
           </div>
-          <p>Resultados Saber 11 agregados por establecimiento y periodo (promedio por materia, número de estudiantes), 2010-2022.</p>
+          <p>Resultados Saber 11 (ICFES) agregados por establecimiento y periodo — promedio por materia y número de estudiantes, 2010-2022.</p>
           <div class="dataset-meta">
             <span class="pill">105.110 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kgxf-xxbe" target="_blank" rel="noopener">ICFES — Resultados Saber 11, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kgxf-xxbe" target="_blank" rel="noopener">ICFES — Resultados Saber 11, agregado por establecimiento (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Seguridad y convivencia</p>
         <div class="dataset-card">
@@ -229,39 +230,39 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <h3>Hurto a personas</h3>
             <span class="dataset-slug">delincuencia_hurto_personas</span>
           </div>
-          <p>Víctimas de hurto a personas por municipio y día, desde 2003 hasta el último corte mensual de la fuente.</p>
+          <p>Víctimas de hurto a personas por municipio y día, 2003 a la fecha (MinDefensa / Policía Nacional).</p>
           <div class="dataset-meta">
             <span class="pill">654.351 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/4rxi-8m8d" target="_blank" rel="noopener">MinDefensa / Policía Nacional — Hurto a personas, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/4rxi-8m8d" target="_blank" rel="noopener">MinDefensa / Policía Nacional — Hurto a personas (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Lesiones personales y de tránsito</h3>
             <span class="dataset-slug">delincuencia_lesiones_personales</span>
           </div>
-          <p>Víctimas de lesiones personales y en accidente de tránsito por municipio y día, con conducta, arma, género y grupo etario, desde 2010.</p>
+          <p>Víctimas de lesiones personales (dolosas y culposas, incluidas las de tránsito) por municipio, día, conducta, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).</p>
           <div class="dataset-meta">
             <span class="pill">1.377.323 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/72sg-cybi" target="_blank" rel="noopener">Policía Nacional — Lesiones personales y en accidente de tránsito, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/72sg-cybi" target="_blank" rel="noopener">Policía Nacional (DIPON) — Lesiones personales y en accidente de tránsito (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <div class="dataset-card">
           <div class="dataset-title">
             <h3>Hurto a residencias y comercios</h3>
             <span class="dataset-slug">delincuencia_hurto_modalidades</span>
           </div>
-          <p>Víctimas de hurto a residencias y entidades comerciales por municipio y día, con arma, género y grupo etario, desde 2010.</p>
+          <p>Víctimas de hurto por modalidades (residencias y entidades comerciales) por municipio, día, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).</p>
           <div class="dataset-meta">
             <span class="pill">397.361 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/6sqw-8cg5" target="_blank" rel="noopener">Policía Nacional — Hurto por modalidades, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/6sqw-8cg5" target="_blank" rel="noopener">Policía Nacional (DIPON) — Hurto por modalidades (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Infraestructura</p>
         <div class="dataset-card">
@@ -269,13 +270,13 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <h3>Puntos de interés urbanos</h3>
             <span class="dataset-slug">infraestructura_poi</span>
           </div>
-          <p>Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) geocodificados por municipio.</p>
+          <p>Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio), geocodificados por municipio — OpenStreetMap vía Geofabrik.</p>
           <div class="dataset-meta">
             <span class="pill">58.049 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">ODbL 1.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://download.geofabrik.de/south-america/colombia.html" target="_blank" rel="noopener">OpenStreetMap contributors, vía Geofabrik</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://download.geofabrik.de/south-america/colombia-latest.osm.pbf" target="_blank" rel="noopener">OpenStreetMap contributors, vía Geofabrik — extracto Colombia</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Economía</p>
         <div class="dataset-card">
@@ -289,7 +290,7 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/32sa-8pi3" target="_blank" rel="noopener">Superintendencia Financiera — TRM, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/32sa-8pi3" target="_blank" rel="noopener">Superintendencia Financiera de Colombia (SUPERFINANCIERA) — TRM (vía datos.gov.co)</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
         <p class="eyebrow catalog-group-label">Medio ambiente</p>
         <div class="dataset-card">
@@ -297,14 +298,15 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <h3>Calidad del aire</h3>
             <span class="dataset-slug">calidad_aire</span>
           </div>
-          <p>Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación de monitoreo, 2011 a la fecha.</p>
+          <p>Calidad del aire por estación de monitoreo: 6 contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO), promedio anual, 2011 a la fecha.</p>
           <div class="dataset-meta">
             <span class="pill">8.985 filas</span>
             <span class="pill">parquet · json</span>
             <span class="pill">CC BY-SA 4.0</span>
           </div>
-          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kekd-7v7h" target="_blank" rel="noopener">IDEAM — Calidad del Aire en Colombia, vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
+          <p class="dataset-source">Fuente: <a href="https://www.datos.gov.co/resource/kekd-7v7h" target="_blank" rel="noopener">IDEAM — Calidad del Aire en Colombia (Promedio Anual), vía datos.gov.co</a><br>Actualizado: 22 de octubre de 2026</p>
         </div>
+        <!-- catalogo:fin -->
       </div>
     </div>
   </section>
@@ -319,17 +321,18 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <tr><th>Dominio</th><th>Fuente oficial</th><th>Estado</th></tr>
           </thead>
           <tbody>
-            <tr><td>Geografía (códigos + centroides)</td><td>DANE, vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Geografía (geometría de polígonos municipales)</td><td>IGAC, vía SNR (ArcGIS)</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Demografía (censo / proyecciones)</td><td>DANE — proyecciones de población</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Educación (directorio de establecimientos)</td><td>MinEducación (MEN)</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Educación (Saber 11)</td><td>ICFES</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Calidad del aire</td><td>IDEAM, vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Macroeconomía (TRM)</td><td>Superintendencia Financiera</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Infraestructura urbana / puntos de interés</td><td>OpenStreetMap (Geofabrik)</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Seguridad y convivencia (hurto a personas)</td><td>Policía Nacional / MinDefensa</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Seguridad y convivencia (lesiones personales)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
-            <tr><td>Seguridad y convivencia (hurto por modalidades)</td><td>Policía Nacional</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <!-- roadmap:inicio -->
+            <tr><td>Geografía (códigos + centroides)</td><td>DANE — DIVIPOLA Códigos municipios (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Geografía (geometría de polígonos municipales)</td><td>DANE (Marco Geoestadístico Nacional), vía HDX — Colombia Subnational Administrative Boundaries (cod-ab-col)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Demografía (censo / proyecciones)</td><td>DANE — Proyecciones de población municipal por área geográfica 2018-2042</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Educación (directorio de establecimientos)</td><td>MEN — Directorio único de establecimientos educativos (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Educación (Saber 11)</td><td>ICFES — Resultados Saber 11, agregado por establecimiento (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Calidad del aire</td><td>IDEAM — Calidad del Aire en Colombia (Promedio Anual), vía datos.gov.co</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Macroeconomía (TRM)</td><td>Superintendencia Financiera de Colombia (SUPERFINANCIERA) — TRM (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Infraestructura urbana / puntos de interés</td><td>OpenStreetMap contributors, vía Geofabrik — extracto Colombia</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (hurto a personas)</td><td>MinDefensa / Policía Nacional — Hurto a personas (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (lesiones personales)</td><td>Policía Nacional (DIPON) — Lesiones personales y en accidente de tránsito (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
+            <tr><td>Seguridad y convivencia (hurto por modalidades)</td><td>Policía Nacional (DIPON) — Hurto por modalidades (vía datos.gov.co)</td><td><span class="status-dot done"></span>Implementada</td></tr>
             <tr><td>Vivienda / edificación</td><td>DANE / Camacol</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Pobreza</td><td>DANE</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Consumo eléctrico</td><td>XM / UPME</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
@@ -339,6 +342,7 @@ hub.resolve_municipios([<span class="gold">"medellín"</span>, <span class="gold
             <tr><td>Electoral</td><td>Registraduría</td><td><span class="status-dot pending"></span>Pendiente</td></tr>
             <tr><td>Mercado laboral (GEIH)</td><td>DANE — microdatos</td><td><span class="status-dot pending"></span>Pendiente — licencia restringida</td></tr>
             <tr><td>Calidad de vida (ECV)</td><td>DANE — microdatos</td><td><span class="status-dot pending"></span>Pendiente — licencia restringida</td></tr>
+            <!-- roadmap:fin -->
           </tbody>
         </table>
       </div>

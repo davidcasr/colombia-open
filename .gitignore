@@ -24,6 +24,7 @@ data/cache/
 !tests/**/*.parquet
 colombia-open-bundle.zip
 colombia-open-bundle.zip.sha256
+_site/
 
 # OS / editor
 .DS_Store

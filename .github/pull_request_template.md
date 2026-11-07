@@ -34,7 +34,7 @@ Closes #
 - [ ] Todas las columnas documentadas en `docs/datasets/{name}.md`
 - [ ] Fila marcada en `docs/roadmap/roadmap.md`
 - [ ] Dataset agregado al enum `src/colombia_open/datasets.py::Dataset`
-- [ ] Tarjeta en `#catalogo` y fila en `#roadmap` de `site/index.html`
+- [ ] Título/grupo en `site/data/catalogo.json` y fila ligada en `site/data/roadmap.json` (la web se genera sola desde el release)
 
 ## ¿Usaste un agente de IA?
 
