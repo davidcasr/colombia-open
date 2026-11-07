@@ -43,7 +43,7 @@ colombia-open = "colombia_open.cli:main"
 [project.optional-dependencies]
 # Todo lo necesario para correr el pipeline extract -> build -> validate localmente.
 pipeline = [
-    "duckdb>=1.1,<2",
+    "duckdb>=1.1,<3",
     "pandas>=2.2,<3",
     "openpyxl>=3.1,<4",
     "tenacity>=9,<10",
