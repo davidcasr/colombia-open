@@ -223,6 +223,20 @@ directamente `data/normalized/` si ya corriste `make build`.
   [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
 - Ver `docs/roadmap/roadmap.md` para qué sigue.
 
+## Apoya este proyecto
+
+`colombia-open` lo mantiene una sola persona, fin de semana a fin de
+semana. Si te sirve la librería y quieres ayudar a sostener el tiempo de
+mantenimiento (revisar que las fuentes sigan vivas, corregir cuando una
+institución cambia su API sin aviso, sumar datasets nuevos), puedes
+patrocinar el proyecto:
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-C9A227?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/davidcasr)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-davidcasr-5B6578?logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/davidcasr)
+
+El patrocinio no cambia el acceso a los datos ni al código — todo sigue
+MIT y público para cualquiera, patrocine o no.
+
 ## Legal
 
 El código es MIT (`LICENSE`). Cada dataset conserva la licencia de su fuente
