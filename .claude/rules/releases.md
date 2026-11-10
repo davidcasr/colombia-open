@@ -76,15 +76,16 @@ ambos — el mismo número de versión identifica el release de datos
    (`scripts/verify_pipeline.py --require-live`) — eso es intencional, no
    un bug a silenciar.
 
-5. `release.yml` adjunta `dataset_catalog.json` al release y dispara
-   `pages-deploy.yml`: la landing regenera `#catalogo` y `#roadmap` desde
-   ese catálogo (`scripts/build_site.py`). Si el deploy falla, la web se
-   queda en la versión anterior — revisa el run, no edites el HTML a mano.
+5. `release.yml` adjunta `dataset_catalog.json` al release. La landing
+   (repo separado [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io))
+   lee ese catálogo en build-time, sola — no hace falta ningún paso
+   adicional aquí para que se actualice (cron diario del otro repo); no
+   edites HTML a mano para reflejar un release.
 
 6. Después de un release exitoso, revisa que no haya quedado
    documentación desactualizada referenciando el tag anterior (README
-   "Estado del proyecto", landing page, etc.) — ya pasó que el README
-   quedó mencionando un tag viejo después de publicar uno nuevo.
+   "Estado del proyecto", etc.) — ya pasó que el README quedó mencionando
+   un tag viejo después de publicar uno nuevo.
 
 ## Publicar el paquete a PyPI
 

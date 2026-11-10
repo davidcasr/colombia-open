@@ -34,7 +34,7 @@ Closes #
 - [ ] Todas las columnas documentadas en `docs/datasets/{name}.md`
 - [ ] Fila marcada en `docs/roadmap/roadmap.md`
 - [ ] Dataset agregado al enum `src/colombia_open/datasets.py::Dataset`
-- [ ] Título/grupo en `site/data/catalogo.json` y fila ligada en `site/data/roadmap.json` (la web se genera sola desde el release)
+- [ ] (Opcional, PR aparte) Título/grupo en `content/catalogo.json` y fila ligada en `content/roadmap.json` del repo [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io) — la landing ya muestra el dataset sin esto, solo decide cómo se presenta
 
 ## ¿Usaste un agente de IA?
 

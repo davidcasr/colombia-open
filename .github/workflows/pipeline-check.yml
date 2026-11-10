@@ -18,118 +18,51 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Detecta si una PR solo toca la landing (site/**). En ese caso los jobs
-  # pesados igual corren (los checks requeridos del ruleset de main deben
-  # reportarse), pero se saltan sus pasos: terminan en verde en segundos en
-  # vez de reconstruir todos los datasets (~20 min). push/schedule/dispatch
-  # siempre corren completos. La landing se valida en el job `site`.
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      code: ${{ steps.diff.outputs.code }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - id: diff
-        env:
-          EVENT: ${{ github.event_name }}
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          if [ "$EVENT" != "pull_request" ]; then
-            echo "code=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          changed=$(git diff --name-only "$BASE...$HEAD")
-          echo "Archivos cambiados:"
-          echo "$changed"
-          if echo "$changed" | grep -qv '^site/'; then
-            echo "code=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "Solo cambia site/: se saltan build, tests y empaquetado."
-            echo "code=false" >> "$GITHUB_OUTPUT"
-          fi
-
-  site:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-      - name: Generar la landing desde el último release (valida site/data/*.json)
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: python scripts/build_site.py --fetch-latest --out _site
-
   quality:
-    needs: changes
     runs-on: windows-latest
-    env:
-      RUN: ${{ needs.changes.outputs.code }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
-        if: env.RUN == 'true'
         with:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v7
-        if: env.RUN == 'true'
       - name: Instalar dependencias
-        if: env.RUN == 'true'
         run: uv pip install -e ".[pipeline,geo,dev,mcp]" --system
       - name: Actualizar setuptools (la imagen base del runner trae una versión vieja y vulnerable)
-        if: env.RUN == 'true'
         run: uv pip install --upgrade setuptools --system
       - name: ruff check
-        if: env.RUN == 'true'
         run: python -m ruff check src/ tests/
       - name: ruff format --check
-        if: env.RUN == 'true'
         run: python -m ruff format --check src/ tests/
       - name: mypy
-        if: env.RUN == 'true'
         run: python -m mypy
       - name: bandit
-        if: env.RUN == 'true'
         run: python -m bandit -c pyproject.toml -r src/
       - name: pip-audit
-        if: env.RUN == 'true'
         run: python -m pip_audit
 
   build-and-test:
-    needs: [changes, quality]
+    needs: quality
     runs-on: windows-latest
-    env:
-      RUN: ${{ needs.changes.outputs.code }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
-        if: env.RUN == 'true'
         with:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v7
-        if: env.RUN == 'true'
       - name: Instalar dependencias
-        if: env.RUN == 'true'
         run: uv pip install -e ".[pipeline,geo,dev,mcp]" --system
       - name: Chequeo anti-drift del registro de validación
-        if: env.RUN == 'true'
         run: python scripts/check_validation_registration.py
       - name: Build (extract -> normalize -> validate -> catalog)
-        if: env.RUN == 'true'
         run: python -m src.build_pipeline
       - name: Verificar catálogo
-        if: env.RUN == 'true'
         run: >
           python scripts/verify_pipeline.py
           ${{ (github.event_name == 'schedule' || inputs.require_live) && '--require-live' || '' }}
       - name: Tests
-        if: env.RUN == 'true'
         run: python -m pytest --cov=colombia_open --cov-report=term-missing
       - name: Subir data/normalized como artifact
-        if: env.RUN == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: normalized-data
@@ -137,29 +70,23 @@ jobs:
           retention-days: 14
 
   package-quality:
-    needs: [changes, quality]
+    needs: quality
     runs-on: windows-latest
-    env:
-      RUN: ${{ needs.changes.outputs.code }}
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
-        if: env.RUN == 'true'
         with:
           python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@v7
-        if: env.RUN == 'true'
       - name: Build wheel + sdist
-        if: env.RUN == 'true'
         run: |
           uv pip install build twine --system
           python -m build
           python -m twine check dist/*
       - name: Smoke install
-        if: env.RUN == 'true'
         # PowerShell (shell por defecto en windows-latest) no expande
         # `dist/*.whl` como bash — uv pip install recibe el literal
         # "*.whl" y falla con "Must have a version". bash sí lo expande.

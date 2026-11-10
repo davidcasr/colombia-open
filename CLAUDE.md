@@ -112,17 +112,20 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 9. **No propongas ni implementes una fuente nueva sin verificar su
    endpoint/URL actual primero** (curl/fetch, no solo búsqueda web) — el
    mapeo de `docs/roadmap/roadmap.md` puede estar desactualizado.
-10. **`site/index.html` (landing page) es código de marca, no un documento
-    aparte.** Usa solo los tokens de `site/styles.css`/`docs/brand/design-system.md`
-    — nunca un color o fuente hardcodeada nueva. Las tarjetas de `#catalogo`
-    y las filas de `#roadmap` **no se editan a mano**: `scripts/build_site.py`
-    las genera en cada deploy desde el `dataset_catalog.json` del último
-    release (lo que de verdad está publicado). Al agregar una fuente, agrega
-    su título/grupo en `site/data/catalogo.json` y liga su fila en
-    `site/data/roadmap.json` (`"datasets": [...]`); aparece en la web al
-    cortar el release. **Todo lo que se publica a GitHub
-    Pages vive dentro de `site/`** — nada de HTML/CSS de la web en la raíz
-    del repo (la raíz es del paquete Python).
+10. **La landing page vive en otro repo —
+    [colombia-open/colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io)
+    (Next.js) — no en este.** Este repo (`colombia-open`) es solo el paquete
+    Python; no tiene `site/` ni publica a GitHub Pages. Lo que este repo le
+    debe a la landing: `dataset_catalog.json` del último release (vía
+    `release.yml`) y `data/registry/datasets.json` en `main`, siempre con
+    `source_name`/`source_url`/`reuse_policy` completos — la landing los lee
+    en build-time, nunca se le copian a mano. Al agregar una fuente, el
+    título/grupo/orden en que aparece en la landing se decide en
+    `content/catalogo.json`/`content/roadmap.json` de ese otro repo (PR
+    aparte) — opcional, no bloquea cortar el release de este. Los tokens de
+    marca (paleta, tipografía) siguen documentados en
+    `docs/brand/design-system.md` aquí — si cambian, el PR correspondiente
+    en `colombia-open.github.io` (`app/globals.css`) se hace por separado.
 
 ## Agregar una fuente nueva
 
@@ -147,7 +150,8 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 | Ver el estado legal de un dataset | `docs/licenses/data_licenses.md` |
 | Entender la API pública | `README.md` sección "Uso" + `src/colombia_open/core.py` |
 | Revisar calidad de datos antes de mergear | agente `.claude/agents/data-quality-reviewer.md` |
-| Tocar la landing page o la marca | `docs/brand/design-system.md` (tokens) + `site/index.html`/`site/styles.css` (implementación) |
+| Tocar la marca (paleta, tipografía, logomarca) | `docs/brand/design-system.md` (aquí) |
+| Tocar la landing page en sí | repo [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io) (otro repo) |
 | Cortar o versionar un release | `.claude/rules/releases.md` |
 | Revisar PRs/issues de colaboradores externos | `.github/CONTRIBUTING.md` (flujo, Conventional Commits, política IA) |
 | Entender/tocar el servidor MCP | `docs/mcp.md` + `src/colombia_open/mcp_server.py` |
