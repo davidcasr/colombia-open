@@ -8,7 +8,7 @@ description: >
 category: ai-entrypoint
 audience: [claude-code, ai-agent]
 priority: critical
-related_docs: [docs/roadmap/roadmap.md, docs/licenses/data_licenses.md, docs/brand/design-system.md, docs/troubleshooting/entorno-windows.md]
+related_docs: [docs/roadmap/roadmap.md, docs/licenses/data_licenses.md, docs/troubleshooting/entorno-windows.md]
 last_updated: 2026-10-17
 ---
 
@@ -122,10 +122,10 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
     en build-time, nunca se le copian a mano. Al agregar una fuente, el
     título/grupo/orden en que aparece en la landing se decide en
     `content/catalogo.json`/`content/roadmap.json` de ese otro repo (PR
-    aparte) — opcional, no bloquea cortar el release de este. Los tokens de
-    marca (paleta, tipografía) siguen documentados en
-    `docs/brand/design-system.md` aquí — si cambian, el PR correspondiente
-    en `colombia-open.github.io` (`app/globals.css`) se hace por separado.
+    aparte) — opcional, no bloquea cortar el release de este. El design
+    system (paleta, tipografía, logomarca) también vive allá
+    (`docs/brand/design-system.md` de ese repo) — este repo no tiene
+    `docs/brand/`, es solo el paquete Python.
 
 ## Agregar una fuente nueva
 
@@ -150,8 +150,7 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 | Ver el estado legal de un dataset | `docs/licenses/data_licenses.md` |
 | Entender la API pública | `README.md` sección "Uso" + `src/colombia_open/core.py` |
 | Revisar calidad de datos antes de mergear | agente `.claude/agents/data-quality-reviewer.md` |
-| Tocar la marca (paleta, tipografía, logomarca) | `docs/brand/design-system.md` (aquí) |
-| Tocar la landing page en sí | repo [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io) (otro repo) |
+| Tocar la marca o la landing page | repo [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io) — `docs/brand/design-system.md` de ese repo (otro repo, no este) |
 | Cortar o versionar un release | `.claude/rules/releases.md` |
 | Revisar PRs/issues de colaboradores externos | `.github/CONTRIBUTING.md` (flujo, Conventional Commits, política IA) |
 | Entender/tocar el servidor MCP | `docs/mcp.md` + `src/colombia_open/mcp_server.py` |
