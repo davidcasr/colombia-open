@@ -115,8 +115,12 @@ Dev: pytest, mypy (strict), ruff, bandit, pip-audit, pre-commit.
 10. **La landing page vive en otro repo —
     [colombia-open/colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io)
     (Next.js) — no en este.** Este repo (`colombia-open`) es solo el paquete
-    Python; no tiene `site/` ni publica a GitHub Pages. Lo que este repo le
-    debe a la landing: `dataset_catalog.json` del último release (vía
+    Python; no tiene `site/`. La única excepción es
+    `pages-redirect/index.html` — una página mínima que GitHub Pages sigue
+    sirviendo en `davidcasr.com/colombia-open` (URL vieja, con años de
+    links externos) solo para redirigir a la landing real; no es
+    contenido de marca y no se toca al cambiar la landing. Lo que este
+    repo le debe a la landing: `dataset_catalog.json` del último release (vía
     `release.yml`) y `data/registry/datasets.json` en `main`, siempre con
     `source_name`/`source_url`/`reuse_policy` completos — la landing los lee
     en build-time, nunca se le copian a mano. Al agregar una fuente, el
