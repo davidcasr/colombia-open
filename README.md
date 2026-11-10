@@ -1,4 +1,4 @@
-<img src="site/assets/brand/mark-indigo.svg" alt="colombia-open" width="96">
+<img src="docs/brand/assets/mark-indigo.svg" alt="colombia-open" width="96">
 
 # <img src="https://flagcdn.com/co.svg" alt="Colombia" width="28" valign="middle"> Colombia Open
 
@@ -219,8 +219,11 @@ directamente `data/normalized/` si ya corriste `make build`.
   listar, describir y consultar con SQL de solo lectura todo el catálogo
   vía `colombia-open mcp` — ver [Servidor MCP](#servidor-mcp) y
   `docs/mcp.md`.
-- ✅ Landing page (`site/`, ver `docs/brand/design-system.md`) deployada en
-  [davidcasr.com/colombia-open](https://davidcasr.com/colombia-open/).
+- ✅ Landing page — repo separado
+  [colombia-open/colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io)
+  (Next.js, lee el catálogo publicado de este repo en build-time), deployada en
+  [colombia-open.github.io](https://colombia-open.github.io/). Tokens de marca
+  en `docs/brand/design-system.md`.
 - Ver `docs/roadmap/roadmap.md` para qué sigue.
 
 ## Apoya este proyecto

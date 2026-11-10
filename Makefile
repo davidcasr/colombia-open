@@ -1,4 +1,4 @@
-.PHONY: bootstrap doctor extract build verify test lint format format-check typecheck audit sec check refresh site clean
+.PHONY: bootstrap doctor extract build verify test lint format format-check typecheck audit sec check refresh clean
 
 VENV := .venv
 PYTHON := $(VENV)/Scripts/python.exe
@@ -43,10 +43,6 @@ sec:
 	$(PYTHON) -m bandit -c pyproject.toml -r src/
 
 check: build verify test lint format-check typecheck sec
-
-# Genera la landing en _site/ desde el último release (igual que el deploy).
-site:
-	$(PYTHON) scripts/build_site.py --fetch-latest --out _site
 
 refresh: extract build verify test lint format-check typecheck audit sec
 
