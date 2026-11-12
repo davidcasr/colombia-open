@@ -37,8 +37,9 @@ jobs:
       - name: Crear Release y adjuntar assets
         # La landing (colombia-open/colombia-open.github.io, otro repo) lee
         # dataset_catalog.json de este release sola, en su propio build
-        # (cron diario + workflow_dispatch) — no hace falta disparar nada
-        # desde aquí. Ver .claude/rules/releases.md.
+        # (cron diario + workflow_dispatch + repository_dispatch, ver el
+        # paso siguiente) — no hace falta copiarle nada a mano. Ver
+        # .claude/rules/releases.md.
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag }}
@@ -46,3 +47,29 @@ jobs:
             colombia-open-bundle.zip
             colombia-open-bundle.zip.sha256
             data/normalized/dataset_catalog.json
+      - name: Disparar rebuild inmediato de la landing
+        # Sin esto, la landing igual se actualiza sola — pero solo vía su
+        # cron diario (~05:17 Bogotá), con hasta ~24h de retraso. Este paso
+        # dispara su `repository_dispatch` (tipo `library-release`,
+        # cableado en `colombia-open/colombia-open.github.io`) para que el
+        # rebuild sea inmediato. Requiere el secret
+        # LANDING_DISPATCH_TOKEN (PAT classic con scope `repo`, de una
+        # cuenta con permiso de push sobre colombia-open/colombia-open.github.io)
+        # configurado en este repo. Si el secret no existe, este paso falla
+        # pero el release de datos ya se creó — no bloquea la publicación;
+        # ver .claude/rules/releases.md.
+        if: ${{ success() }}
+        continue-on-error: true
+        shell: bash
+        env:
+          LANDING_DISPATCH_TOKEN: ${{ secrets.LANDING_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$LANDING_DISPATCH_TOKEN" ]; then
+            echo "LANDING_DISPATCH_TOKEN no está configurado — se omite el rebuild inmediato, el cron diario de la landing se encarga." >&2
+            exit 1
+          fi
+          curl -fsSL -X POST \
+            -H "Authorization: Bearer $LANDING_DISPATCH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/colombia-open/colombia-open.github.io/dispatches \
+            -d "{\"event_type\":\"library-release\",\"client_payload\":{\"tag\":\"${{ inputs.tag }}\"}}"
