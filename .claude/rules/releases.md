@@ -76,11 +76,22 @@ ambos — el mismo número de versión identifica el release de datos
    (`scripts/verify_pipeline.py --require-live`) — eso es intencional, no
    un bug a silenciar.
 
-5. `release.yml` adjunta `dataset_catalog.json` al release. La landing
-   (repo separado [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io))
-   lee ese catálogo en build-time, sola — no hace falta ningún paso
-   adicional aquí para que se actualice (cron diario del otro repo); no
-   edites HTML a mano para reflejar un release.
+5. `release.yml` adjunta `dataset_catalog.json` al release y dispara un
+   `repository_dispatch` a la landing (repo separado
+   [colombia-open.github.io](https://github.com/colombia-open/colombia-open.github.io))
+   para que reconstruya de inmediato (requiere el secret
+   `LANDING_DISPATCH_TOKEN` en este repo; si falta, ese paso falla sin
+   bloquear el release y la landing igual se actualiza sola vía su cron
+   diario, con hasta ~24h de retraso). No hace falta ningún paso manual
+   aquí para que la landing se actualice; no edites HTML a mano para
+   reflejar un release.
+
+   **Si agregaste una fuente nueva en este release**, la landing SÍ
+   necesita una entrada a mano en `content/catalogo.json`
+   (título/grupo) de ese otro repo — sin eso su build falla a propósito
+   (`SiteBuildError`, ver `.claude/rules/data-source.md` de ese repo).
+   Eso no es automatizable: es la landing validando que no le falte
+   presentación a un dataset ya publicado.
 
 6. Después de un release exitoso, revisa que no haya quedado
    documentación desactualizada referenciando el tag anterior (README
