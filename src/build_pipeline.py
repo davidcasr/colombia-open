@@ -20,6 +20,7 @@ from src.builders.catalog import build_catalog_entry, write_dataset_catalog
 from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
 from src.extractors.calidad_aire_extractor import CalidadAireExtractor
+from src.extractors.delincuencia_homicidios_extractor import DelincuenciaHomicidiosExtractor
 from src.extractors.delincuencia_hurto_modalidades_extractor import (
     DelincuenciaHurtoModalidadesExtractor,
 )
@@ -41,6 +42,7 @@ from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExt
 from src.registry import load_registry
 from src.validation import (
     validate_calidad_aire,
+    validate_delincuencia_homicidios,
     validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
@@ -196,6 +198,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["delincuencia_hurto_modalidades"],
             extraction_metadata=modalidades_staging_metadata,
             validation_result=modalidades_validation,
+        )
+    )
+
+    # --- delincuencia_homicidios: 1:1 desde staging (el extractor ya agrega
+    # las filas repetidas de la fuente por combinación única), sin derive_* ---
+    homicidios_extraction = DelincuenciaHomicidiosExtractor().run()
+    homicidios_staging_metadata = homicidios_extraction.to_staging_metadata()
+    homicidios_df = homicidios_extraction.dataframe
+    homicidios_validation = validate_delincuencia_homicidios(
+        homicidios_df, homicidios_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(homicidios_df, NORMALIZED_DIR / "delincuencia_homicidios.parquet")
+    write_json_atomic(homicidios_df, NORMALIZED_DIR / "delincuencia_homicidios.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["delincuencia_homicidios"],
+            extraction_metadata=homicidios_staging_metadata,
+            validation_result=homicidios_validation,
         )
     )
 

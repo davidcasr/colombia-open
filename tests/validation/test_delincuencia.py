@@ -3,6 +3,7 @@ import datetime
 import polars as pl
 
 from src.validation import (
+    validate_delincuencia_homicidios,
     validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
@@ -339,5 +340,105 @@ def test_validate_modalidades_live_with_too_few_rows_is_error():
 
 def test_validate_modalidades_fallback_adds_warning():
     result = validate_delincuencia_hurto_modalidades(_modalidades_df(), {"source_mode": "fallback"})
+    assert result.status == "ok"
+    assert any("fallback" in w for w in result.warnings)
+
+
+# --- delincuencia_homicidios ---
+
+
+def _homicidios_df() -> pl.DataFrame:
+    return pl.DataFrame(
+        {
+            "fecha": [datetime.date(2025, 3, 14)] * 3,
+            "anio": [2025, 2025, 2025],
+            "cod_dpto": ["05", "05", "11"],
+            "nombre_dpto": ["ANTIOQUIA", "ANTIOQUIA", "BOGOTA D.C."],
+            "cod_mpio": ["05001", "05001", "11001"],
+            "nombre_mpio": ["MEDELLIN", "MEDELLIN", "BOGOTA D.C."],
+            "zona": ["URBANA", "URBANA", "URBANA"],
+            "sexo": ["MASCULINO", "FEMENINO", "MASCULINO"],
+            "arma_medio": ["ARMA DE FUEGO", "ARMA BLANCA / CORTOPUNZANTE", None],
+            "modalidad_presunta": ["SICARIATO", "VIOLENCIA INTRAFAMILIAR", None],
+            "caracterizacion": [
+                "HOMICIDIO INTENCIONAL O CON DOLO",
+                "FEMINICIDIO",
+                "HOMICIDIO INTENCIONAL O CON DOLO",
+            ],
+            "cantidad": [2, 1, 3],
+        }
+    )
+
+
+def test_validate_homicidios_ok():
+    result = validate_delincuencia_homicidios(
+        _homicidios_df(), references={"cod_mpio": {"05001", "11001"}}
+    )
+    assert result.status == "ok"
+    assert result.record_count == 3
+    assert result.errors == []
+    assert result.warnings == []
+
+
+def test_validate_homicidios_detects_duplicate_primary_key():
+    df = pl.concat([_homicidios_df(), _homicidios_df().tail(1)])
+    result = validate_delincuencia_homicidios(df)
+    assert result.status == "error"
+    assert any("duplicada" in e for e in result.errors)
+
+
+def test_validate_homicidios_same_day_mpio_different_dimension_is_not_duplicate():
+    # Mismo día y municipio, distinto sexo/arma: filas distintas, no duplicado.
+    result = validate_delincuencia_homicidios(_homicidios_df().head(2))
+    assert result.status == "ok"
+
+
+def test_validate_homicidios_detects_bad_code_width():
+    df = _homicidios_df().with_columns(pl.Series("cod_dpto", ["5", "05", "11"]))
+    result = validate_delincuencia_homicidios(df)
+    assert result.status == "error"
+    assert any("2 dígitos" in e for e in result.errors)
+
+
+def test_validate_homicidios_detects_mpio_not_matching_dpto():
+    df = _homicidios_df().with_columns(pl.Series("cod_dpto", ["05", "05", "05"]))
+    result = validate_delincuencia_homicidios(df)
+    assert result.status == "error"
+    assert any("no empieza por su cod_dpto" in e for e in result.errors)
+
+
+def test_validate_homicidios_detects_non_positive_cantidad():
+    df = _homicidios_df().with_columns(pl.Series("cantidad", [2, 0, -1]))
+    result = validate_delincuencia_homicidios(df)
+    assert result.status == "error"
+    assert any("> 0" in e for e in result.errors)
+
+
+def test_validate_homicidios_orphan_mpio_is_warning_not_error():
+    result = validate_delincuencia_homicidios(_homicidios_df(), references={"cod_mpio": {"05001"}})
+    assert result.status == "ok"
+    assert any("no existe en el municipios vigente" in w for w in result.warnings)
+
+
+def test_validate_homicidios_empty_dataframe_is_error_not_traceback():
+    result = validate_delincuencia_homicidios(_homicidios_df().clear())
+    assert result.status == "error"
+    assert any("vacío" in e for e in result.errors)
+
+
+def test_validate_homicidios_missing_columns_is_error_not_traceback():
+    result = validate_delincuencia_homicidios(pl.DataFrame({"fecha": []}))
+    assert result.status == "error"
+    assert any("faltan columnas" in e for e in result.errors)
+
+
+def test_validate_homicidios_live_with_too_few_rows_is_error():
+    result = validate_delincuencia_homicidios(_homicidios_df(), {"source_mode": "live"})
+    assert result.status == "error"
+    assert any("incompleto" in e for e in result.errors)
+
+
+def test_validate_homicidios_fallback_adds_warning():
+    result = validate_delincuencia_homicidios(_homicidios_df(), {"source_mode": "fallback"})
     assert result.status == "ok"
     assert any("fallback" in w for w in result.warnings)

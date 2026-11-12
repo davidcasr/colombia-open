@@ -83,3 +83,7 @@ DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO = 0.5
 # 397361 filas tras agregar centro poblado -> municipio (confirmado en vivo
 # 2026-10-20, de 653384 filas crudas con cantidad siempre "1").
 EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT = 350_000
+# 286469 filas tras agregar filas repetidas por combinación única de
+# dimensiones (confirmado en vivo 2026-11-12, de 345195 filas crudas y
+# 345917 víctimas).
+EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT = 250_000

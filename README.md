@@ -74,8 +74,8 @@ hub.list_datasets()
 # ["departamentos", "municipios", "municipios_geometria", "demografia",
 #  "educacion_establecimientos", "educacion_saber11",
 #  "delincuencia_hurto_personas", "delincuencia_lesiones_personales",
-#  "delincuencia_hurto_modalidades", "infraestructura_poi",
-#  "macroeconomia_trm", "calidad_aire"]
+#  "delincuencia_hurto_modalidades", "delincuencia_homicidios",
+#  "infraestructura_poi", "macroeconomia_trm", "calidad_aire"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -114,6 +114,7 @@ colombia-open validate municipios
 | `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~650835 | CC BY-SA 4.0 |
 | `delincuencia_lesiones_personales` | Víctimas de lesiones personales (incl. tránsito) por municipio, día, conducta, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~1377323 | CC BY-SA 4.0 |
 | `delincuencia_hurto_modalidades` | Víctimas de hurto a residencias y entidades comerciales por municipio, día, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~397361 | CC BY-SA 4.0 |
+| `delincuencia_homicidios` | Víctimas de homicidio (incl. feminicidio) por municipio, día, zona, sexo, arma y modalidad, 2003 a la fecha | MinDefensa / Policía, vía datos.gov.co | ~286469 | CC BY-SA 4.0 |
 | `infraestructura_poi` | Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) por municipio | OpenStreetMap, vía Geofabrik | ~58046 | ODbL 1.0 |
 | `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8372 | CC BY-SA 4.0 |
 | `calidad_aire` | Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación, 2011 a la fecha | IDEAM, vía datos.gov.co | ~8985 | CC BY-SA 4.0 |
@@ -198,9 +199,9 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con once
+- ✅ Patrón extractor/builder/validación/registro probado con doce
   fuentes (DIVIPOLA, geometría municipal IGAC vía SNR, demografía, dos de educación,
-  tres de delincuencia, POI de OpenStreetMap, TRM y calidad del aire) de
+  cuatro de delincuencia, POI de OpenStreetMap, TRM y calidad del aire) de
   dominios distintos (API Socrata pequeña, descarga directa de Excel, API
   Socrata grande y paginada —incluida una de 7.1M filas con paginación por
   keyset—, shapefile geoespacial, extracto `.osm.pbf` con

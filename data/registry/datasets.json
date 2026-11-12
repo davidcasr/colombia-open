@@ -121,6 +121,25 @@
     },
     "documentation": "docs/datasets/delincuencia_hurto_modalidades.md"
   },
+  "delincuencia_homicidios": {
+    "description": "Víctimas de homicidio (incluido feminicidio) por municipio, día, zona, sexo, arma/medio y modalidad presunta, 2003 a la fecha (MinDefensa / Policía Nacional).",
+    "extractor": "src/extractors/delincuencia_homicidios_extractor.py",
+    "source_name": "MinDefensa / Policía Nacional — Homicidio (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "fecha"],
+    "references": {
+      "cod_mpio": "municipios"
+    },
+    "expected_record_count": 286469,
+    "outputs": {
+      "parquet": "data/normalized/delincuencia_homicidios.parquet",
+      "json": "data/normalized/delincuencia_homicidios.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_homicidios')",
+      "cli": "colombia-open path delincuencia_homicidios --output parquet"
+    },
+    "documentation": "docs/datasets/delincuencia_homicidios.md"
+  },
   "municipios_geometria": {
     "description": "Geometría de polígonos municipales (IGAC), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
     "extractor": "src/extractors/municipios_geometria_extractor.py",
