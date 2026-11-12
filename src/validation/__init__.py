@@ -6,6 +6,9 @@ from collections.abc import Callable
 
 from ._calidad_aire import validate_calidad_aire as validate_calidad_aire
 from ._delincuencia import (
+    validate_delincuencia_homicidios as validate_delincuencia_homicidios,
+)
+from ._delincuencia import (
     validate_delincuencia_hurto_modalidades as validate_delincuencia_hurto_modalidades,
 )
 from ._delincuencia import (
@@ -34,6 +37,7 @@ VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
     "delincuencia_hurto_personas": validate_delincuencia_hurto_personas,
     "delincuencia_lesiones_personales": validate_delincuencia_lesiones_personales,
     "delincuencia_hurto_modalidades": validate_delincuencia_hurto_modalidades,
+    "delincuencia_homicidios": validate_delincuencia_homicidios,
     "infraestructura_poi": validate_infraestructura_poi,
     "educacion_saber11": validate_educacion_saber11,
     "macroeconomia_trm": validate_macroeconomia_trm,
@@ -43,6 +47,7 @@ __all__ = [
     "VALIDATORS",
     "ValidationResult",
     "validate_calidad_aire",
+    "validate_delincuencia_homicidios",
     "validate_delincuencia_hurto_modalidades",
     "validate_delincuencia_hurto_personas",
     "validate_delincuencia_lesiones_personales",

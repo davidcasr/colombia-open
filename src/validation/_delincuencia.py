@@ -1,5 +1,6 @@
 """Validaciones del dominio delincuencia: hurto a personas, lesiones
-personales y hurto por modalidades por municipio y día (Policía Nacional)."""
+personales, hurto por modalidades y homicidios por municipio y día
+(Policía Nacional)."""
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ import polars as pl
 
 from ._constants import (
     DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO,
+    EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT,
     EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT,
     EXPECTED_DELINCUENCIA_HURTO_PERSONAS_MIN_COUNT,
     EXPECTED_DELINCUENCIA_LESIONES_PERSONALES_MIN_COUNT,
@@ -42,6 +44,17 @@ _MODALIDADES_REQUIRED_COLUMNS = [
     "cantidad",
     *_MODALIDADES_PRIMARY_KEY,
 ]
+
+_HOMICIDIOS_PRIMARY_KEY = [
+    "fecha",
+    "cod_mpio",
+    "zona",
+    "sexo",
+    "arma_medio",
+    "modalidad_presunta",
+    "caracterizacion",
+]
+_HOMICIDIOS_REQUIRED_COLUMNS = ["anio", "cod_dpto", "cantidad", *_HOMICIDIOS_PRIMARY_KEY]
 
 
 def _check_mpio_coverage_per_year(df: pl.DataFrame, doc: str) -> list[str]:
@@ -254,6 +267,39 @@ def validate_delincuencia_hurto_modalidades(
 
     return ValidationResult(
         dataset="delincuencia_hurto_modalidades",
+        status="error" if errors else "ok",
+        record_count=df.height,
+        errors=errors,
+        warnings=warnings,
+    )
+
+
+def validate_delincuencia_homicidios(
+    df: pl.DataFrame,
+    metadata: dict[str, Any] | None = None,
+    *,
+    references: dict[str, set[str]] | None = None,
+) -> ValidationResult:
+    missing = missing_columns(df, _HOMICIDIOS_REQUIRED_COLUMNS)
+    if missing:
+        return ValidationResult(
+            dataset="delincuencia_homicidios",
+            status="error",
+            record_count=df.height,
+            errors=[f"faltan columnas requeridas: {missing}"],
+            warnings=[],
+        )
+
+    errors, warnings = _check_common(
+        df,
+        metadata,
+        references,
+        primary_key=_HOMICIDIOS_PRIMARY_KEY,
+        min_live_count=EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT,
+        doc="docs/datasets/delincuencia_homicidios.md",
+    )
+    return ValidationResult(
+        dataset="delincuencia_homicidios",
         status="error" if errors else "ok",
         record_count=df.height,
         errors=errors,

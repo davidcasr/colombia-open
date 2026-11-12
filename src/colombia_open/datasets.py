@@ -16,6 +16,7 @@ class Dataset(enum.StrEnum):
     DELINCUENCIA_HURTO_PERSONAS = "delincuencia_hurto_personas"
     DELINCUENCIA_LESIONES_PERSONALES = "delincuencia_lesiones_personales"
     DELINCUENCIA_HURTO_MODALIDADES = "delincuencia_hurto_modalidades"
+    DELINCUENCIA_HOMICIDIOS = "delincuencia_homicidios"
     INFRAESTRUCTURA_POI = "infraestructura_poi"
     EDUCACION_SABER11 = "educacion_saber11"
     MACROECONOMIA_TRM = "macroeconomia_trm"
