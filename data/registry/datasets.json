@@ -140,6 +140,25 @@
     },
     "documentation": "docs/datasets/delincuencia_homicidios.md"
   },
+  "delincuencia_homicidios_transito": {
+    "description": "Víctimas de homicidio en accidente de tránsito por municipio y día, 2003 a la fecha (MinDefensa / Policía Nacional).",
+    "extractor": "src/extractors/delincuencia_homicidios_transito_extractor.py",
+    "source_name": "MinDefensa / Policía Nacional — Homicidio en accidente de tránsito (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio", "fecha"],
+    "references": {
+      "cod_mpio": "municipios"
+    },
+    "expected_record_count": 102336,
+    "outputs": {
+      "parquet": "data/normalized/delincuencia_homicidios_transito.parquet",
+      "json": "data/normalized/delincuencia_homicidios_transito.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_homicidios_transito')",
+      "cli": "colombia-open path delincuencia_homicidios_transito --output parquet"
+    },
+    "documentation": "docs/datasets/delincuencia_homicidios_transito.md"
+  },
   "municipios_geometria": {
     "description": "Geometría de polígonos municipales (IGAC), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
     "extractor": "src/extractors/municipios_geometria_extractor.py",

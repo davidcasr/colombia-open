@@ -21,6 +21,9 @@ from src.builders.datasets import derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
 from src.extractors.calidad_aire_extractor import CalidadAireExtractor
 from src.extractors.delincuencia_homicidios_extractor import DelincuenciaHomicidiosExtractor
+from src.extractors.delincuencia_homicidios_transito_extractor import (
+    DelincuenciaHomicidiosTransitoExtractor,
+)
 from src.extractors.delincuencia_hurto_modalidades_extractor import (
     DelincuenciaHurtoModalidadesExtractor,
 )
@@ -43,6 +46,7 @@ from src.registry import load_registry
 from src.validation import (
     validate_calidad_aire,
     validate_delincuencia_homicidios,
+    validate_delincuencia_homicidios_transito,
     validate_delincuencia_hurto_modalidades,
     validate_delincuencia_hurto_personas,
     validate_delincuencia_lesiones_personales,
@@ -216,6 +220,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["delincuencia_homicidios"],
             extraction_metadata=homicidios_staging_metadata,
             validation_result=homicidios_validation,
+        )
+    )
+
+    # --- delincuencia_homicidios_transito: 1:1 desde staging (el extractor ya
+    # agrega las filas repetidas por (fecha, municipio)), sin derive_* ---
+    transito_extraction = DelincuenciaHomicidiosTransitoExtractor().run()
+    transito_staging_metadata = transito_extraction.to_staging_metadata()
+    transito_df = transito_extraction.dataframe
+    transito_validation = validate_delincuencia_homicidios_transito(
+        transito_df, transito_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(transito_df, NORMALIZED_DIR / "delincuencia_homicidios_transito.parquet")
+    write_json_atomic(transito_df, NORMALIZED_DIR / "delincuencia_homicidios_transito.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["delincuencia_homicidios_transito"],
+            extraction_metadata=transito_staging_metadata,
+            validation_result=transito_validation,
         )
     )
 

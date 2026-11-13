@@ -87,3 +87,6 @@ EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT = 350_000
 # dimensiones (confirmado en vivo 2026-11-12, de 345195 filas crudas y
 # 345917 víctimas).
 EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT = 250_000
+# 102336 filas tras agregar filas repetidas por (fecha, municipio) (confirmado
+# en vivo 2026-11-13, de 128440 filas crudas y 128900 víctimas).
+EXPECTED_DELINCUENCIA_HOMICIDIOS_TRANSITO_MIN_COUNT = 90_000
