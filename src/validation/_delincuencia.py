@@ -1,6 +1,6 @@
 """Validaciones del dominio delincuencia: hurto a personas, lesiones
-personales, hurto por modalidades y homicidios por municipio y día
-(Policía Nacional)."""
+personales, hurto por modalidades, homicidios y homicidios en accidente de
+tránsito por municipio y día (Policía Nacional)."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import polars as pl
 from ._constants import (
     DELINCUENCIA_LOW_MPIO_COVERAGE_RATIO,
     EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT,
+    EXPECTED_DELINCUENCIA_HOMICIDIOS_TRANSITO_MIN_COUNT,
     EXPECTED_DELINCUENCIA_HURTO_MODALIDADES_MIN_COUNT,
     EXPECTED_DELINCUENCIA_HURTO_PERSONAS_MIN_COUNT,
     EXPECTED_DELINCUENCIA_LESIONES_PERSONALES_MIN_COUNT,
@@ -300,6 +301,40 @@ def validate_delincuencia_homicidios(
     )
     return ValidationResult(
         dataset="delincuencia_homicidios",
+        status="error" if errors else "ok",
+        record_count=df.height,
+        errors=errors,
+        warnings=warnings,
+    )
+
+
+def validate_delincuencia_homicidios_transito(
+    df: pl.DataFrame,
+    metadata: dict[str, Any] | None = None,
+    *,
+    references: dict[str, set[str]] | None = None,
+) -> ValidationResult:
+    """Mismo esquema y clave que hurto a personas: `(fecha, cod_mpio)`."""
+    missing = missing_columns(df, _HURTO_REQUIRED_COLUMNS)
+    if missing:
+        return ValidationResult(
+            dataset="delincuencia_homicidios_transito",
+            status="error",
+            record_count=df.height,
+            errors=[f"faltan columnas requeridas: {missing}"],
+            warnings=[],
+        )
+
+    errors, warnings = _check_common(
+        df,
+        metadata,
+        references,
+        primary_key=_HURTO_PRIMARY_KEY,
+        min_live_count=EXPECTED_DELINCUENCIA_HOMICIDIOS_TRANSITO_MIN_COUNT,
+        doc="docs/datasets/delincuencia_homicidios_transito.md",
+    )
+    return ValidationResult(
+        dataset="delincuencia_homicidios_transito",
         status="error" if errors else "ok",
         record_count=df.height,
         errors=errors,
