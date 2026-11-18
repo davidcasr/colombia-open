@@ -1,5 +1,9 @@
 name: Publish (PyPI)
 
+# Camino normal: release.yml publica a PyPI solo (job `pypi`, input
+# publish_pypi=true). Este workflow queda como respaldo manual — para
+# re-publicar si ese job falló, o publicar una versión sin release de datos.
+
 # Manual-only a propósito, igual que release.yml. Publica el PAQUETE
 # (código de colombia_open/, sin datos — ver data_manager.py) a PyPI vía
 # trusted publishing (OIDC, sin token almacenado). Activar esto a un
