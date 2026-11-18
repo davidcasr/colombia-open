@@ -36,6 +36,12 @@ class DatasetSpec:
     # dataset (ver core.py::validate_dataset() y
     # `.claude/rules/validation.md`).
     references: dict[str, str] = field(default_factory=dict)
+    # Frecuencia de actualización DECLARADA POR LA FUENTE (p. ej. "Mensual",
+    # tomada de la metadata de datos.gov.co), no la del pipeline. `None`
+    # cuando la fuente no la declara — nunca se estima. Va siempre con
+    # `update_frequency_source`, que dice de dónde salió el valor.
+    update_frequency: str | None = None
+    update_frequency_source: str | None = None
 
     @classmethod
     def from_dict(cls, dataset: str, data: dict[str, Any]) -> DatasetSpec:
@@ -51,6 +57,8 @@ class DatasetSpec:
             expected_record_count=data.get("expected_record_count"),
             alias_for=data.get("alias_for"),
             references=data.get("references", {}),
+            update_frequency=data.get("update_frequency"),
+            update_frequency_source=data.get("update_frequency_source"),
         )
 
 

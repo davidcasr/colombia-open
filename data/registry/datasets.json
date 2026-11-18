@@ -13,7 +13,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('departamentos')",
       "cli": "colombia-open path departamentos --output parquet"
     },
-    "documentation": "docs/datasets/departamentos.md"
+    "documentation": "docs/datasets/departamentos.md",
+    "update_frequency": "Semestral",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "municipios": {
     "description": "Municipios de Colombia: código DIVIPOLA de 5 dígitos, nombre, departamento y centroide (lon/lat). Geometría de polígonos en el dataset separado `municipios_geometria`.",
@@ -30,7 +32,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('municipios')",
       "cli": "colombia-open path municipios --output parquet"
     },
-    "documentation": "docs/datasets/municipios.md"
+    "documentation": "docs/datasets/municipios.md",
+    "update_frequency": "Semestral",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "demografia": {
     "description": "Proyecciones de población municipal de Colombia por área geográfica (cabecera / centros poblados y rural disperso / total), años 2018-2042 (DANE).",
@@ -47,7 +51,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('demografia')",
       "cli": "colombia-open path demografia --output parquet"
     },
-    "documentation": "docs/datasets/demografia.md"
+    "documentation": "docs/datasets/demografia.md",
+    "update_frequency": null,
+    "update_frequency_source": "No declarada por la fuente: el DANE publica las proyecciones (PPED) sin frecuencia de actualización fija (revisado 2026-11-18)"
   },
   "educacion_establecimientos": {
     "description": "Directorio único de establecimientos educativos de Colombia (preescolar, básica y media), 2015-2025 (MEN).",
@@ -64,7 +70,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('educacion_establecimientos')",
       "cli": "colombia-open path educacion_establecimientos --output parquet"
     },
-    "documentation": "docs/datasets/educacion_establecimientos.md"
+    "documentation": "docs/datasets/educacion_establecimientos.md",
+    "update_frequency": "Anual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "delincuencia_hurto_personas": {
     "description": "Víctimas de hurto a personas por municipio y día, 2003 a la fecha (MinDefensa / Policía Nacional).",
@@ -81,7 +89,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_hurto_personas')",
       "cli": "colombia-open path delincuencia_hurto_personas --output parquet"
     },
-    "documentation": "docs/datasets/delincuencia_hurto_personas.md"
+    "documentation": "docs/datasets/delincuencia_hurto_personas.md",
+    "update_frequency": "Mensual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "delincuencia_lesiones_personales": {
     "description": "Víctimas de lesiones personales (dolosas y culposas, incluidas las de tránsito) por municipio, día, conducta, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).",
@@ -100,7 +110,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_lesiones_personales')",
       "cli": "colombia-open path delincuencia_lesiones_personales --output parquet"
     },
-    "documentation": "docs/datasets/delincuencia_lesiones_personales.md"
+    "documentation": "docs/datasets/delincuencia_lesiones_personales.md",
+    "update_frequency": "Trimestral",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "delincuencia_hurto_modalidades": {
     "description": "Víctimas de hurto por modalidades (residencias y entidades comerciales) por municipio, día, arma/medio, género y grupo etario, 2010 a la fecha (Policía Nacional).",
@@ -119,7 +131,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_hurto_modalidades')",
       "cli": "colombia-open path delincuencia_hurto_modalidades --output parquet"
     },
-    "documentation": "docs/datasets/delincuencia_hurto_modalidades.md"
+    "documentation": "docs/datasets/delincuencia_hurto_modalidades.md",
+    "update_frequency": "Trimestral",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "delincuencia_homicidios": {
     "description": "Víctimas de homicidio (incluido feminicidio) por municipio, día, zona, sexo, arma/medio y modalidad presunta, 2003 a la fecha (MinDefensa / Policía Nacional).",
@@ -138,7 +152,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_homicidios')",
       "cli": "colombia-open path delincuencia_homicidios --output parquet"
     },
-    "documentation": "docs/datasets/delincuencia_homicidios.md"
+    "documentation": "docs/datasets/delincuencia_homicidios.md",
+    "update_frequency": "Mensual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "delincuencia_homicidios_transito": {
     "description": "Víctimas de homicidio en accidente de tránsito por municipio y día, 2003 a la fecha (MinDefensa / Policía Nacional).",
@@ -157,7 +173,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('delincuencia_homicidios_transito')",
       "cli": "colombia-open path delincuencia_homicidios_transito --output parquet"
     },
-    "documentation": "docs/datasets/delincuencia_homicidios_transito.md"
+    "documentation": "docs/datasets/delincuencia_homicidios_transito.md",
+    "update_frequency": "Mensual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "municipios_geometria": {
     "description": "Geometría de polígonos municipales (IGAC), simplificada, con área geodésica — segunda iteración de `divipola`/`municipios`.",
@@ -174,7 +192,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('municipios_geometria')",
       "cli": "colombia-open path municipios_geometria --output parquet"
     },
-    "documentation": "docs/datasets/municipios_geometria.md"
+    "documentation": "docs/datasets/municipios_geometria.md",
+    "update_frequency": null,
+    "update_frequency_source": "No declarada por la fuente: el servicio ArcGIS MunicipiosSNR no publica frecuencia de actualización (revisado 2026-11-18)"
   },
   "infraestructura_poi": {
     "description": "Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio), geocodificados por municipio — OpenStreetMap vía Geofabrik.",
@@ -191,7 +211,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('infraestructura_poi')",
       "cli": "colombia-open path infraestructura_poi --output parquet"
     },
-    "documentation": "docs/datasets/infraestructura_poi.md"
+    "documentation": "docs/datasets/infraestructura_poi.md",
+    "update_frequency": "Diaria",
+    "update_frequency_source": "Geofabrik (download.geofabrik.de/technical.html): 'Once a day ... we update a locally held version of the planet file ... and split it into a number of pre-defined regions' (verificada 2026-11-18)"
   },
   "educacion_saber11": {
     "description": "Resultados Saber 11 (ICFES) agregados por establecimiento y periodo — promedio por materia y número de estudiantes, 2010-2022.",
@@ -211,7 +233,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('educacion_saber11')",
       "cli": "colombia-open path educacion_saber11 --output parquet"
     },
-    "documentation": "docs/datasets/educacion_saber11.md"
+    "documentation": "docs/datasets/educacion_saber11.md",
+    "update_frequency": "Semestral",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "macroeconomia_trm": {
     "description": "Tasa de Cambio Representativa del Mercado (TRM, COP/USD) diaria, 1991 a la fecha.",
@@ -227,7 +251,9 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('macroeconomia_trm')",
       "cli": "colombia-open path macroeconomia_trm --output parquet"
     },
-    "documentation": "docs/datasets/macroeconomia_trm.md"
+    "documentation": "docs/datasets/macroeconomia_trm.md",
+    "update_frequency": "Diaria",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   },
   "calidad_aire": {
     "description": "Calidad del aire por estación de monitoreo: 6 contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO), promedio anual, 2011 a la fecha.",
@@ -244,6 +270,8 @@
       "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('calidad_aire')",
       "cli": "colombia-open path calidad_aire --output parquet"
     },
-    "documentation": "docs/datasets/calidad_aire.md"
+    "documentation": "docs/datasets/calidad_aire.md",
+    "update_frequency": "Anual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
   }
 }

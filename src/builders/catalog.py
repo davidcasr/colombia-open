@@ -41,6 +41,8 @@ def build_catalog_entry(
         "source_url": extraction_metadata.get("source_url"),
         "source_mode": extraction_metadata.get("source_mode"),
         "refreshed_at_utc": extraction_metadata.get("refreshed_at_utc"),
+        "update_frequency": spec.update_frequency,
+        "update_frequency_source": spec.update_frequency_source,
         "record_count": validation_result.record_count,
         "join_keys": spec.join_keys,
         "reuse_policy": extraction_metadata.get("reuse_policy"),

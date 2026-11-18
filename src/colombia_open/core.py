@@ -216,6 +216,8 @@ class ColombiaOpen:
                 "source_url",
                 "source_mode",
                 "refreshed_at_utc",
+                "update_frequency",
+                "update_frequency_source",
                 "reuse_policy",
             )
         }

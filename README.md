@@ -135,7 +135,10 @@ hub.cross_view(["municipios", "departamentos"], on="cod_dpto")
 # join listo entre dos datasets que comparten una clave territorial
 
 hub.provenance("municipios")
-# {"source_name": "DANE — DIVIPOLA...", "source_url": "...", "source_mode": "live", ...}
+# {"source_name": "DANE — DIVIPOLA...", "source_url": "...", "source_mode": "live",
+#  "refreshed_at_utc": "...", "update_frequency": "Semestral", ...}
+# update_frequency = frecuencia declarada por la fuente (None si no la declara);
+# refreshed_at_utc = cuándo el pipeline la extrajo por última vez.
 ```
 
 CLI equivalente:
