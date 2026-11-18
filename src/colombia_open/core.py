@@ -8,15 +8,18 @@
 1. `catalog_path` explícito.
 2. `data_dir` explícito (p. ej. `data_dir="data/normalized"` en un checkout
    de desarrollo con el pipeline ya corrido).
-3. `data/normalized/dataset_catalog.json` relativo a la raíz del repo, si
+3. Variable de entorno `COLOMBIA_OPEN_DATA_DIR` (mirror/offline: un
+   bundle ya descomprimido).
+4. `data/normalized/dataset_catalog.json` relativo a la raíz del repo, si
    existe (desarrollo).
-4. Si nada de lo anterior existe y `auto_update=True`: descarga y cachea el
+5. Si nada de lo anterior existe y `auto_update=True`: descarga y cachea el
    bundle publicado en GitHub Releases (ver `data_manager.py`).
 """
 
 from __future__ import annotations
 
 import json
+import os
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal
@@ -36,12 +39,21 @@ JoinStrategy = Literal["inner", "left", "right", "full", "semi", "anti", "cross"
 _DF_CACHE_MAXSIZE = 8
 
 
-def _resolve_dataset_name(dataset_name: str | Dataset) -> str:
+def _resolve_dataset_name(dataset_name: str | Dataset, published: list[str] | None = None) -> str:
+    """Valida contra el enum `Dataset`; si el nombre no está en el enum pero
+    SÍ está en el catálogo cargado (`published`), se acepta tal cual.
+
+    Así una versión vieja del paquete puede leer un dataset agregado en un
+    bundle más nuevo (compatibilidad hacia adelante — ver README, sección
+    "Compatibilidad entre paquete y bundle"), sin perder la sugerencia de
+    typo del enum cuando el nombre no existe en ninguna parte."""
     if isinstance(dataset_name, Dataset):
         return dataset_name.value
     try:
         return Dataset.from_string(dataset_name).value
     except ValueError as exc:
+        if published is not None and dataset_name in published:
+            return dataset_name
         raise ColombiaOpenDatasetError(str(exc)) from exc
 
 
@@ -75,6 +87,8 @@ class ColombiaOpen:
             resolved_catalog = Path(catalog_path)
         elif data_dir is not None:
             resolved_catalog = Path(data_dir) / "dataset_catalog.json"
+        elif os.environ.get(data_manager.DATA_DIR_ENV):
+            resolved_catalog = Path(os.environ[data_manager.DATA_DIR_ENV]) / "dataset_catalog.json"
         else:
             dev_catalog = _find_dev_catalog()
             if dev_catalog is not None:
@@ -83,7 +97,9 @@ class ColombiaOpen:
                 if not auto_update:
                     raise ColombiaOpenDatasetError(
                         "No se encontró data/normalized/dataset_catalog.json y "
-                        "auto_update=False. Corre `make build` o pasa data_dir/catalog_path."
+                        "auto_update=False. Pasa data_dir/catalog_path, define "
+                        f"{data_manager.DATA_DIR_ENV}, o corre `make build` en un "
+                        "checkout del repo."
                     )
                 bundle_dir = data_manager.download_and_cache_bundle()
                 resolved_catalog = bundle_dir / "dataset_catalog.json"
@@ -104,7 +120,7 @@ class ColombiaOpen:
         return [entry["dataset"] for entry in self.catalog.get("datasets", [])]
 
     def get_dataset(self, dataset_name: str | Dataset) -> dict[str, Any]:
-        name = _resolve_dataset_name(dataset_name)
+        name = _resolve_dataset_name(dataset_name, self.list_datasets())
         for entry in self.catalog.get("datasets", []):
             if entry["dataset"] == name:
                 result: dict[str, Any] = entry
@@ -129,7 +145,7 @@ class ColombiaOpen:
         return path if path.is_absolute() else self.root_dir / path.name
 
     def load_polars(self, dataset_name: str | Dataset, *, validate: bool = False) -> pl.DataFrame:
-        name = _resolve_dataset_name(dataset_name)
+        name = _resolve_dataset_name(dataset_name, self.list_datasets())
         if name in self._df_cache:
             self._df_cache[name] = self._df_cache.pop(name)  # touch for LRU
         else:
@@ -164,7 +180,7 @@ class ColombiaOpen:
 
         Requiere el extra `pipeline` (importa `src.validation`/`src.registry`).
         """
-        name = _resolve_dataset_name(dataset_name)
+        name = _resolve_dataset_name(dataset_name, self.list_datasets())
         try:
             from src.registry import load_registry
             from src.validation import VALIDATORS

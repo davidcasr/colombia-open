@@ -63,6 +63,48 @@ make build       # extract -> normalize -> validate -> data/normalized/
 make test
 ```
 
+### Datos: descarga, caché y entornos sin acceso a GitHub
+
+El paquete de PyPI no trae los datos: en el primer uso, `ColombiaOpen()`
+descarga el bundle del último release desde la URL de descarga directa de
+GitHub (`releases/latest/download/colombia-open-bundle.zip`, sin usar
+`api.github.com`, que tiene límite de 60 req/h y suele estar bloqueada en
+CI/proxies), verifica su SHA256 y lo cachea. En cada uso siguiente solo se
+pide el `.sha256` (unos bytes): si el release cambió, se baja el nuevo; sin
+red, se usa el último bundle cacheado con un aviso.
+
+Para mirrors, CI o entornos sin salida a GitHub:
+
+```bash
+# Un bundle ya descomprimido (no descarga nada):
+export COLOMBIA_OPEN_DATA_DIR=/ruta/al/bundle
+# o un mirror / .zip local (busca el checksum en <url>.sha256):
+export COLOMBIA_OPEN_BUNDLE_URL=https://mirror.interno/colombia-open-bundle.zip
+```
+
+O directamente en código: `ColombiaOpen(data_dir="/ruta/al/bundle")`, tras
+descargar y descomprimir `colombia-open-bundle.zip` desde
+[Releases](https://github.com/davidcasr/colombia-open/releases/latest).
+`colombia-open cache status|update|clear` gestiona el caché.
+
+### Compatibilidad entre paquete y bundle
+
+El paquete y el bundle se versionan juntos (`X.Y.Z` en PyPI = `vX.Y.Z` en
+Releases), pero el paquete siempre descarga el bundle **más reciente**:
+
+- **Paquete viejo + bundle nuevo con datasets nuevos**: funciona. Los
+  datasets que el enum `Dataset` de tu versión no conoce se cargan igual
+  por nombre (`hub.load_polars("dataset_nuevo")`) si están en el catálogo.
+- **Esquemas**: un cambio que rompa un esquema publicado (renombrar/quitar
+  una columna o cambiar su tipo) solo ocurre en un salto MAJOR (ver
+  `.claude/rules/releases.md`); agregar columnas no rompe a nadie.
+- **Métodos nuevos de la API** (p. ej. opciones nuevas de
+  `resolve_municipios`) requieren actualizar el paquete:
+  `pip install -U colombia-open`.
+- Para fijar una versión exacta de los datos, descarga el bundle de ese
+  tag y usa `data_dir=` (o `COLOMBIA_OPEN_BUNDLE_URL` apuntando a
+  `releases/download/vX.Y.Z/colombia-open-bundle.zip`).
+
 ## Uso
 
 ```python
@@ -213,8 +255,8 @@ directamente `data/normalized/` si ya corriste `make build`.
   keyset—, shapefile geoespacial, extracto `.osm.pbf` con
   geoprocesamiento).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.13.0`, bundle de datos con SHA256, incluye las
-  doce fuentes) — `ColombiaOpen()` descarga y cachea el bundle
+  publicados (último: `v0.14.0`, bundle de datos con SHA256, incluye las
+  trece fuentes) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**
