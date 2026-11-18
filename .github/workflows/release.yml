@@ -26,6 +26,19 @@ jobs:
         with:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v7
+      # Falla ANTES de reconstruir (~30 min) si el tag no coincide con
+      # pyproject.toml — regla 3 de .claude/rules/releases.md. Sin esto, un
+      # release de datos vX.Y.Z puede quedar sin paquete X.Y.Z equivalente
+      # (o al revés) y los ejemplos de la landing fallan con pip install.
+      - name: Validar que el tag coincide con pyproject.toml
+        shell: bash
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          if [ "${{ inputs.tag }}" != "v$version" ]; then
+            echo "El tag '${{ inputs.tag }}' no coincide con pyproject.toml (version=$version, se esperaba v$version)." >&2
+            exit 1
+          fi
+          echo "tag confirmado: v$version"
       - name: Instalar dependencias
         run: uv pip install -e ".[pipeline,geo,dev]" --system
       - name: Build

@@ -71,6 +71,15 @@ ambos — el mismo número de versión identifica el release de datos
    gh run watch
    ```
 
+   El primer paso del workflow valida que `tag == v{version de
+   pyproject.toml}` y falla antes de reconstruir si no coincide.
+
+   **Después del release de datos, publica el paquete con el mismo número**
+   (`publish.yml`, sección de abajo). Si no, PyPI queda atrás del release
+   y los ejemplos de la landing/README que usan API nueva fallan con
+   `pip install colombia-open` (pasó: v0.13.0/v0.14.0 en Releases con
+   0.12.0 en PyPI).
+
    El workflow reconstruye desde las fuentes en vivo y **falla el release
    si cualquier dataset queda en `source_mode="fallback"`**
    (`scripts/verify_pipeline.py --require-live`) — eso es intencional, no
