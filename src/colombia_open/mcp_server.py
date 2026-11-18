@@ -18,8 +18,8 @@ catálogo, surfaceados por `describe_dataset`, cubren el caso de uso).
 ## Por qué `query()` valida el SQL antes de ejecutarlo
 
 El dialecto SQL de polars soporta funciones de tabla con ruta arbitraria —
-`read_parquet('/cualquier/archivo')`, `read_csv(...)`, `scan_parquet(...)`,
-`glob(...)` — que ignoran completamente las tablas registradas en el
+`read_parquet('/cualquier/archivo')`, `read_csv(...)`, `read_json(...)`,
+`scan_parquet(...)`, `glob(...)` — que ignoran completamente las tablas registradas en el
 `SQLContext` y leen cualquier archivo del disco accesible al proceso.
 Confirmado ejecutando código real contra polars (no es una suposición): un
 `query(sql)` que reenvíe el string tal cual a `SQLContext.execute()` es un
@@ -34,6 +34,7 @@ configura como comando.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 import polars as pl
@@ -46,21 +47,24 @@ DEFAULT_LIMIT = 100
 MAX_LIMIT = 1000
 _MAX_SQL_LENGTH = 10_000
 
-# Funciones/keywords que permiten leer archivos fuera de las tablas
-# registradas, o mutar/ejecutar más de una sentencia. Búsqueda de substring
-# case-insensitive sobre el string completo — no requiere parsear SQL
-# estructuralmente: un token prohibido se detecta sin importar en qué nivel
-# de anidamiento, UNION o subquery aparezca.
+# Funciones de tabla que leen archivos arbitrarios del disco. Se detectan
+# por NOMBRE (`read_*`, `scan_*`, `glob`), sin exigir el `(` pegado: una
+# versión anterior buscaba el substring `read_csv(` y se saltaba con
+# `read_csv ('...')`, `read_csv/**/('...')` o un salto de línea antes del
+# paréntesis — y `read_json(` ni siquiera estaba en la lista. Bloquear la
+# familia completa por prefijo cubre también funciones que polars agregue
+# en el futuro con la misma convención de nombre.
+_FORBIDDEN_SQL_FUNCTIONS = re.compile(r"\b(?:read|scan)_[a-z0-9_]*|\bglob\b")
+
+# Comentarios SQL: no hay caso de uso legítimo para un agente, y son la
+# forma más fácil de partir un token prohibido en dos.
+_SQL_COMMENT_MARKERS = ("--", "/*", "*/")
+
+# Keywords que permiten mutar/ejecutar más de una sentencia. Búsqueda de
+# substring case-insensitive sobre el string completo — no requiere parsear
+# SQL estructuralmente: un token prohibido se detecta sin importar en qué
+# nivel de anidamiento, UNION o subquery aparezca.
 _FORBIDDEN_SQL_TOKENS = (
-    "read_csv(",
-    "read_parquet(",
-    "read_ndjson(",
-    "read_ipc(",
-    "scan_csv(",
-    "scan_parquet(",
-    "scan_ndjson(",
-    "scan_ipc(",
-    "glob(",
     "attach",
     "copy",
     "pragma",
@@ -92,6 +96,16 @@ def _validate_sql(cleaned_sql: str) -> None:
     lowered = cleaned_sql.lower()
     if not (lowered.startswith("select") or lowered.startswith("with")):
         raise McpQueryError("Solo se permiten queries que empiecen con SELECT o WITH.")
+    for marker in _SQL_COMMENT_MARKERS:
+        if marker in lowered:
+            raise McpQueryError(f"Query rechazada: no se permiten comentarios SQL ('{marker}').")
+    function_match = _FORBIDDEN_SQL_FUNCTIONS.search(lowered)
+    if function_match:
+        raise McpQueryError(
+            f"Query rechazada: contiene '{function_match.group(0)}', no permitido — "
+            "las funciones read_*/scan_*/glob leen archivos fuera de los datasets. "
+            "Solo se puede leer de los datasets registrados (ver list_datasets())."
+        )
     for token in _FORBIDDEN_SQL_TOKENS:
         if token in lowered:
             raise McpQueryError(
@@ -156,7 +170,7 @@ def _query_impl(hub: ColombiaOpen, sql: str, limit: int | None = None) -> dict[s
     ctx = _build_sql_context(hub)
     # nosec B608 — bandit marca cualquier SQL armado con f-string como
     # posible inyección, pero `cleaned` ya pasó por `_validate_sql()`
-    # (denylist de funciones de lectura de archivo/DDL/DML/multi-statement)
+    # (bloqueo de read_*/scan_*/glob, comentarios, DDL/DML y multi-statement)
     # arriba. Este wrap es exactamente la funcionalidad del tool, no un bug:
     # `query()` existe para ejecutar SQL del agente, ya acotado por la
     # validación — ver docs/mcp.md sección "Por qué query() valida el SQL".

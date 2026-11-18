@@ -90,9 +90,15 @@ con prompt injection).
 Por eso `query()` rechaza, antes de que el string toque el motor SQL,
 cualquier query que:
 - No empiece con `SELECT` o `WITH`.
-- Contenga `read_csv(`, `read_parquet(`, `read_ndjson(`, `read_ipc(`,
-  `scan_csv(`, `scan_parquet(`, `scan_ndjson(`, `scan_ipc(`, `glob(`,
-  `attach`, `copy`, `pragma`, `insert `, `update `, `delete `, `create `,
+- Mencione cualquier función `read_*` o `scan_*` (`read_csv`,
+  `read_parquet`, `read_json`, `read_ndjson`, `read_ipc`, `scan_parquet`…)
+  o `glob` — por **nombre**, con o sin paréntesis pegado. Una versión
+  anterior buscaba el substring `read_csv(` y se saltaba con
+  `read_csv ('/etc/passwd')`, un comentario o un salto de línea antes del
+  paréntesis (y no cubría `read_json`); ver la regresión
+  `test_query_impl_rejects_arbitrary_file_read_end_to_end`.
+- Contenga comentarios SQL (`--`, `/*`, `*/`).
+- Contenga `attach`, `copy`, `pragma`, `insert `, `update `, `delete `, `create `,
   `drop `, o un `;` que no sea solo el final del string (un `;` final
   inofensivo, hábito común al escribir SQL, se tolera).
 - Exceda 10,000 caracteres.
@@ -101,6 +107,17 @@ No hace falta validar "a mano" que las tablas referenidas en el `FROM`
 sean datasets reales — el `SQLContext` solo tiene registrados los
 datasets del catálogo, así que referenciar cualquier otra cosa falla
 naturalmente con un error de "tabla no encontrada" del propio motor.
+
+### Límites conocidos
+
+El motor es **polars** (`pl.SQLContext`), no DuckDB: no tiene `httpfs`,
+`INSTALL`/`LOAD` de extensiones ni `enable_external_access`, así que esas
+superficies no aplican — la única vía de E/S son las funciones de tabla de
+arriba. Lo que polars **no** ofrece es timeout por consulta ni límite de
+memoria: una query costosa (p. ej. un `CROSS JOIN` entre datasets grandes)
+puede tardar o consumir mucha RAM aunque la salida se recorte a `limit`.
+Si expones el servidor a agentes no confiables, córrelo en un proceso con
+límites del sistema operativo (contenedor, `ulimit`/cgroups).
 
 Ver los tests de regresión de esto en `tests/test_mcp_server.py`
 (`test_query_impl_rejects_unsafe_sql`) — no son opcionales, son la prueba

@@ -181,6 +181,21 @@ def test_query_impl_trailing_semicolon_is_tolerated(hub):
         "SELECT * FROM read_parquet('data/normalized/departamentos.parquet')",
         "SELECT * FROM read_csv('C:/Windows/win.ini')",
         "SELECT * FROM scan_parquet('anything')",
+        # Bypasses reales de la versión anterior (substring `read_csv(`),
+        # confirmados leyendo un archivo arbitrario antes del fix:
+        "SELECT * FROM read_csv ('/etc/passwd')",
+        "SELECT * FROM read_csv/**/('/etc/passwd')",
+        "SELECT * FROM READ_CSV\n('/etc/passwd')",
+        "SELECT * FROM read_csv\t('/etc/passwd')",
+        "SELECT * FROM \"read_csv\"('/etc/passwd')",
+        "SELECT * FROM read_json('/etc/passwd')",
+        "SELECT * FROM read_ndjson ('/etc/passwd')",
+        "SELECT * FROM scan_csv ('~/.ssh/id_rsa')",
+        "SELECT * FROM glob ('/home/*')",
+        "SELECT * FROM departamentos UNION ALL SELECT * FROM read_parquet ('x.parquet')",
+        "WITH x AS (SELECT * FROM read_ipc ('x.arrow')) SELECT * FROM x",
+        "SELECT cod_dpto FROM departamentos -- comentario",
+        "SELECT cod_dpto /* comentario */ FROM departamentos",
         "SELECT 1; DROP TABLE departamentos",
         "SELECT 1; SELECT 2",
         "DROP TABLE departamentos",
@@ -199,3 +214,23 @@ def test_query_impl_rejects_sql_over_length_cap(hub):
     huge = "SELECT " + "1" * 20_000
     with pytest.raises(McpQueryError):
         _query_impl(hub, huge)
+
+
+def test_query_impl_rejects_arbitrary_file_read_end_to_end(hub, tmp_path):
+    """Regresión del bypass: con el archivo existiendo de verdad, ninguna
+    variante de espaciado debe devolver su contenido."""
+    secret = tmp_path / "secret.csv"
+    secret.write_text("a\nSECRETO\n", encoding="utf-8")
+    path = secret.as_posix()
+    for sql in (
+        f"SELECT * FROM read_csv ('{path}')",
+        f"SELECT * FROM read_csv/**/('{path}')",
+        f"SELECT * FROM read_csv\n('{path}')",
+        f"SELECT * FROM read_json('{path}')",
+        f"SELECT * FROM '{path}'",
+    ):
+        try:
+            result = _query_impl(hub, sql)
+        except Exception:  # cualquier rechazo/error del motor es correcto aquí
+            continue
+        assert "SECRETO" not in json.dumps(result), sql
