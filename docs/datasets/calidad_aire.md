@@ -143,3 +143,11 @@ aire.filter(
   el resto del catálogo: IDEAM y DANE son entidades distintas con ciclos
   de actualización propios. El validador reporta cualquier `cod_mpio` que
   no exista en `municipios` vigente como warning, no error.
+- **`cod_dpto` que contradice a `cod_mpio` en algunas filas** — en el
+  bundle `v0.14.0`, 17 filas (9 estaciones) traen un departamento que no
+  corresponde al prefijo del código municipal (p. ej. estaciones con
+  `cod_dpto="81"` ARAUCA y `cod_mpio="85001"` YOPAL; o `"05"` ANTIOQUIA con
+  `"15759"` SOGAMOSO). Es un error de la fuente: no se corrige porque no
+  hay forma de saber cuál de los dos códigos es el correcto. El validador
+  lo reporta como warning. Para agregar por departamento, deriva el
+  departamento de `cod_mpio` (`cod_mpio[:2]`) o descarta esas filas.

@@ -45,6 +45,8 @@ jobs:
         run: python -m src.build_pipeline
       - name: Verificar (requiere source_mode=live en todos los datasets)
         run: python scripts/verify_pipeline.py --require-live
+      - name: Spot-checks de calidad sobre los datos reales (DIVIPOLA, joins, fuente/licencia)
+        run: python -m pytest tests/test_published_data.py
       - name: Empaquetar bundle
         run: python scripts/make_bundle.py
       - name: Crear Release y adjuntar assets

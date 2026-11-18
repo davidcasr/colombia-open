@@ -52,3 +52,17 @@ def out_of_bounds_count(df: pl.DataFrame, column: str, low: float, high: float) 
         return 0
     series = df[column].drop_nulls()
     return int(((series < low) | (series > high)).sum())
+
+
+def dpto_mpio_mismatch_count(df: pl.DataFrame) -> int:
+    """Filas donde `cod_dpto` no coincide con los 2 primeros dígitos de
+    `cod_mpio` (en DIVIPOLA el código municipal empieza por el del
+    departamento). Detecta errores de la fuente como una estación de
+    Arauca (81) asignada a Yopal (85001). Ignora filas con nulos."""
+    if "cod_dpto" not in df.columns or "cod_mpio" not in df.columns:
+        return 0
+    pair = df.select(
+        pl.col("cod_dpto").cast(pl.Utf8, strict=False),
+        pl.col("cod_mpio").cast(pl.Utf8, strict=False),
+    ).drop_nulls()
+    return int((pair["cod_mpio"].str.slice(0, 2) != pair["cod_dpto"]).sum())
