@@ -82,8 +82,12 @@ municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
 
 hub.resolve_municipios(["Medellín", "cali", "BOGOTA"])
-# resuelve nombres a código DIVIPOLA, sin fuzzy matching (coincidencia exacta
-# normalizada: sin tildes, minúsculas)
+# resuelve nombres a código DIVIPOLA: coincidencia exacta normalizada (sin
+# tildes, minúsculas) + alias curados ("Cali", "Bogotá", "Cartagena"…).
+# Un nombre repetido entre departamentos (Rionegro, La Unión…) NUNCA se
+# resuelve en silencio: vuelve matched=False con sus candidatos.
+hub.resolve_municipios(["Rionegro"], departamento="Antioquia")
+hub.resolve_municipios([("Rionegro", "Santander"), ("La Unión", "Nariño")])
 
 hub.cross_view(["municipios", "departamentos"], on="cod_dpto")
 # join listo entre dos datasets que comparten una clave territorial

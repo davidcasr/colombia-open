@@ -30,7 +30,8 @@ hub = ColombiaOpen()
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
 
-hub.resolve_municipios(["Medellín", "Santiago de Cali"])
+hub.resolve_municipios(["Medellín", "Cali"])
+hub.resolve_municipios(["Rionegro"], departamento="Antioquia")
 hub.cross_view(["municipios", "departamentos"], on="cod_dpto")
 ```
 
@@ -42,6 +43,17 @@ hub.cross_view(["municipios", "departamentos"], on="cod_dpto")
   `cod_mpio`), para no cargarle a quien solo necesita nombre/centroide con
   el peso de los polígonos.
 - `resolve_municipios()` hace coincidencia **exacta tras normalizar**
-  (sin tildes, minúsculas), no fuzzy matching — "Cali" no resuelve porque
-  el nombre oficial DIVIPOLA es "SANTIAGO DE CALI". Usa el nombre oficial
-  o el código directamente si lo conoces.
+  (sin tildes, minúsculas) y luego consulta una tabla de alias curada
+  (`colombia_open/resolve.py::MUNICIPIO_ALIASES`: "Cali" -> SANTIAGO DE
+  CALI, "Bogotá" -> BOGOTÁ, D.C., "Cartagena" -> CARTAGENA DE INDIAS,
+  "Cúcuta" -> SAN JOSÉ DE CÚCUTA, "Mompós", "Ubaté", "Buga", "Tolú",
+  "Tumaco"…). No hay fuzzy matching automático: las coincidencias
+  aproximadas solo aparecen como sugerencias en `candidates` cuando
+  `match_type="not_found"`.
+- **Nombres repetidos.** 67 nombres normalizados existen en más de un
+  departamento (Rionegro en Antioquia y Santander; La Unión, Buenavista y
+  Villanueva en cuatro cada uno…). Sin `departamento`, esos nombres
+  devuelven `matched=False`, `match_type="ambiguous"` y la lista de
+  candidatos — nunca se escoge uno en silencio. `departamento` acepta el
+  código (`"05"`) o el nombre (`"Antioquia"`, `"Valle"`), global o por
+  nombre con tuplas `(municipio, departamento)`.

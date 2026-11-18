@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal
 
@@ -29,7 +30,7 @@ from .exceptions import (
     ColombiaOpenDatasetError,
     ColombiaOpenOutputError,
 )
-from .text import clean_name
+from .resolve import NameQuery, resolve_municipio_names
 
 JoinStrategy = Literal["inner", "left", "right", "full", "semi", "anti", "cross", "outer"]
 _DF_CACHE_MAXSIZE = 8
@@ -223,25 +224,33 @@ class ColombiaOpen:
             result = result.join(other, on=join_cols, how=how)
         return result
 
-    def resolve_municipios(self, names: list[str]) -> pl.DataFrame:
-        """Resuelve nombres de municipio a código DIVIPOLA por coincidencia
-        exacta normalizada (sin tildes, minúsculas) — sin fuzzy matching."""
+    def resolve_municipios(
+        self,
+        names: Sequence[NameQuery],
+        *,
+        departamento: str | None = None,
+    ) -> pl.DataFrame:
+        """Resuelve nombres de municipio a código DIVIPOLA.
+
+        Coincidencia exacta normalizada (sin tildes, minúsculas), luego una
+        tabla de alias curada ("Cali", "Bogotá", "Cartagena", "Cúcuta"…).
+        Si un nombre existe en varios departamentos (Rionegro, La Unión…)
+        y no se indica cuál, NO se escoge uno: `matched=False`,
+        `match_type="ambiguous"` y los candidatos en `candidates`.
+
+        Desambigua con `departamento="Antioquia"` (o `"05"`) para todos, o
+        por nombre con tuplas: `[("Rionegro", "Antioquia"), "Cali"]`.
+
+        Columnas: query, departamento, matched, match_type
+        (exact|alias|ambiguous|not_found), cod_mpio, nombre_mpio, cod_dpto,
+        candidates (candidatos si es ambiguo; sugerencias aproximadas si no
+        se encontró — nunca se usan como match automático).
+        """
         municipios = self.load_polars("municipios")
-        lookup = {clean_name(row["nombre_mpio"]): row for row in municipios.to_dicts()}
-        rows = []
-        for name in names:
-            key = clean_name(name)
-            match = lookup.get(key)
-            rows.append(
-                {
-                    "query": name,
-                    "matched": match is not None,
-                    "cod_mpio": match["cod_mpio"] if match else None,
-                    "nombre_mpio": match["nombre_mpio"] if match else None,
-                    "cod_dpto": match["cod_dpto"] if match else None,
-                }
-            )
-        return pl.DataFrame(rows)
+        if "nombre_dpto" not in municipios.columns and "departamentos" in self.list_datasets():
+            departamentos = self.load_polars("departamentos").select("cod_dpto", "nombre_dpto")
+            municipios = municipios.join(departamentos, on="cod_dpto", how="left")
+        return resolve_municipio_names(municipios, names, departamento=departamento)
 
     def summary(self) -> dict[str, Any]:
         return {

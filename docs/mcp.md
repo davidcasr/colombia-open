@@ -128,7 +128,9 @@ de este hallazgo.
 - **`cross_view()`** — subsumido por `JOIN` en `query()`.
 - **`resolve_municipios()`** — una vez el agente ve `nombre_mpio_clean` vía
   `describe_dataset("municipios")`, es trivial expresarlo como
-  `WHERE nombre_mpio_clean = 'medellin'`.
+  `WHERE nombre_mpio_clean = 'medellin'`. Ojo: el agente debe filtrar
+  también por `cod_dpto` ante nombres repetidos (Rionegro, La Unión…) — la
+  tabla de alias curada de la librería (`resolve.py`) no está expuesta.
 - **`validate_dataset()`** — es pipeline-only (importa `src.registry`/
   `src.validation`, que requieren el extra `pipeline`); exponerlo violaría
   que el extra `mcp` se mantenga liviano. Los `warnings`/`validation_status`
