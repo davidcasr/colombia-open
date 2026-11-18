@@ -8,6 +8,7 @@ import polars as pl
 
 from ._constants import CONTAMINANTES_ICA_VALIDOS, EXPECTED_CALIDAD_AIRE_MIN_COUNT
 from ._helpers import (
+    dpto_mpio_mismatch_count,
     duplicate_count_multi,
     invalid_fixed_length_count,
     missing_columns,
@@ -52,6 +53,15 @@ def validate_calidad_aire(
     bad_mpio = invalid_fixed_length_count(df, "cod_mpio", 5)
     if bad_mpio > 0:
         errors.append(f"cod_mpio debe tener 5 dígitos, {bad_mpio} filas no cumplen")
+
+    mismatched = dpto_mpio_mismatch_count(df)
+    if mismatched > 0:
+        # Warning, no error: es un error de la fuente (IDEAM) que no se
+        # corrige aquí — no sabemos cuál de los dos códigos es el bueno.
+        warnings.append(
+            f"{mismatched} filas con cod_dpto que no coincide con el prefijo de cod_mpio "
+            "(inconsistencia de la fuente, no corregida)"
+        )
 
     bad_contaminante = df.filter(~pl.col("contaminante").is_in(CONTAMINANTES_ICA_VALIDOS)).height
     if bad_contaminante > 0:

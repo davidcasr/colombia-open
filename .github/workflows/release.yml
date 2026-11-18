@@ -1,10 +1,13 @@
 name: Release (bundle de datos)
 
-# Manual-only a propósito. NO publica a PyPI (ver README.md "Estado del
-# proyecto") — solo construye el pipeline, lo verifica en modo
+# Manual-only a propósito. Construye el pipeline, lo verifica en modo
 # --require-live, empaqueta data/normalized/ y lo adjunta como asset de un
-# GitHub Release con su SHA256. Activar esto a un trigger automático es
-# una decisión del mantenedor, no algo que un agente deba habilitar solo.
+# GitHub Release con su SHA256 — y, si `publish_pypi` está activo (default),
+# publica el paquete X.Y.Z a PyPI en el job `pypi`, DESPUÉS de que el
+# release de datos vX.Y.Z exista. Así nunca vuelve a quedar PyPI atrás de
+# Releases (pasó: v0.14.0 en Releases con 0.12.0 en PyPI).
+# Activar esto a un trigger automático es una decisión del mantenedor, no
+# algo que un agente deba habilitar solo.
 # Convención de versionado del tag: ver .claude/rules/releases.md.
 
 on:
@@ -13,6 +16,10 @@ on:
       tag:
         description: "Tag del release (ej. v0.1.0)"
         required: true
+      publish_pypi:
+        description: "Publicar también el paquete a PyPI con la misma versión"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -26,12 +33,27 @@ jobs:
         with:
           python-version: "3.11"
       - uses: astral-sh/setup-uv@v7
+      # Falla ANTES de reconstruir (~30 min) si el tag no coincide con
+      # pyproject.toml — regla 3 de .claude/rules/releases.md. Sin esto, un
+      # release de datos vX.Y.Z puede quedar sin paquete X.Y.Z equivalente
+      # (o al revés) y los ejemplos de la landing fallan con pip install.
+      - name: Validar que el tag coincide con pyproject.toml
+        shell: bash
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          if [ "${{ inputs.tag }}" != "v$version" ]; then
+            echo "El tag '${{ inputs.tag }}' no coincide con pyproject.toml (version=$version, se esperaba v$version)." >&2
+            exit 1
+          fi
+          echo "tag confirmado: v$version"
       - name: Instalar dependencias
         run: uv pip install -e ".[pipeline,geo,dev]" --system
       - name: Build
         run: python -m src.build_pipeline
       - name: Verificar (requiere source_mode=live en todos los datasets)
         run: python scripts/verify_pipeline.py --require-live
+      - name: Spot-checks de calidad sobre los datos reales (DIVIPOLA, joins, fuente/licencia)
+        run: python -m pytest tests/test_published_data.py
       - name: Empaquetar bundle
         run: python scripts/make_bundle.py
       - name: Crear Release y adjuntar assets
@@ -73,3 +95,37 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/colombia-open/colombia-open.github.io/dispatches \
             -d "{\"event_type\":\"library-release\",\"client_payload\":{\"tag\":\"${{ inputs.tag }}\"}}"
+
+  pypi:
+    # Job separado en ubuntu: pypa/gh-action-pypi-publish es una Docker
+    # action (no corre en windows-latest, donde vive el job de datos).
+    #
+    # Trusted publishing: requiere que pypi.org tenga un trusted publisher
+    # con workflow `release.yml` (además del existente para `publish.yml`):
+    # Account settings -> Publishing -> owner davidcasr, repo colombia-open,
+    # workflow release.yml, environment pypi. Sin eso este job falla con un
+    # error de autenticación DESPUÉS de que el release de datos ya se creó
+    # — no lo deshace; en ese caso publica a mano con publish.yml.
+    needs: release
+    if: ${{ inputs.publish_pypi }}
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Validar que el tag coincide con pyproject.toml
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          if [ "${{ inputs.tag }}" != "v$version" ]; then
+            echo "El tag '${{ inputs.tag }}' no coincide con pyproject.toml (version=$version)." >&2
+            exit 1
+          fi
+      - name: Build (sdist + wheel)
+        run: python -m pip install build && python -m build
+      - name: Publicar a PyPI (trusted publishing, sin token)
+        uses: pypa/gh-action-pypi-publish@release/v1

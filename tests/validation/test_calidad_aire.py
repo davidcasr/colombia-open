@@ -89,3 +89,13 @@ def test_validate_aire_fallback_adds_warning():
     result = validate_calidad_aire(_aire_df(), {"source_mode": "fallback"})
     assert result.status == "ok"
     assert any("fallback" in w for w in result.warnings)
+
+
+def test_validate_aire_dpto_mpio_mismatch_is_warning_not_error():
+    """Caso real del bundle v0.14.0: estación con cod_dpto=81 (Arauca) y
+    cod_mpio=85001 (Yopal, Casanare). Se reporta, no se corrige."""
+    df = _aire_df().with_columns(pl.Series("cod_dpto", ["81", "05", "20"]))
+    df = df.with_columns(pl.Series("cod_mpio", ["85001", "05001", "20621"]))
+    result = validate_calidad_aire(df, references={"cod_mpio": {"85001", "05001", "20621"}})
+    assert result.status == "ok"
+    assert any("no coincide con el prefijo de cod_mpio" in w for w in result.warnings)

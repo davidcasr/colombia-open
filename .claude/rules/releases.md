@@ -8,8 +8,9 @@ workflow manual:
   cachea automáticamente en el primer uso (ver `data_manager.py`).
 - **Paquete**: el código de `colombia_open/` a [PyPI](https://pypi.org/project/colombia-open/)
   (`pip install colombia-open`), vía trusted publishing — sin token
-  almacenado (`.github/workflows/publish.yml`). El job corre en
-  `ubuntu-latest`, nunca `windows-latest` como `release.yml` —
+  almacenado. Lo hace el job `pypi` de `release.yml` en el mismo release;
+  `.github/workflows/publish.yml` queda como respaldo manual. El job de PyPI corre en
+  `ubuntu-latest`, nunca `windows-latest` como el job de datos —
   `pypa/gh-action-pypi-publish` es una Docker action, solo corre en Linux.
 
 Usa SemVer (`MAJOR.MINOR.PATCH`) sobre `version` en `pyproject.toml` para
@@ -70,6 +71,18 @@ ambos — el mismo número de versión identifica el release de datos
    gh workflow run release.yml -f tag=vX.Y.Z
    gh run watch
    ```
+
+   El primer paso del workflow valida que `tag == v{version de
+   pyproject.toml}` y falla antes de reconstruir si no coincide.
+
+   **El mismo workflow publica el paquete a PyPI** (job `pypi`, input
+   `publish_pypi`, default `true`), después de crear el release de datos.
+   Si no, PyPI queda atrás del release y los ejemplos de la landing/README
+   que usan API nueva fallan con `pip install colombia-open` (pasó:
+   v0.13.0/v0.14.0 en Releases con 0.12.0 en PyPI). Requiere un trusted
+   publisher en pypi.org para `release.yml` (ver el comentario del job);
+   si ese job falla, el release de datos ya existe — publica con
+   `publish.yml` (respaldo manual, sección de abajo).
 
    El workflow reconstruye desde las fuentes en vivo y **falla el release
    si cualquier dataset queda en `source_mode="fallback"`**

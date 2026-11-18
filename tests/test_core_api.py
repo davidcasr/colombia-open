@@ -228,3 +228,25 @@ def test_version_matches_pyproject():
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     expected = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["version"]
     assert colombia_open.__version__ == expected
+
+
+def test_dataset_newer_than_package_enum_is_loadable(catalog_dir):
+    """Compatibilidad hacia adelante: un bundle más nuevo puede traer un
+    dataset que el enum `Dataset` de esta versión del paquete no conoce.
+    Si está en el catálogo, se carga igual."""
+    pl.DataFrame({"x": [1]}).write_parquet(catalog_dir / "dataset_futuro.parquet")
+    catalog = json.loads((catalog_dir / "dataset_catalog.json").read_text(encoding="utf-8"))
+    catalog["datasets"].append(
+        {"dataset": "dataset_futuro", "outputs": {"parquet": "dataset_futuro.parquet"}}
+    )
+    (catalog_dir / "dataset_catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+
+    hub = ColombiaOpen(data_dir=catalog_dir)
+    assert hub.load_polars("dataset_futuro").height == 1
+    assert hub.get_dataset("dataset_futuro")["dataset"] == "dataset_futuro"
+
+
+def test_unknown_dataset_still_gets_typo_hint(catalog_dir):
+    hub = ColombiaOpen(data_dir=catalog_dir)
+    with pytest.raises(ColombiaOpenDatasetError, match="Quisiste decir 'municipios'"):
+        hub.load_polars("municipio")

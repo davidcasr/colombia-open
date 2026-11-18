@@ -90,9 +90,18 @@ No empieces una segunda mientras esta no pase `make check` completo.
     "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('{dataset}')",
     "cli": "colombia-open path {dataset} --output parquet"
   },
-  "documentation": "docs/datasets/{dataset}.md"
+  "documentation": "docs/datasets/{dataset}.md",
+  "update_frequency": "Mensual",
+  "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada AAAA-MM-DD)"
 }
 ```
+
+`update_frequency` es la frecuencia **declarada por la fuente** (en
+datos.gov.co: `GET /api/views/{id}.json` -> `metadata.custom_fields` ->
+"Frecuencia de Actualización"). Si la fuente no la declara, `null` con
+`update_frequency_source` explicando que no está declarada — nunca la
+estimes. `tests/registry/test_dataset_spec.py` falla si falta la clave.
+La landing la muestra por dataset.
 
 ### 5. Orquestador — `src/build_pipeline.py`
 
