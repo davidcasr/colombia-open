@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/colombia-open)](https://pypi.org/project/colombia-open/)
 [![Python](https://img.shields.io/pypi/pyversions/colombia-open)](https://pypi.org/project/colombia-open/)
 [![License](https://img.shields.io/github/license/davidcasr/colombia-open)](LICENSE)
-[![Datasets](https://img.shields.io/badge/datasets-12-success)](#datasets-disponibles)
+[![Datasets](https://img.shields.io/badge/datasets-14-success)](#datasets-disponibles)
 
 Datasets públicos de Colombia, **curados, normalizados y validados**, para
 que cualquiera los use desde Python sin lidiar con los portales, APIs y
@@ -20,14 +20,15 @@ municipios = hub.load_polars("municipios")
 departamentos = hub.load_polars("departamentos")
 ```
 
-> **Proyecto en MVP activo.** Once fuentes están implementadas de punta a
-> punta (DIVIPOLA: departamentos + municipios, DANE; geometría municipal,
-> IGAC vía SNR; demografía: proyecciones de población, DANE; educación:
-> establecimientos y Saber 11, MEN/ICFES; seguridad: hurto a personas,
-> lesiones personales e hurto a residencias/comercio, Policía;
-> infraestructura: puntos de interés urbanos, OpenStreetMap;
-> macroeconomía: TRM, Superfinanciera; y calidad del aire, IDEAM).
-> Publicado en [PyPI](https://pypi.org/project/colombia-open/)
+> **Proyecto en MVP activo.** Trece fuentes están implementadas de punta a
+> punta, catorce datasets publicados (DIVIPOLA: departamentos + municipios,
+> DANE; geometría municipal, IGAC vía SNR; demografía: proyecciones de
+> población, DANE; educación: establecimientos y Saber 11, MEN/ICFES;
+> seguridad: hurto a personas, lesiones personales, hurto a
+> residencias/comercio, homicidios y homicidios en accidente de tránsito,
+> MinDefensa/Policía; infraestructura: puntos de interés urbanos,
+> OpenStreetMap; macroeconomía: TRM, Superfinanciera; y calidad del aire,
+> IDEAM). Publicado en [PyPI](https://pypi.org/project/colombia-open/)
 > (`pip install colombia-open`), con
 > [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
 > para el bundle de datos y landing page en vivo en
@@ -161,16 +162,16 @@ colombia-open validate municipios
 | `demografia`    | Proyecciones de población municipal por área geográfica, 2018-2042              | DANE (descarga directa) | ~84225 | Términos DANE (público) |
 | `educacion_establecimientos` | Directorio único de establecimientos educativos, 2015-2025            | MEN, vía datos.gov.co  | ~606206 | CC BY-SA 4.0 |
 | `educacion_saber11` | Resultados Saber 11 agregados por establecimiento y periodo, 2010-2022 | ICFES, vía datos.gov.co | ~105110 | CC BY-SA 4.0 |
-| `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~650835 | CC BY-SA 4.0 |
+| `delincuencia_hurto_personas` | Víctimas de hurto a personas por municipio y día, 2003 a la fecha      | MinDefensa / Policía, vía datos.gov.co | ~656989 | CC BY-SA 4.0 |
 | `delincuencia_lesiones_personales` | Víctimas de lesiones personales (incl. tránsito) por municipio, día, conducta, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~1377323 | CC BY-SA 4.0 |
 | `delincuencia_hurto_modalidades` | Víctimas de hurto a residencias y entidades comerciales por municipio, día, arma, género y edad, 2010 a la fecha | Policía Nacional, vía datos.gov.co | ~397361 | CC BY-SA 4.0 |
-| `delincuencia_homicidios` | Víctimas de homicidio (incl. feminicidio) por municipio, día, zona, sexo, arma y modalidad, 2003 a la fecha | MinDefensa / Policía, vía datos.gov.co | ~286469 | CC BY-SA 4.0 |
-| `delincuencia_homicidios_transito` | Víctimas de homicidio en accidente de tránsito por municipio y día, 2003 a la fecha | MinDefensa / Policía, vía datos.gov.co | ~102336 | CC BY-SA 4.0 |
-| `infraestructura_poi` | Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) por municipio | OpenStreetMap, vía Geofabrik | ~58046 | ODbL 1.0 |
-| `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8372 | CC BY-SA 4.0 |
+| `delincuencia_homicidios` | Víctimas de homicidio (incl. feminicidio) por municipio, día, zona, sexo, arma y modalidad, 2003 a la fecha | MinDefensa / Policía, vía datos.gov.co | ~287429 | CC BY-SA 4.0 |
+| `delincuencia_homicidios_transito` | Víctimas de homicidio en accidente de tránsito por municipio y día, 2003 a la fecha | MinDefensa / Policía, vía datos.gov.co | ~102809 | CC BY-SA 4.0 |
+| `infraestructura_poi` | Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) por municipio | OpenStreetMap, vía Geofabrik | ~58028 | ODbL 1.0 |
+| `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8388 | CC BY-SA 4.0 |
 | `calidad_aire` | Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación, 2011 a la fecha | IDEAM, vía datos.gov.co | ~8985 | CC BY-SA 4.0 |
 
-Ver `docs/roadmap/roadmap.md` para las ~14 fuentes mapeadas (implementadas y
+Ver `docs/roadmap/roadmap.md` para el resto de fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
 
 ## Instalación con extras
@@ -258,8 +259,8 @@ directamente `data/normalized/` si ya corriste `make build`.
   keyset—, shapefile geoespacial, extracto `.osm.pbf` con
   geoprocesamiento).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
-  publicados (último: `v0.14.0`, bundle de datos con SHA256, incluye las
-  trece fuentes) — `ColombiaOpen()` descarga y cachea el bundle
+  publicados (último: `v0.14.0`, bundle de datos con SHA256, incluye los
+  catorce datasets) — `ColombiaOpen()` descarga y cachea el bundle
   automáticamente sin tener que correr el pipeline localmente (ver
   `data_manager.py`). Convención de versionado: `.claude/rules/releases.md`.
 - ✅ **Publicado en [PyPI](https://pypi.org/project/colombia-open/)**
