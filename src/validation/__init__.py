@@ -25,6 +25,7 @@ from ._educacion import validate_educacion_establecimientos as validate_educacio
 from ._educacion import validate_educacion_saber11 as validate_educacion_saber11
 from ._infraestructura import validate_infraestructura_poi as validate_infraestructura_poi
 from ._macroeconomia import validate_macroeconomia_trm as validate_macroeconomia_trm
+from ._salud import validate_rethus as validate_rethus
 from ._territorio import validate_departamentos as validate_departamentos
 from ._territorio import validate_municipios as validate_municipios
 from ._territorio import validate_municipios_geometria as validate_municipios_geometria
@@ -45,6 +46,7 @@ VALIDATORS: dict[str, Callable[..., ValidationResult]] = {
     "infraestructura_poi": validate_infraestructura_poi,
     "educacion_saber11": validate_educacion_saber11,
     "macroeconomia_trm": validate_macroeconomia_trm,
+    "rethus": validate_rethus,
 }
 
 __all__ = [
@@ -64,4 +66,5 @@ __all__ = [
     "validate_macroeconomia_trm",
     "validate_municipios",
     "validate_municipios_geometria",
+    "validate_rethus",
 ]

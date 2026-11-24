@@ -90,3 +90,15 @@ EXPECTED_DELINCUENCIA_HOMICIDIOS_MIN_COUNT = 250_000
 # 102336 filas tras agregar filas repetidas por (fecha, municipio) (confirmado
 # en vivo 2026-11-13, de 128440 filas crudas y 128900 víctimas).
 EXPECTED_DELINCUENCIA_HOMICIDIOS_TRANSITO_MIN_COUNT = 90_000
+
+# RETHUS (MinSalud). 90297 filas confirmadas en vivo 2026-11-24 (92373
+# crudas, menos 2076 excluidas por "SIN INFORMACION" en departamento y
+# municipio de residencia). Snapshot congelado desde 2022-05-30 — ver
+# docstring de src/extractors/rethus_extractor.py.
+EXPECTED_RETHUS_MIN_COUNT = 80_000
+# Año más reciente con datos reales en el snapshot (2022 es un año
+# parcial, cortado en la fecha de congelamiento de la fuente). Cualquier
+# fila con `anio_registro` posterior a este año es el defecto conocido de
+# captura de la fuente (4 filas con "2028" confirmadas 2026-11-24) — se
+# reporta como warning, nunca se excluye ni se corrige a ciegas.
+RETHUS_SNAPSHOT_MAX_PLAUSIBLE_YEAR = 2022
