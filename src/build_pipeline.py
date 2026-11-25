@@ -42,6 +42,7 @@ from src.extractors.educacion_saber11_extractor import EducacionSaber11Extractor
 from src.extractors.infraestructura_poi_extractor import InfraestructuraPoiExtractor
 from src.extractors.macroeconomia_trm_extractor import MacroeconomiaTrmExtractor
 from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExtractor
+from src.extractors.rethus_extractor import RethusExtractor
 from src.registry import load_registry
 from src.validation import (
     validate_calidad_aire,
@@ -58,6 +59,7 @@ from src.validation import (
     validate_macroeconomia_trm,
     validate_municipios,
     validate_municipios_geometria,
+    validate_rethus,
 )
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -309,6 +311,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["calidad_aire"],
             extraction_metadata=aire_staging_metadata,
             validation_result=aire_validation,
+        )
+    )
+
+    # --- rethus: dataset normalizado 1:1 desde staging (ya agregado por la
+    # fuente), sin derive_* ---
+    rethus_extraction = RethusExtractor().run()
+    rethus_staging_metadata = rethus_extraction.to_staging_metadata()
+    rethus_df = rethus_extraction.dataframe
+    rethus_validation = validate_rethus(
+        rethus_df, rethus_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(rethus_df, NORMALIZED_DIR / "rethus.parquet")
+    write_json_atomic(rethus_df, NORMALIZED_DIR / "rethus.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["rethus"],
+            extraction_metadata=rethus_staging_metadata,
+            validation_result=rethus_validation,
         )
     )
 

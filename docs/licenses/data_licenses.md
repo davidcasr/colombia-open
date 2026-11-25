@@ -71,6 +71,7 @@ más permisiva).
 | `educacion_saber11` | ICFES, vía datos.gov.co (`kgxf-xxbe`) | CC BY-SA 4.0 | Sí — "ICFES" | Sí, bajo CC BY-SA 4.0 |
 | `macroeconomia_trm` | Superintendencia Financiera, vía datos.gov.co (`32sa-8pi3`) | CC BY-SA 4.0 | Sí — "Superintendencia Financiera" | Sí, bajo CC BY-SA 4.0 |
 | `calidad_aire` | IDEAM, vía datos.gov.co (`kekd-7v7h`) | CC BY-SA 4.0 | Sí — "IDEAM" | Sí, bajo CC BY-SA 4.0 |
+| `rethus` | MinSalud, vía datos.gov.co (`my8c-6xkk`) | CC BY-SA 4.0 | Sí — "Ministerio de Salud y Protección Social" | Sí, bajo CC BY-SA 4.0 (snapshot congelado a 2022-05, ver `docs/datasets/rethus.md`) |
 
 ## Nota sobre `demografia` (public-api-review-terms)
 

@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/colombia-open)](https://pypi.org/project/colombia-open/)
 [![Python](https://img.shields.io/pypi/pyversions/colombia-open)](https://pypi.org/project/colombia-open/)
 [![License](https://img.shields.io/github/license/davidcasr/colombia-open)](LICENSE)
-[![Datasets](https://img.shields.io/badge/datasets-14-success)](#datasets-disponibles)
+[![Datasets](https://img.shields.io/badge/datasets-15-success)](#datasets-disponibles)
 
 Datasets públicos de Colombia, **curados, normalizados y validados**, para
 que cualquiera los use desde Python sin lidiar con los portales, APIs y
@@ -20,15 +20,16 @@ municipios = hub.load_polars("municipios")
 departamentos = hub.load_polars("departamentos")
 ```
 
-> **Proyecto en MVP activo.** Trece fuentes están implementadas de punta a
-> punta, catorce datasets publicados (DIVIPOLA: departamentos + municipios,
+> **Proyecto en MVP activo.** Catorce fuentes están implementadas de punta a
+> punta, quince datasets publicados (DIVIPOLA: departamentos + municipios,
 > DANE; geometría municipal, IGAC vía SNR; demografía: proyecciones de
 > población, DANE; educación: establecimientos y Saber 11, MEN/ICFES;
 > seguridad: hurto a personas, lesiones personales, hurto a
 > residencias/comercio, homicidios y homicidios en accidente de tránsito,
 > MinDefensa/Policía; infraestructura: puntos de interés urbanos,
-> OpenStreetMap; macroeconomía: TRM, Superfinanciera; y calidad del aire,
-> IDEAM). Publicado en [PyPI](https://pypi.org/project/colombia-open/)
+> OpenStreetMap; macroeconomía: TRM, Superfinanciera; calidad del aire,
+> IDEAM; y talento humano en salud, RETHUS/MinSalud). Publicado en
+> [PyPI](https://pypi.org/project/colombia-open/)
 > (`pip install colombia-open`), con
 > [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
 > para el bundle de datos y landing page en vivo en
@@ -119,7 +120,7 @@ hub.list_datasets()
 #  "delincuencia_hurto_personas", "delincuencia_lesiones_personales",
 #  "delincuencia_hurto_modalidades", "delincuencia_homicidios",
 #  "delincuencia_homicidios_transito", "infraestructura_poi",
-#  "macroeconomia_trm", "calidad_aire"]
+#  "macroeconomia_trm", "calidad_aire", "rethus"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -170,6 +171,7 @@ colombia-open validate municipios
 | `infraestructura_poi` | Puntos de interés urbanos (salud, educación, seguridad, finanzas, religión, gobierno, transporte, comercio) por municipio | OpenStreetMap, vía Geofabrik | ~58028 | ODbL 1.0 |
 | `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8388 | CC BY-SA 4.0 |
 | `calidad_aire` | Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación, 2011 a la fecha | IDEAM, vía datos.gov.co | ~8985 | CC BY-SA 4.0 |
+| `rethus` | Talento humano en salud por perfil, programa, año de registro y municipio de residencia — snapshot congelado a 2022-05, no serie viva | MinSalud, vía datos.gov.co | ~90297 | CC BY-SA 4.0 |
 
 Ver `docs/roadmap/roadmap.md` para el resto de fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.
@@ -251,13 +253,13 @@ directamente `data/normalized/` si ya corriste `make build`.
 
 ## Estado del proyecto
 
-- ✅ Patrón extractor/builder/validación/registro probado con trece
+- ✅ Patrón extractor/builder/validación/registro probado con catorce
   fuentes (DIVIPOLA, geometría municipal IGAC vía SNR, demografía, dos de educación,
-  cinco de delincuencia, POI de OpenStreetMap, TRM y calidad del aire) de
-  dominios distintos (API Socrata pequeña, descarga directa de Excel, API
-  Socrata grande y paginada —incluida una de 7.1M filas con paginación por
-  keyset—, shapefile geoespacial, extracto `.osm.pbf` con
-  geoprocesamiento).
+  cinco de delincuencia, POI de OpenStreetMap, TRM, calidad del aire y
+  RETHUS) de dominios distintos (API Socrata pequeña, descarga directa de
+  Excel, API Socrata grande y paginada —incluida una de 7.1M filas con
+  paginación por keyset—, API Socrata ya agregada por la fuente,
+  shapefile geoespacial, extracto `.osm.pbf` con geoprocesamiento).
 - ✅ [GitHub Releases](https://github.com/davidcasr/colombia-open/releases)
   publicados (último: `v0.14.0`, bundle de datos con SHA256, incluye los
   catorce datasets) — `ColombiaOpen()` descarga y cachea el bundle

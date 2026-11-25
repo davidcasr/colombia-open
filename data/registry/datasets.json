@@ -273,5 +273,24 @@
     "documentation": "docs/datasets/calidad_aire.md",
     "update_frequency": "Anual",
     "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-18)"
+  },
+  "rethus": {
+    "description": "Registro Único Nacional del Talento Humano en Salud (RETHUS): conteo de registros de talento humano en salud por perfil profesional, tipo de programa e institución, año del acto administrativo y municipio de residencia. Snapshot congelado a 2022-05 — no es una serie viva, ver docs/datasets/rethus.md.",
+    "extractor": "src/extractors/rethus_extractor.py",
+    "source_name": "Ministerio de Salud y Protección Social (MinSalud) — RETHUS (vía datos.gov.co)",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio_registro"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 90297,
+    "outputs": {
+      "parquet": "data/normalized/rethus.parquet",
+      "json": "data/normalized/rethus.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('rethus')",
+      "cli": "colombia-open path rethus --output parquet"
+    },
+    "documentation": "docs/datasets/rethus.md",
+    "update_frequency": "Anual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-24) — pero las filas no se han refrescado desde 2022-05-30, ver docs/datasets/rethus.md"
   }
 }
