@@ -102,3 +102,9 @@ EXPECTED_RETHUS_MIN_COUNT = 80_000
 # captura de la fuente (4 filas con "2028" confirmadas 2026-11-24) — se
 # reporta como warning, nunca se excluye ni se corrige a ciegas.
 RETHUS_SNAPSHOT_MAX_PLAUSIBLE_YEAR = 2022
+
+# EVA (UPRA 2019-2025 + MinAgricultura 2006-2018). 372800 filas crudas
+# confirmadas en vivo 2026-11-27 (166732 + 206068), sin solape de años.
+EXPECTED_AGRO_EVA_MIN_COUNT = 340_000
+# Valores de `serie_fuente` — ver src/extractors/agro_eva_extractor.py.
+AGRO_EVA_SERIES_VALIDAS = {"upra_2019_2025", "minagricultura_2006_2018"}

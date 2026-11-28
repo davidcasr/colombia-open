@@ -120,7 +120,7 @@ hub.list_datasets()
 #  "delincuencia_hurto_personas", "delincuencia_lesiones_personales",
 #  "delincuencia_hurto_modalidades", "delincuencia_homicidios",
 #  "delincuencia_homicidios_transito", "infraestructura_poi",
-#  "macroeconomia_trm", "calidad_aire", "rethus"]
+#  "macroeconomia_trm", "calidad_aire", "rethus", "agro_eva"]
 
 municipios = hub.load_polars("municipios")
 municipios.filter(municipios["cod_dpto"] == "05")  # municipios de Antioquia
@@ -172,6 +172,7 @@ colombia-open validate municipios
 | `macroeconomia_trm` | Tasa de Cambio Representativa del Mercado (COP/USD) diaria, 1991 a la fecha | Superintendencia Financiera, vía datos.gov.co | ~8388 | CC BY-SA 4.0 |
 | `calidad_aire` | Contaminantes del Índice de Calidad del Aire (PM10, PM2.5, SO2, O3, NO2, CO) por estación, 2011 a la fecha | IDEAM, vía datos.gov.co | ~8985 | CC BY-SA 4.0 |
 | `rethus` | Talento humano en salud por perfil, programa, año de registro y municipio de residencia — snapshot congelado a 2022-05, no serie viva | MinSalud, vía datos.gov.co | ~90297 | CC BY-SA 4.0 |
+| `agro_eva` | Evaluaciones Agropecuarias Municipales: área sembrada/cosechada, producción y rendimiento por municipio, cultivo y periodo, 2006-2025 | MinAgricultura (2006-2018) + UPRA (2019-2025), vía datos.gov.co | ~372800 | CC BY-SA 4.0 |
 
 Ver `docs/roadmap/roadmap.md` para el resto de fuentes mapeadas (implementadas y
 pendientes) y `docs/licenses/data_licenses.md` para el detalle legal de cada una.

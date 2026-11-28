@@ -292,5 +292,24 @@
     "documentation": "docs/datasets/rethus.md",
     "update_frequency": "Anual",
     "update_frequency_source": "Metadata 'Frecuencia de Actualización' del dataset en datos.gov.co (verificada 2026-11-24) — pero las filas no se han refrescado desde 2022-05-30, ver docs/datasets/rethus.md"
+  },
+  "agro_eva": {
+    "description": "Evaluaciones Agropecuarias Municipales (EVA): área sembrada, área cosechada, producción y rendimiento por municipio, cultivo y periodo, 2006-2025. Une la serie de MinAgricultura (2006-2018) y la de UPRA (2019-2025) bajo un esquema común; la columna `serie_fuente` indica de cuál viene cada fila.",
+    "extractor": "src/extractors/agro_eva_extractor.py",
+    "source_name": "UPRA (2019-2025) / MinAgricultura (2006-2018) — Evaluaciones Agropecuarias Municipales (EVA), vía datos.gov.co",
+    "join_keys": ["cod_mpio", "cod_dpto", "anio"],
+    "references": { "cod_mpio": "municipios" },
+    "expected_record_count": 372800,
+    "outputs": {
+      "parquet": "data/normalized/agro_eva.parquet",
+      "json": "data/normalized/agro_eva.json"
+    },
+    "usage_examples": {
+      "python": "from colombia_open import ColombiaOpen\n\nhub = ColombiaOpen()\ndf = hub.load_polars('agro_eva')",
+      "cli": "colombia-open path agro_eva --output parquet"
+    },
+    "documentation": "docs/datasets/agro_eva.md",
+    "update_frequency": "Anual",
+    "update_frequency_source": "Metadata 'Frecuencia de Actualización' de uejq-wxrr (UPRA) y 2pnw-mmge (MinAgricultura) en datos.gov.co (verificada 2026-11-27) — la serie MinAgricultura no se refresca desde 2019-11 (cerrada, continuada por UPRA)"
   }
 }
