@@ -17,8 +17,9 @@ from pathlib import Path
 from typing import Any
 
 from src.builders.catalog import build_catalog_entry, write_dataset_catalog
-from src.builders.datasets import derive_departamentos, derive_municipios
+from src.builders.datasets import derive_agro_eva, derive_departamentos, derive_municipios
 from src.builders.formats import write_json_atomic, write_parquet_atomic
+from src.extractors.agro_eva_extractor import AgroEvaExtractor
 from src.extractors.calidad_aire_extractor import CalidadAireExtractor
 from src.extractors.delincuencia_homicidios_extractor import DelincuenciaHomicidiosExtractor
 from src.extractors.delincuencia_homicidios_transito_extractor import (
@@ -45,6 +46,7 @@ from src.extractors.municipios_geometria_extractor import MunicipiosGeometriaExt
 from src.extractors.rethus_extractor import RethusExtractor
 from src.registry import load_registry
 from src.validation import (
+    validate_agro_eva,
     validate_calidad_aire,
     validate_delincuencia_homicidios,
     validate_delincuencia_homicidios_transito,
@@ -329,6 +331,24 @@ def build() -> list[dict[str, Any]]:
             spec=registry["rethus"],
             extraction_metadata=rethus_staging_metadata,
             validation_result=rethus_validation,
+        )
+    )
+
+    # --- agro_eva: el extractor ya une las dos series (UPRA + MinAgricultura);
+    # derive_agro_eva solo agrega la columna de búsqueda cultivo_clean ---
+    agro_extraction = AgroEvaExtractor().run()
+    agro_staging_metadata = agro_extraction.to_staging_metadata()
+    agro_df = derive_agro_eva(agro_extraction.dataframe)
+    agro_validation = validate_agro_eva(
+        agro_df, agro_staging_metadata, references={"cod_mpio": valid_mpio_codes}
+    )
+    write_parquet_atomic(agro_df, NORMALIZED_DIR / "agro_eva.parquet")
+    write_json_atomic(agro_df, NORMALIZED_DIR / "agro_eva.json")
+    catalog_entries.append(
+        build_catalog_entry(
+            spec=registry["agro_eva"],
+            extraction_metadata=agro_staging_metadata,
+            validation_result=agro_validation,
         )
     )
 

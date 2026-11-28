@@ -3,6 +3,7 @@
 `divipola_extractor` produce UNA tabla de staging (municipios con
 departamento embebido). Este builder la parte en dos datasets normalizados:
 `departamentos` (único por cod_dpto) y `municipios` (la tabla completa).
+`derive_agro_eva` agrega la columna de búsqueda `cultivo_clean`.
 """
 
 from __future__ import annotations
@@ -55,3 +56,16 @@ def derive_municipios(divipola_df: pl.DataFrame) -> pl.DataFrame:
             "latitud",
         ]
     ).sort("cod_mpio")
+
+
+def derive_agro_eva(staging_df: pl.DataFrame) -> pl.DataFrame:
+    """Agrega `cultivo_clean`: UPRA escribe "Acelga" y MinAgricultura
+    "ACELGA" — sin esto, filtrar por cultivo pierde una de las dos series."""
+    mapping = {value: clean_name(value) for value in staging_df["cultivo"].drop_nulls().unique()}
+    columns = list(staging_df.columns)
+    columns.insert(columns.index("cultivo") + 1, "cultivo_clean")
+    return staging_df.with_columns(
+        pl.col("cultivo")
+        .replace_strict(mapping, default=None, return_dtype=pl.Utf8)
+        .alias("cultivo_clean")
+    ).select(columns)

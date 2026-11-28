@@ -13,7 +13,7 @@
 
 ## Estado actual
 
-- **Fuentes implementadas**: 14 — `divipola` (geografía: departamentos +
+- **Fuentes implementadas**: 15 — `divipola` (geografía: departamentos +
   municipios, DANE), `municipios_geometria` (geometría de polígonos
   municipales, IGAC vía SNR/ArcGIS — segunda iteración de `divipola`),
   `demografia` (proyecciones de población municipal 2018-2042, DANE),
@@ -38,21 +38,20 @@
   `macroeconomia_trm` (Tasa de Cambio Representativa del Mercado diaria,
   1991 a la fecha, Superintendencia Financiera), `calidad_aire` (los 6
   contaminantes del Índice de Calidad del Aire por estación, 2011 a la
-  fecha, IDEAM) y `rethus` (talento humano en salud por perfil, programa,
+  fecha, IDEAM), `rethus` (talento humano en salud por perfil, programa,
   año de registro y municipio de residencia, snapshot congelado a
-  2022-05, MinSalud).
+  2022-05, MinSalud) y `agro_eva` (Evaluaciones Agropecuarias Municipales
+  por municipio, cultivo y periodo, 2006-2025, MinAgricultura + UPRA).
 - **Próximas candidatas sugeridas** (auditoría 2026-11-11, ordenadas por
   dificultad de acceso — la elección es del mantenedor):
   1. 🟢 **Otros delitos de la Policía/MinDefensa** (homicidio, delitos
      sexuales, violencia intrafamiliar, extorsión, secuestro…): mismo
      esquema exacto que `delincuencia_hurto_personas`, confirmados en
      vivo.
-  2. 🟢 **Agro — EVA** (`2pnw-mmge` 2007-2018 + `uejq-wxrr` 2019-2025):
-     acceso confirmado en vivo; unir las dos series es curación, no acceso.
-  3. 🟢 **Energía — XM** (series nacionales): API pública confirmada en
+  2. 🟢 **Energía — XM** (series nacionales): API pública confirmada en
      vivo; falta confirmar los términos de uso de los datos y no hay
      granularidad municipal.
-  4. 🟡 **Macroeconomía — DTF/IBR/UVR**: **ya no** es "mismo patrón que
+  3. 🟡 **Macroeconomía — DTF/IBR/UVR**: **ya no** es "mismo patrón que
      TRM" — los IDs de datos.gov.co son enlaces, no tablas (#13); la vía
      es la API SDMX de BanRep en XML (#16).
 
@@ -84,7 +83,7 @@
 | Delincuencia (hurto a personas) | Policía Nacional, vía Ministerio de Defensa | **Confirmado en vivo 2026-10-19**: `datos.gov.co/resource/4rxi-8m8d.json` (CC BY-SA 4.0). 651200 filas ya agregadas por fecha + municipio, 2003 a la fecha, ~1.5 min por build. Defecto conocido de la fuente: 2008 casi sin desagregación municipal (365 filas "SIN ESTABLECER", excluidas — ver `docs/datasets/delincuencia_hurto_personas.md`) | 🟡 Fácil | ✅ `delincuencia_hurto_personas` — ver `src/extractors/delincuencia_hurto_personas_extractor.py` |
 | Delincuencia (lesiones personales) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmado en vivo 2026-10-19**: `datos.gov.co/resource/72sg-cybi.json` (CC BY-SA 4.0). 1381416 filas, 2010 a la fecha, con conducta, arma, género y grupo etario; `codigo_dane` de 8 dígitos (municipio + centro poblado) que se colapsa a municipio → ~1377323 filas, ~1 min por build. Mezcla lesiones dolosas y culposas en tránsito (columna derivada `tipo_lesion`) — ver `docs/datasets/delincuencia_lesiones_personales.md` | 🟡 Media (normalización de códigos) | ✅ `delincuencia_lesiones_personales` — ver `src/extractors/delincuencia_lesiones_personales_extractor.py` |
 | Delincuencia (hurto por modalidades) | Policía Nacional (DIPON), vía datos.gov.co | **Confirmado en vivo 2026-10-20** (CC BY-SA 4.0): `datos.gov.co/resource/6sqw-8cg5.json` (653384 filas crudas; residencias y entidades comerciales). Mismo formato que lesiones: microdato por hecho, `codigo_dane` de 8 dígitos y nombres con sufijo "(CT)" | 🟡 Media (normalización de códigos; reusó la de lesiones) | ✅ `delincuencia_hurto_modalidades` — ver `src/extractors/delincuencia_hurto_modalidades_extractor.py` |
-| Agro (Evaluaciones Agropecuarias Municipales, EVA) | MinAgricultura (2007-2018) / UPRA (2019 en adelante) | **Confirmado en vivo 2026-11-11** (CC BY-SA 4.0): `datos.gov.co/resource/2pnw-mmge.json` (MinAgricultura, serie 2007-2018, sin actualizar desde 2019-11) y `datos.gov.co/resource/uejq-wxrr.json` ("EVA 2019 - 2025. Base Agrícola", UPRA, 166732 filas, con `c_digo_dane_municipio`, `cultivo`, `a_o`, `periodo`). Las dos series tienen esquemas distintos: unirlas es trabajo de curación. UPRA ejecuta las EVA desde 2019 (https://upra.gov.co/en/eva) | 🟢 Fácil (acceso) / 🟡 Media (unir las dos series) | ⬜ No implementada |
+| Agro (Evaluaciones Agropecuarias Municipales, EVA) | MinAgricultura (2006-2018) / UPRA (2019 en adelante) | **Confirmado en vivo 2026-11-27** (CC BY-SA 4.0): `datos.gov.co/resource/2pnw-mmge.json` (MinAgricultura, 206068 filas, serie **2006**-2018 — no 2007 como se documentó el 2026-11-11 —, sin actualizar desde 2019-11) y `datos.gov.co/resource/uejq-wxrr.json` ("EVA 2019 - 2025. Base Agrícola", UPRA, 166732 filas). Sin solape de años. Esquemas distintos, unidos bajo uno común con `serie_fuente`. Defectos de la fuente MinAgricultura: `c_d_dep`/`c_d_mun` tipados como número (Antioquia llega como `5`, se restaura a `05`) y `rendimiento` omitido cuando no hubo cosecha (3433 filas, se conserva nulo). Las taxonomías de grupo de cultivo no son comparables entre series — ver `docs/datasets/agro_eva.md`. UPRA ejecuta las EVA desde 2019 (https://upra.gov.co/en/eva) | 🟢 Fácil (acceso) / 🟡 Media (unir las dos series) | ✅ `agro_eva` — ver `src/extractors/agro_eva_extractor.py` |
 | Contratación pública (SECOP II) | Colombia Compra Eficiente (ANCP-CCE) | datos.gov.co, actualización diaria. Contratos: `datos.gov.co/resource/jbjy-vk9h.json` ("SECOP II - Contratos Electrónicos", CC BY-SA 4.0) — **confirmado en vivo 2026-11-11** (HTTP 200 con `$limit=1`; un `count(*)` respondió `service-unavailable` por volumen). [Índice oficial de conjuntos](https://www.colombiacompra.gov.co/archivos/app-datos-abiertos/secop-ii) (HTTP 200). Publicar agregado (entidad × municipio × año), no el microdato completo; paginación por keyset | 🟡 Media (volumen) | ⬜ No implementada |
 | Seguridad (homicidios y otros delitos) | Policía Nacional, vía Ministerio de Defensa (misma familia que `delincuencia_hurto_personas`) | **Confirmados en vivo 2026-11-11** (todos CC BY-SA 4.0, HTTP 200, mismo esquema `fecha_hecho`/`cod_depto`/`cod_muni`/`cantidad` que `4rxi-8m8d`): `m8fd-ahd9` HOMICIDIO (345195 filas, 2003-01-01 a 2026-09-30, con `sexo`, `arma_medio`, `zona`), `uav5-b85g` homicidio en accidente de tránsito, `u8eq-92tb` masacres (`casos`/`victimas`), `bz43-8ahq` delitos sexuales (451146 filas), `gepp-dxcs` violencia intrafamiliar (675813), `q2ib-t9am` extorsión (132453), `d7zw-hpf4` secuestro (10449), `csb4-y6v2` hurto a vehículos (389928; un `$limit=1` dio HTTP 500 intermitente), `p88b-5ac7` abigeato, `7i2x-h5vp` hurto a comercio (se solapa con `delincuencia_hurto_modalidades`), `yi5j-5fe9` terrorismo, `sutf-7dyz` piratería terrestre. Hay también una familia DIPON con el formato de `delincuencia_lesiones_personales` (`fpe5-yrmw` delitos sexuales, `vuyt-mqpw` violencia intrafamiliar, `ha6j-pa2r` homicidios en tránsito, `37p5-impc` terrorismo): elegir una familia por delito y documentar por qué | 🟢 Fácil (mismo patrón que `delincuencia_hurto_personas`) | 🟡 Parcial: ✅ homicidio (`m8fd-ahd9`) → `delincuencia_homicidios` — ver `src/extractors/delincuencia_homicidios_extractor.py`; ✅ homicidio en accidente de tránsito (`uav5-b85g`, confirmado en vivo 2026-11-13: 128440 filas, 128900 víctimas) → `delincuencia_homicidios_transito` — ver `src/extractors/delincuencia_homicidios_transito_extractor.py`; ⬜ los demás delitos (issue #29) |
 | Educación superior (SNIES) | MinEducación — SNIES | Portal de datos abiertos `https://snies.mineducacion.gov.co/portal/ESTADISTICAS/Datos-abiertos/` y "Bases consolidadas" responden HTTP 200 (2026-11-11), pero los archivos por año (XLSX) están detrás de páginas del portal: no se extrajo un enlace de descarga directa estable. En datos.gov.co, `n5yy-8nav` ("MEN_INSTITUCIONES EDUCACIÓN SUPERIOR") existe (CC BY-SA 4.0) pero la API respondió `internal-error` el 2026-11-11 | 🟡 Media | ⬜ No implementada |

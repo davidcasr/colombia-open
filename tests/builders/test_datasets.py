@@ -1,6 +1,16 @@
 import polars as pl
 
-from src.builders.datasets import clean_name, derive_departamentos, derive_municipios
+from src.builders.datasets import (
+    clean_name,
+    derive_agro_eva,
+    derive_departamentos,
+    derive_municipios,
+)
+from src.extractors.agro_eva_extractor import (
+    AGRO_EVA_MINAGRICULTURA_FALLBACK_DATA,
+    AGRO_EVA_UPRA_FALLBACK_DATA,
+)
+from src.extractors.agro_eva_extractor import _normalize as normalize_agro_eva
 
 
 def _divipola_df() -> pl.DataFrame:
@@ -34,3 +44,15 @@ def test_derive_municipios_keeps_all_rows_and_adds_clean_name():
     assert df.height == 3
     assert "nombre_mpio_clean" in df.columns
     assert df.filter(pl.col("cod_mpio") == "05001")["nombre_mpio_clean"].item() == "medellin"
+
+
+def test_derive_agro_eva_unifies_crop_name_case_across_series():
+    staging, _, _ = normalize_agro_eva(
+        AGRO_EVA_UPRA_FALLBACK_DATA, AGRO_EVA_MINAGRICULTURA_FALLBACK_DATA
+    )
+    df = derive_agro_eva(staging)
+    assert df.height == staging.height
+    # "Acelga" (UPRA) y "ACELGA" (MinAgricultura) caen en la misma clave.
+    acelga = df.filter(pl.col("cultivo_clean") == "acelga")
+    assert set(acelga["serie_fuente"].to_list()) == {"upra_2019_2025", "minagricultura_2006_2018"}
+    assert df.columns.index("cultivo_clean") == df.columns.index("cultivo") + 1
